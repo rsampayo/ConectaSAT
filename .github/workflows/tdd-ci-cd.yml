@@ -18,11 +18,13 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install black
+          pip install black isort flake8
       - name: Run quality checks
         run: | 
-          # Temporarily simplify to just black for now to get CI passing
-          black --check --verbose app/tests/test_integration/test_admin_api_integration.py
+          # Run code quality tools on all Python files
+          black --check --verbose .
+          isort --check --verbose .
+          flake8 .
 
   unit-tests:
     name: Run Unit Tests
