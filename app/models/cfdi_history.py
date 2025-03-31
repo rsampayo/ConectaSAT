@@ -2,7 +2,7 @@
 Database model for CFDI History
 """
 
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, JSON
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -21,8 +21,14 @@ class CFDIHistory(Base):
     emisor_rfc = Column(String, nullable=False)
     receptor_rfc = Column(String, nullable=False)
     total = Column(String, nullable=False)
+    
+    # API Token
+    token_id = Column(String, index=True, nullable=True)
+    
+    # JSON details
+    details = Column(JSON, nullable=True)
 
-    # Verification results
+    # Verification results (legacy fields)
     estado = Column(String, nullable=True)
     es_cancelable = Column(String, nullable=True)
     estatus_cancelacion = Column(String, nullable=True)

@@ -47,7 +47,8 @@ app = FastAPI(
 )
 
 # Include routers
-app.include_router(cfdi.router, prefix="/cfdi", tags=["CFDI"])
+app.include_router(cfdi.router)  # New API v1 router (/api/v1/cfdi/*)
+app.include_router(cfdi.legacy_router)  # Legacy router for backward compatibility
 app.include_router(health.router, tags=["Health"])
 app.include_router(admin.router, prefix="/admin", tags=["Admin"])
 

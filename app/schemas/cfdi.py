@@ -2,7 +2,7 @@
 Pydantic models for CFDI verification
 """
 
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -29,6 +29,16 @@ class CFDIRequest(BaseModel):
     )
 
 
+class CFDIVerifyRequest(BaseModel):
+    """
+    New CFDI verification request format
+    """
+    uuid: str = Field(..., description="UUID del CFDI")
+    rfc_emisor: str = Field(..., description="RFC del emisor")
+    rfc_receptor: str = Field(..., description="RFC del receptor")
+    total: float = Field(..., description="Monto total del CFDI")
+
+
 class CFDIResponse(BaseModel):
     """
     CFDI verification response
@@ -44,6 +54,27 @@ class CFDIResponse(BaseModel):
     efos_emisor: Optional[str] = Field(None, description="Estatus EFOS del emisor")
     efos_receptor: Optional[str] = Field(None, description="Estatus EFOS del receptor")
     raw_response: Optional[str] = Field(None, description="Respuesta XML completa")
+    # New fields for updated API
+    status: Optional[str] = Field(None, description="Estado de la petición")
+    message: Optional[str] = Field(None, description="Mensaje descriptivo")
+    data: Optional[Dict[str, Any]] = Field(None, description="Datos de la verificación")
+
+
+class VerifyCFDI(BaseModel):
+    """
+    CFDI verification result for batch processing
+    """
+    uuid: str = Field(..., description="UUID del CFDI verificado")
+    status: str = Field(..., description="Estado de la verificación (success/error)")
+    message: str = Field(..., description="Mensaje descriptivo")
+    data: Optional[Dict[str, Any]] = Field(None, description="Datos de la verificación")
+
+
+class CFDIBatch(BaseModel):
+    """
+    Batch response for CFDI verifications
+    """
+    results: List[VerifyCFDI] = Field(..., description="Resultados de las verificaciones")
 
 
 class BatchCFDIRequest(BaseModel):

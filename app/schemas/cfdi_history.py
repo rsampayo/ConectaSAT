@@ -3,7 +3,7 @@ Pydantic models for CFDI History
 """
 
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -19,10 +19,18 @@ class CFDIHistoryBase(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
 
-class CFDIHistoryCreate(CFDIHistoryBase):
+class CFDIHistoryCreate(BaseModel):
     """CFDI History attributes for creating a record"""
 
-    user_id: int = Field(..., description="ID del usuario que realizó la consulta")
+    uuid: str = Field(..., description="UUID del CFDI")
+    rfc_emisor: str = Field(..., description="RFC del emisor")
+    rfc_receptor: str = Field(..., description="RFC del receptor")
+    total: str = Field(..., description="Monto total del CFDI")
+    token_id: Optional[str] = Field("legacy", description="ID del token que se usó para la consulta")
+    user_id: Optional[str] = Field("0", description="ID del usuario que realizó la consulta")
+    details: Optional[Dict[str, Any]] = Field(None, description="Detalles de la verificación")
+
+    # Legacy fields
     estado: Optional[str] = Field(None, description="Estado del CFDI")
     es_cancelable: Optional[str] = Field(None, description="Si el CFDI es cancelable")
     estatus_cancelacion: Optional[str] = Field(
