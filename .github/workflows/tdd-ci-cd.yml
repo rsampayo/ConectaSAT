@@ -62,37 +62,34 @@ jobs:
       - name: Run tests with coverage
         run: pytest app/tests/test_integration/test_admin_api_integration.py -v
   
-  # Note: The deploy job is currently disabled since it requires Heroku credentials
-  # After you've set up GitHub Secrets (HEROKU_API_KEY, HEROKU_EMAIL, HEROKU_APP_NAME),
-  # you can uncomment and use this job.
-  # We're skipping this step for now since direct deployment from local works successfully.
+  # Deployment is now enabled since GitHub secrets have been configured
   
-#  deploy:
-#    name: Deploy
-#    needs: test
-#    if: success() && (github.ref == 'refs/heads/main')
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#      - name: Install Heroku CLI
-#        run: |
-#          curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
-#      - name: Login to Heroku
-#        run: |
-#          cat > ~/.netrc << EOF
-#          machine api.heroku.com
-#            login ${{ secrets.HEROKU_EMAIL }}
-#            password ${{ secrets.HEROKU_API_KEY }}
-#          machine git.heroku.com
-#            login ${{ secrets.HEROKU_EMAIL }}
-#            password ${{ secrets.HEROKU_API_KEY }}
-#          EOF
-#          chmod 600 ~/.netrc
-#      - name: Deploy to Heroku
-#        run: |
-#          heroku git:remote --app ${{ secrets.HEROKU_APP_NAME }}
-#          git push heroku main:main --force
-#      - name: Verify deployment
-#        run: |
-#          sleep 30
-#          curl -f https://${{ secrets.HEROKU_APP_NAME }}.herokuapp.com/health || exit 1 
+  deploy:
+    name: Deploy
+    needs: test
+    if: success() && (github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Heroku CLI
+        run: |
+          curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+      - name: Login to Heroku
+        run: |
+          cat > ~/.netrc << EOF
+          machine api.heroku.com
+            login ${{ secrets.HEROKU_EMAIL }}
+            password ${{ secrets.HEROKU_API_KEY }}
+          machine git.heroku.com
+            login ${{ secrets.HEROKU_EMAIL }}
+            password ${{ secrets.HEROKU_API_KEY }}
+          EOF
+          chmod 600 ~/.netrc
+      - name: Deploy to Heroku
+        run: |
+          heroku git:remote --app ${{ secrets.HEROKU_APP_NAME }}
+          git push heroku main:main --force
+      - name: Verify deployment
+        run: |
+          sleep 30
+          curl -f https://${{ secrets.HEROKU_APP_NAME }}.herokuapp.com/health || exit 1 
