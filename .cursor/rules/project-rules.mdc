@@ -11,7 +11,7 @@ globs:
 ---
 
 ## Summary:
-Enforce a strict test-driven development workflow with continuous integration and deployment for a production-ready FastAPI project. Each feature goes through a complete TDD lifecycle with automated testing across all environments, deployed to Heroku Eco dynos with LTS dependencies.
+Enforce a strict test-driven development workflow with **iterative code quality checks integrated into the development cycle**. Each feature goes through a complete TDD lifecycle with automated testing across all environments, deployed to Heroku Eco dynos with LTS dependencies. Continuous integration and deployment ensure a production-ready FastAPI project.
 ## Goals:
 - **Prioritize TDD**: Write tests before implementation
 - **Automate Everything**: Tests, linting, formatting, deployment
@@ -93,6 +93,10 @@ Local Development → GitHub CI → Review App → Production (Eco Dyno)
 - Enable strict mode for maximum type safety
 - Run type checking in the CI pipeline
 - Add inline type ignores only when absolutely necessary
+
+Iterative Application During Development:**
+**Crucially, apply Black, isort, Flake8, and Mypy frequently during development. After completing a function, method, or significant block of code, run these tools and fix any reported issues immediately before moving on to the next piece of functionality. Do not accumulate quality debt.**
+
 ---
 ## 🚀 FastAPI & Project Structure
 - Use **Pydantic** for data validation and response models.
