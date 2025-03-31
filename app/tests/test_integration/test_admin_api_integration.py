@@ -8,7 +8,7 @@ BASE_URL = "https://conecta-sat-70222b8ec91a.herokuapp.com"
 # Admin credentials for testing
 # These should match the credentials in the test environment
 ADMIN_USERNAME = "admin"
-ADMIN_PASSWORD = "changeme"
+ADMIN_PASSWORD = "heroku-admin-password123"
 
 
 def test_admin_token_not_found() -> None:
