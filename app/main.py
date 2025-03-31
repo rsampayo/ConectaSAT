@@ -1,24 +1,29 @@
 """
 Main FastAPI application
 """
+
 import logging
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Depends
+
+from fastapi import Depends, FastAPI
 from sqlalchemy.orm import Session
 
-from app.api import cfdi, health, admin
+from app.api import admin, cfdi, health
 from app.core.config import settings
-from app.db.database import get_db, engine
+from app.db.database import engine, get_db
 from app.db.init_db import init_db
-from app.models import user, cfdi_history
+from app.models import cfdi_history, user
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 # Create database tables
 user.Base.metadata.create_all(bind=engine)
 cfdi_history.Base.metadata.create_all(bind=engine)
+
 
 # Lifespan context manager
 @asynccontextmanager
@@ -30,6 +35,7 @@ async def lifespan(app: FastAPI):
     yield
     # Shutdown: Cleanup if needed
     logger.info("Application shutting down")
+
 
 # Create FastAPI app
 app = FastAPI(
@@ -46,6 +52,7 @@ app.include_router(cfdi.router, prefix="/cfdi", tags=["CFDI"])
 app.include_router(health.router, tags=["Health"])
 app.include_router(admin.router, prefix="/admin", tags=["Admin"])
 
+
 # Root endpoint
 @app.get("/", tags=["Root"])
 async def root():
@@ -53,5 +60,5 @@ async def root():
         "service": settings.PROJECT_NAME,
         "version": "1.0.0",
         "status": "online",
-        "docs": "/docs"
+        "docs": "/docs",
     }

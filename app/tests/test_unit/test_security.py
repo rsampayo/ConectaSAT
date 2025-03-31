@@ -169,10 +169,10 @@ def test_verify_api_token_inactive(mock_db):
     """Test verification of an inactive API token."""
     # Setup - The query should filter for active tokens, so we return None
     mock_db.query.return_value.filter.return_value.first.return_value = None
-    
+
     # Test verification
     result = verify_api_token(mock_db, "test-token-123")
-    
+
     # Should return False
     assert result is False
 

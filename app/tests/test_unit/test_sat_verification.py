@@ -171,7 +171,9 @@ async def test_verify_cfdi_http_error():
 async def test_verify_cfdi_request_exception():
     """Test verify_cfdi with a requests.RequestException"""
     # Mock the requests.post to raise a RequestException
-    with patch("requests.post", side_effect=requests.RequestException("Connection refused")):
+    with patch(
+        "requests.post", side_effect=requests.RequestException("Connection refused")
+    ):
         # Call the function and expect an exception
         with pytest.raises(Exception) as excinfo:
             await verify_cfdi(
@@ -204,7 +206,9 @@ async def test_verify_cfdi_invalid_xml():
                 total="12000.00",
             )
 
-        assert "syntax error" in str(excinfo.value) or "Error parsing SAT response" in str(excinfo.value)
+        assert "syntax error" in str(
+            excinfo.value
+        ) or "Error parsing SAT response" in str(excinfo.value)
 
 
 @pytest.mark.asyncio
@@ -271,9 +275,14 @@ async def test_verify_cfdi_with_validacion_efos():
 async def test_verify_cfdi_with_xml_parsing_error():
     """Test verify_cfdi with an error during XML parsing"""
     # Mock the requests.post response
-    with patch("requests.post") as mock_post, \
-         patch("xml.etree.ElementTree.fromstring", side_effect=ET.ParseError("XML parsing error")):
-        
+    with (
+        patch("requests.post") as mock_post,
+        patch(
+            "xml.etree.ElementTree.fromstring",
+            side_effect=ET.ParseError("XML parsing error"),
+        ),
+    ):
+
         # Configure the mock
         mock_response = MagicMock()
         mock_response.status_code = 200
@@ -308,7 +317,7 @@ async def test_verify_cfdi_special_xml_format():
         </s:Body>
     </s:Envelope>
     """
-    
+
     # Mock the requests.post response
     with patch("requests.post") as mock_post:
         # Configure the mock
@@ -320,46 +329,46 @@ async def test_verify_cfdi_special_xml_format():
         # Here we patch ET.fromstring to return our own mock Element
         # This allows us to control the behavior of findall and find methods
         original_fromstring = ET.fromstring
-        
+
         def mock_fromstring(content):
             # Create a real element from the XML
             real_element = original_fromstring(content)
-            
+
             # Create a mock to wrap it with our custom behavior
             mock_element = MagicMock()
-            
+
             # Make findall return empty list for a:Estado to trigger special path
             def mock_findall(path, namespaces=None):
-                if 'a:Estado' in path:
+                if "a:Estado" in path:
                     return []
                 # For other paths, return real element's findall result
                 return real_element.findall(path, namespaces)
-            
+
             # Make find work for retrieving ConsultaResult with attributes
             def mock_find(path, namespaces=None):
-                if path == './/ConsultaResult':
+                if path == ".//ConsultaResult":
                     # Create an attributes dict matching the XML
                     attr_mock = MagicMock()
                     attr_mock.attrib = {
-                        'Estado': 'Vigente',
-                        'EsCancelable': 'Cancelable sin aceptación',
-                        'EstatusCancelacion': 'No cancelado',
-                        'CodigoEstatus': 'S - Comprobante obtenido satisfactoriamente.'
+                        "Estado": "Vigente",
+                        "EsCancelable": "Cancelable sin aceptación",
+                        "EstatusCancelacion": "No cancelado",
+                        "CodigoEstatus": "S - Comprobante obtenido satisfactoriamente.",
                     }
                     return attr_mock
                 # For other paths like a:Estado, return None to trigger special path
-                if 'a:' in path:
+                if "a:" in path:
                     return None
                 # For other paths, return real element's find result
                 return real_element.find(path, namespaces)
-            
+
             # Assign our mock methods
             mock_element.findall = mock_findall
             mock_element.find = mock_find
-            
+
             # Return the mock element
             return mock_element
-        
+
         # Patch ET.fromstring
         with patch("xml.etree.ElementTree.fromstring", mock_fromstring):
             # Call the function
@@ -374,7 +383,10 @@ async def test_verify_cfdi_special_xml_format():
             assert result["estado"] == "Vigente"
             assert result["es_cancelable"] == "Cancelable sin aceptación"
             assert result["estatus_cancelacion"] == "No cancelado"
-            assert result["codigo_estatus"] == "S - Comprobante obtenido satisfactoriamente."
+            assert (
+                result["codigo_estatus"]
+                == "S - Comprobante obtenido satisfactoriamente."
+            )
             assert mock_post.called
 
 
@@ -394,7 +406,7 @@ async def test_verify_cfdi_special_xml_empty_estado():
         </s:Body>
     </s:Envelope>
     """
-    
+
     # Mock the requests.post response
     with patch("requests.post") as mock_post:
         # Configure the mock
@@ -406,29 +418,29 @@ async def test_verify_cfdi_special_xml_empty_estado():
         # Create a specific mock for ET.fromstring that will force our desired code path
         def mock_fromstring(content):
             mock_root = MagicMock()
-            
+
             # 1. Make findall return empty list (first condition)
             mock_root.findall.return_value = []
-            
+
             # 2. Create a mock ConsultaResult with attributes
             mock_consulta_result = MagicMock()
             mock_consulta_result.attrib = {
-                'Estado': 'Vigente',
-                'EsCancelable': 'Cancelable sin aceptación',
-                'EstatusCancelacion': 'No cancelado',
-                'CodigoEstatus': 'S - Comprobante obtenido satisfactoriamente.'
+                "Estado": "Vigente",
+                "EsCancelable": "Cancelable sin aceptación",
+                "EstatusCancelacion": "No cancelado",
+                "CodigoEstatus": "S - Comprobante obtenido satisfactoriamente.",
             }
-            
+
             # 3. Setup find to return our mock ConsultaResult
             def mock_find(path, namespaces=None):
-                if path == './/ConsultaResult':
+                if path == ".//ConsultaResult":
                     return mock_consulta_result
                 return None  # Return None for other paths
-            
+
             mock_root.find = mock_find
-            
+
             return mock_root
-        
+
         # Patch ET.fromstring
         with patch("xml.etree.ElementTree.fromstring", mock_fromstring):
             # Call the function
@@ -443,5 +455,8 @@ async def test_verify_cfdi_special_xml_empty_estado():
             assert result["estado"] == "Vigente"
             assert result["es_cancelable"] == "Cancelable sin aceptación"
             assert result["estatus_cancelacion"] == "No cancelado"
-            assert result["codigo_estatus"] == "S - Comprobante obtenido satisfactoriamente."
+            assert (
+                result["codigo_estatus"]
+                == "S - Comprobante obtenido satisfactoriamente."
+            )
             assert mock_post.called

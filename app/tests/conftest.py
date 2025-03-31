@@ -1,58 +1,62 @@
 """
 Pytest configuration file with common fixtures
 """
+
 import os
-import pytest
 import warnings
 from unittest.mock import AsyncMock, MagicMock, patch
+
+import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy.pool import StaticPool
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.pool import StaticPool
 
+from app.core.auth import create_access_token
+from app.core.config import settings
+from app.core.security import create_api_token
 from app.db.database import Base, get_db
 from app.main import app
-from app.models.user import User, APIToken
-from app.core.auth import create_access_token
-from app.core.security import create_api_token
-from app.core.config import settings
+from app.models.user import APIToken, User
 
 # Suppress Pydantic deprecation warnings
 warnings.filterwarnings(
-    "ignore", 
-    message="The `__fields__` attribute is deprecated", 
-    category=DeprecationWarning
+    "ignore",
+    message="The `__fields__` attribute is deprecated",
+    category=DeprecationWarning,
 )
 warnings.filterwarnings(
-    "ignore", 
-    message="The `__fields_set__` attribute is deprecated", 
-    category=DeprecationWarning
+    "ignore",
+    message="The `__fields_set__` attribute is deprecated",
+    category=DeprecationWarning,
 )
 
 # Test database
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
 
+
 @pytest.fixture(scope="session", autouse=True)
 def configure_database_url():
     """
-    Configure a non-SQLite database URL to ensure database.py's 
+    Configure a non-SQLite database URL to ensure database.py's
     non-SQLite code branch is covered during tests.
     """
     # Save original value if it exists
-    original_database_url = os.environ.get('DATABASE_URL', None)
+    original_database_url = os.environ.get("DATABASE_URL", None)
 
     # Set a PostgreSQL URL
-    os.environ['DATABASE_URL'] = "postgresql://fake:fake@localhost:5432/fakedb"
-    
+    os.environ["DATABASE_URL"] = "postgresql://fake:fake@localhost:5432/fakedb"
+
     # Let tests run
     yield
-    
+
     # Restore original
     if original_database_url is not None:
-        os.environ['DATABASE_URL'] = original_database_url
+        os.environ["DATABASE_URL"] = original_database_url
     else:
-        del os.environ['DATABASE_URL']
+        del os.environ["DATABASE_URL"]
+
 
 @pytest.fixture
 def test_db():
@@ -63,10 +67,10 @@ def test_db():
         poolclass=StaticPool,
     )
     TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    
+
     # Create tables
     Base.metadata.create_all(bind=engine)
-    
+
     # Dependency override
     def override_get_db():
         try:
@@ -74,28 +78,28 @@ def test_db():
             yield db
         finally:
             db.close()
-    
+
     app.dependency_overrides[get_db] = override_get_db
-    
+
     # Create a test database session
     db = TestingSessionLocal()
-    
+
     # Create a test user
     test_user = User(name="Test User", email="test@example.com", is_active=True)
     db.add(test_user)
     db.commit()
     db.refresh(test_user)
-    
+
     # Create a test API token
     test_token = APIToken(
         token="test-token",
         description="Test Token",
         is_active=True,
-        user_id=test_user.id
+        user_id=test_user.id,
     )
     db.add(test_token)
     db.commit()
-    
+
     try:
         yield db
     finally:
@@ -103,14 +107,16 @@ def test_db():
         # Drop tables after tests
         Base.metadata.drop_all(bind=engine)
 
+
 @pytest.fixture
 def db_session(test_db):
     """
     Fixture that provides a database session for unit tests.
-    This is an alias for test_db to maintain naming consistency 
+    This is an alias for test_db to maintain naming consistency
     with the rest of the codebase.
     """
     yield test_db
+
 
 @pytest.fixture
 def test_token():
@@ -119,6 +125,7 @@ def test_token():
     """
     return create_access_token(user_id=1)
 
+
 @pytest.fixture
 def api_token():
     """
@@ -126,11 +133,13 @@ def api_token():
     """
     return "test-token"
 
+
 @pytest.fixture
 def client(test_db):
     # Return a test client with the test database
     with TestClient(app) as c:
         yield c
+
 
 @pytest.fixture
 def override_get_token_dependency():
@@ -139,16 +148,17 @@ def override_get_token_dependency():
     """
     # Store the original dependency
     original_dependency = app.dependency_overrides.get(get_db, None)
-    
+
     def mock_get_current_token():
         return "test-token"
-    
+
     # Override the dependency
     from app.core.deps import get_current_token
+
     app.dependency_overrides[get_current_token] = mock_get_current_token
-    
+
     yield
-    
+
     # Restore the original dependency
     if original_dependency:
         app.dependency_overrides[get_current_token] = original_dependency

@@ -11,10 +11,10 @@ from sqlalchemy.orm import Session
 from app.models.cfdi_history import CFDIHistory
 from app.services.cfdi_history import (
     create_cfdi_history,
+    create_cfdi_history_from_verification,
     get_cfdi_history_by_uuid,
     get_user_cfdi_history,
     get_user_cfdi_history_count,
-    create_cfdi_history_from_verification,
 )
 
 
@@ -184,7 +184,7 @@ def test_create_cfdi_history_from_verification(db_session: Session):
         db=db_session,
         user_id=user_id,
         cfdi_request=cfdi_request,
-        verification_result=verification_result
+        verification_result=verification_result,
     )
 
     # Assert results
@@ -196,6 +196,8 @@ def test_create_cfdi_history_from_verification(db_session: Session):
     assert history_item.user_id == user_id
     assert history_item.estado == verification_result["estado"]
     assert history_item.es_cancelable == verification_result["es_cancelable"]
-    assert history_item.estatus_cancelacion == verification_result["estatus_cancelacion"]
+    assert (
+        history_item.estatus_cancelacion == verification_result["estatus_cancelacion"]
+    )
     assert history_item.codigo_estatus == verification_result["codigo_estatus"]
     assert history_item.validacion_efos == verification_result["validacion_efos"]

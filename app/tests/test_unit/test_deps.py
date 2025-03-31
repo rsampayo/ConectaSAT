@@ -122,21 +122,23 @@ async def test_get_user_id_from_token_with_user_id(mock_db, mock_api_token):
 
 
 @pytest.mark.asyncio
-async def test_get_user_id_from_token_creates_default_user(mock_db, mock_api_token, mock_user):
+async def test_get_user_id_from_token_creates_default_user(
+    mock_db, mock_api_token, mock_user
+):
     """Test getting user ID creates default user when token has no user."""
     # Setup token without user_id
     mock_api_token.user_id = None
-    
+
     # Let's look at the original default user creation path in get_user_id_from_token
     # It creates a default user, associates the token with it, and returns the user id
     # So let's mock that more precisely
-    
+
     # First call returns the token, second call returns no existing user
     mock_db.query.return_value.filter.return_value.first.side_effect = [
         mock_api_token,  # First call for APIToken
-        None,            # Second call for existing User (not found)
+        None,  # Second call for existing User (not found)
     ]
-    
+
     # Mock the behavior when a new User is created
     def mock_db_operations(obj):
         if isinstance(obj, User):
@@ -148,14 +150,14 @@ async def test_get_user_id_from_token_creates_default_user(mock_db, mock_api_tok
             # 3. Update the query side effect to return the user on next query
             mock_db.query.return_value.filter.return_value.first.side_effect = None
             mock_db.query.return_value.filter.return_value.first.return_value = obj
-            
+
     mock_db.add.side_effect = mock_db_operations
-    
+
     # Directly patch the return value for the function
-    with patch('app.core.deps.get_user_id_from_token', return_value=999):
+    with patch("app.core.deps.get_user_id_from_token", return_value=999):
         # Call the dependency
         result = await get_user_id_from_token("test-token-123", mock_db)
-    
+
     # The result should be the ID we set
     assert result == 999
 

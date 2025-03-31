@@ -9,4 +9,4 @@ admins = db.query(SuperAdmin).all()
 
 print(f"Found {len(admins)} admin users:")
 for admin in admins:
-    print(f"- {admin.username} (Active: {admin.is_active})") 
+    print(f"- {admin.username} (Active: {admin.is_active})")
