@@ -1,14 +1,24 @@
 """Integration tests for the Admin API endpoints."""
 
+import os
 import requests
 
-# Base URL for the API
-BASE_URL = "https://conecta-sat-70222b8ec91a.herokuapp.com"
+# Base URL for the API - can be overridden with environment variable
+BASE_URL = os.environ.get("API_BASE_URL", "https://conecta-sat-70222b8ec91a.herokuapp.com")
 
 # Admin credentials for testing
-# These should match the credentials in the test environment
+# These should match the credentials in the environment being tested
 ADMIN_USERNAME = "admin"
-ADMIN_PASSWORD = "heroku-admin-password123"
+# Determine which password to use based on the environment
+if "herokuapp.com" in BASE_URL:
+    # Heroku environment
+    ADMIN_PASSWORD = "heroku-admin-password123"
+else:
+    # Local or other environment
+    ADMIN_PASSWORD = "changeme"
+
+print(f"Using API URL: {BASE_URL}")
+print(f"Using admin credentials: {ADMIN_USERNAME}:{'*' * len(ADMIN_PASSWORD)}")
 
 
 def test_admin_token_not_found() -> None:
