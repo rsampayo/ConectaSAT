@@ -62,7 +62,7 @@ jobs:
       - name: Run tests with coverage
         run: pytest app/tests/test_integration/test_admin_api_integration.py -v
   
-  # Deployment is now enabled since GitHub secrets have been configured
+  # Deployment is now enabled with the correct Heroku app name
   
   deploy:
     name: Deploy
@@ -77,7 +77,7 @@ jobs:
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: "conecta-sat-70222b8ec91a"
+          heroku_app_name: "conecta-sat"
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
           branch: main
       - name: Verify deployment
