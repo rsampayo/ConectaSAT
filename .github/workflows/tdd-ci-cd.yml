@@ -21,10 +21,10 @@ jobs:
           pip install black isort flake8
       - name: Run quality checks
         run: | 
-          # Run code quality tools on all Python files
-          black --check --verbose .
-          isort --check --verbose .
-          flake8 .
+          # Run code quality tools on all Python files except those in alembic/ and .venv/
+          black --check --verbose --exclude="alembic/|\.venv/" .
+          isort --check --verbose --skip=alembic --skip=.venv .
+          flake8 --exclude=alembic,.venv .
 
   unit-tests:
     name: Run Unit Tests
