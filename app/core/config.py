@@ -2,7 +2,7 @@
 Application settings configuration.
 """
 import os
-from pydantic import Field
+from pydantic import Field, ConfigDict
 from pydantic_settings import BaseSettings
 from typing import Optional
 
@@ -48,9 +48,10 @@ class Settings(BaseSettings):
         description="API version prefix"
     )
     
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
+    model_config = ConfigDict(
+        env_file=".env",
+        case_sensitive=True
+    )
 
 # Create settings instance
 settings = Settings() 

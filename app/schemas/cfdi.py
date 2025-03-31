@@ -8,10 +8,21 @@ class CFDIRequest(BaseModel):
     """
     CFDI verification request
     """
-    uuid: str = Field(..., description="UUID del CFDI", example="6128396f-c09b-4ec6-8699-43c5f7e3b230")
-    emisor_rfc: str = Field(..., description="RFC del emisor", example="CDZ050722LA9")
-    receptor_rfc: str = Field(..., description="RFC del receptor", example="XIN06112344A")
-    total: str = Field(..., description="Monto total del CFDI", example="12000.00")
+    uuid: str = Field(..., description="UUID del CFDI")
+    emisor_rfc: str = Field(..., description="RFC del emisor")
+    receptor_rfc: str = Field(..., description="RFC del receptor")
+    total: str = Field(..., description="Monto total del CFDI")
+    
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "uuid": "6128396f-c09b-4ec6-8699-43c5f7e3b230",
+                "emisor_rfc": "CDZ050722LA9",
+                "receptor_rfc": "XIN06112344A",
+                "total": "12000.00"
+            }
+        }
+    }
 
 class CFDIResponse(BaseModel):
     """
@@ -30,7 +41,7 @@ class BatchCFDIRequest(BaseModel):
     """
     Batch CFDI verification request
     """
-    cfdis: List[CFDIRequest] = Field(..., description="Lista de CFDIs a verificar", min_items=1)
+    cfdis: List[CFDIRequest] = Field(..., description="Lista de CFDIs a verificar", min_length=1)
 
 class CFDIBatchItem(BaseModel):
     """

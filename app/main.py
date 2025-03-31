@@ -2,6 +2,7 @@
 Main FastAPI application
 """
 import logging
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 
@@ -18,6 +19,17 @@ logger = logging.getLogger(__name__)
 # Create database tables
 user.Base.metadata.create_all(bind=engine)
 
+# Lifespan context manager
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup: Initialize DB with admin user
+    db = next(get_db())
+    init_db(db)
+    logger.info("Application startup complete")
+    yield
+    # Shutdown: Cleanup if needed
+    logger.info("Application shutting down")
+
 # Create FastAPI app
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -25,14 +37,8 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
-
-# Initialize database on startup
-@app.on_event("startup")
-async def startup_event():
-    db = next(get_db())
-    init_db(db)
-    logger.info("Application startup complete")
 
 # Include routers
 app.include_router(cfdi.router, tags=["CFDI"])
