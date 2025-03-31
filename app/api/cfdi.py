@@ -9,203 +9,184 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.core.deps import get_current_token, get_db, get_user_id_from_token
-from app.db.database import get_db
-from app.schemas.cfdi import (
-    BatchCFDIRequest,
-    BatchCFDIResponse,
-    CFDIBatchItem,
-    CFDIRequest,
-    CFDIResponse,
-)
-from app.schemas.cfdi_history import CFDIHistoryResponse
+from app.schemas.cfdi import CFDIBatch, CFDIResponse, CFDIVerifyRequest, VerifyCFDI
+from app.schemas.cfdi_history import CFDIHistoryCreate
 from app.services.cfdi_history import (
-    create_cfdi_history_from_verification,
+    create_cfdi_history,
     get_cfdi_history_by_uuid,
-    get_user_cfdi_history,
+    get_verified_cfdis_by_token_id,
 )
-from app.services.sat_verification import verify_cfdi
+from app.services.sat_verification import CFDIVerification
 
-# Configure logging
-logger = logging.getLogger(__name__)
-
-router = APIRouter()
+router = APIRouter(prefix="/api/v1/cfdi", tags=["cfdi"])
 
 
 @router.post(
-    "/verify-cfdi",
+    "/verify",
     response_model=CFDIResponse,
-    summary="Verify Single CFDI",
-    description=(
-        "Verify a single CFDI with the SAT service. "
-        "Requires API token authentication."
-    ),
+    status_code=status.HTTP_200_OK,
+    summary="Verify Cfdi",
+    description="""
+            Verifica la validez de un CFDI con el SAT y devuelve el resultado
+            de dicha verificación, así como información del mismo.
+            """,
 )
 async def verify_cfdi_endpoint(
-    cfdi: CFDIRequest,
-    token: str = Depends(get_current_token),
-    user_id: int = Depends(get_user_id_from_token),
+    cfdi_data: CFDIVerifyRequest,
     db: Session = Depends(get_db),
-) -> CFDIResponse:
+    token_id: str = Depends(get_current_token),
+    user_id: str = Depends(get_user_id_from_token),
+):
     """
-    Verify a single CFDI with the SAT (Mexican tax authority).
-
-    Args:
-        cfdi: CFDI request data containing UUID, RFCs, and total
-        token: API token
-        user_id: User ID
-        db: Database session
-
-    Returns:
-        Verification result from SAT
+    Verifies a CFDI with the SAT and returns the validation result along with CFDI information.
     """
+    cfdi_verification = CFDIVerification()
     try:
-        # Call the SAT verification service
-        verification_result = await verify_cfdi(
-            uuid=cfdi.uuid,
-            emisor_rfc=cfdi.emisor_rfc,
-            receptor_rfc=cfdi.receptor_rfc,
-            total=cfdi.total,
+        cfdi_info = cfdi_verification.validate_cfdi(
+            cfdi_data.uuid,
+            cfdi_data.rfc_emisor,
+            cfdi_data.rfc_receptor,
+            cfdi_data.total,
         )
 
-        # Record the verification in history
-        create_cfdi_history_from_verification(
-            db=db,
+        # Save to history
+        history_entry = CFDIHistoryCreate(
+            uuid=cfdi_data.uuid,
+            rfc_emisor=cfdi_data.rfc_emisor,
+            rfc_receptor=cfdi_data.rfc_receptor,
+            total=str(cfdi_data.total),
+            token_id=token_id,
+            details=cfdi_info,
             user_id=user_id,
-            cfdi_request=cfdi.dict(),
-            verification_result=verification_result,
         )
+        create_cfdi_history(db, history_entry)
 
-        # Return the verification result
         return CFDIResponse(
-            estado=verification_result["estado"],
-            es_cancelable=verification_result["es_cancelable"],
-            estatus_cancelacion=verification_result["estatus_cancelacion"],
-            codigo_estatus=verification_result["codigo_estatus"],
-            raw_response=verification_result.get("raw_response"),
+            status="success",
+            message="CFDI verificado exitosamente",
+            data=cfdi_info,
         )
     except Exception as e:
-        # Log the error
-        logger.error(f"Error verifying CFDI: {str(e)}")
-        # Re-raise the exception
+        logging.error(f"Error verifying CFDI: {e}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error verifying CFDI: {str(e)}",
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e),
         )
 
 
 @router.post(
-    "/verify-cfdi-batch",
-    response_model=BatchCFDIResponse,
+    "/verify-batch",
+    response_model=CFDIBatch,
+    status_code=status.HTTP_200_OK,
     summary="Verify Cfdi Batch",
     description="""
             Verifica la validez de múltiples CFDIs con el SAT en una sola petición
 
-            Esta API consulta el servicio oficial del SAT para verificar el estatus de múltiples CFDIs.
-            Cada CFDI se procesa de forma independiente y los resultados se devuelven en un único response.
-            Requiere autenticación mediante Bearer token.
-
-            Returns:
-                BatchCFDIResponse: Información sobre la validez de todos los CFDIs solicitados
+            Devuelve un objeto con los resultados de cada CFDI procesado.
             """,
 )
 async def verify_cfdi_batch_endpoint(
-    batch_request: BatchCFDIRequest,
-    token: str = Depends(get_current_token),
-    user_id: int = Depends(get_user_id_from_token),
+    cfdi_data: List[CFDIVerifyRequest],
     db: Session = Depends(get_db),
-) -> BatchCFDIResponse:
+    token_id: str = Depends(get_current_token),
+    user_id: str = Depends(get_user_id_from_token),
+):
     """
-    Verify multiple CFDIs with the SAT service
+    Verifies multiple CFDIs with the SAT in a single request.
+    Returns an object with results for each CFDI processed.
     """
     results = []
+    cfdi_verification = CFDIVerification()
 
-    for cfdi_request in batch_request.cfdis:
-        item = {"request": cfdi_request, "response": None, "error": None}
-
+    for cfdi in cfdi_data:
         try:
-            cfdi_result = await verify_cfdi(
-                uuid=cfdi_request.uuid,
-                emisor_rfc=cfdi_request.emisor_rfc,
-                receptor_rfc=cfdi_request.receptor_rfc,
-                total=cfdi_request.total,
+            cfdi_info = cfdi_verification.validate_cfdi(
+                cfdi.uuid, cfdi.rfc_emisor, cfdi.rfc_receptor, cfdi.total
             )
 
-            # Convert boolean values to strings to match CFDIResponse schema
-            if "efos_emisor" in cfdi_result and cfdi_result["efos_emisor"] is False:
-                cfdi_result["efos_emisor"] = None
-            if "efos_receptor" in cfdi_result and cfdi_result["efos_receptor"] is False:
-                cfdi_result["efos_receptor"] = None
-
-            response = CFDIResponse(**cfdi_result)
-            item["response"] = response
-
-            # Save verification to history
-            create_cfdi_history_from_verification(
-                db=db,
+            # Save to history
+            history_entry = CFDIHistoryCreate(
+                uuid=cfdi.uuid,
+                rfc_emisor=cfdi.rfc_emisor,
+                rfc_receptor=cfdi.rfc_receptor,
+                total=str(cfdi.total),
+                token_id=token_id,
+                details=cfdi_info,
                 user_id=user_id,
-                cfdi_request=cfdi_request.model_dump(),
-                verification_result=cfdi_result,
+            )
+            create_cfdi_history(db, history_entry)
+
+            results.append(
+                VerifyCFDI(
+                    uuid=cfdi.uuid,
+                    status="success",
+                    message="CFDI verificado exitosamente",
+                    data=cfdi_info,
+                )
+            )
+        except Exception as e:
+            logging.error(f"Error verifying CFDI {cfdi.uuid}: {e}")
+            results.append(
+                VerifyCFDI(uuid=cfdi.uuid, status="error", message=str(e), data=None)
             )
 
-        except Exception as e:
-            item["response"] = CFDIResponse()
-            item["error"] = str(e)
-
-        results.append(CFDIBatchItem(**item))
-
-    return BatchCFDIResponse(results=results)
+    return CFDIBatch(results=results)
 
 
 @router.get(
     "/history",
-    response_model=List[CFDIHistoryResponse],
+    status_code=status.HTTP_200_OK,
     summary="Get CFDI History",
-    description="""
-            Obtiene el historial de consultas de CFDIs realizadas por el usuario
-
-            Esta API devuelve el historial de consultas de CFDIs realizadas por el usuario autenticado.
-            Requiere autenticación mediante Bearer token.
-
-            Returns:
-                List[CFDIHistoryResponse]: Lista de verificaciones de CFDIs realizadas
-            """,
+    description="Obtiene el historial de CFDIs verificados",
 )
 async def get_cfdi_history_endpoint(
-    skip: int = 0,
-    limit: int = 100,
-    token: str = Depends(get_current_token),
-    user_id: int = Depends(get_user_id_from_token),
     db: Session = Depends(get_db),
-) -> List[CFDIHistoryResponse]:
+    token_id: str = Depends(get_current_token),
+    user_id: str = Depends(get_user_id_from_token),
+):
     """
-    Get CFDI verification history for the user
+    Gets the history of verified CFDIs.
     """
-    history_items = get_user_cfdi_history(db, user_id=user_id, skip=skip, limit=limit)
-    return history_items
+    try:
+        history = get_verified_cfdis_by_token_id(db, token_id)
+        return {
+            "status": "success",
+            "message": "Historial obtenido exitosamente",
+            "data": history,
+        }
+    except Exception as e:
+        logging.error(f"Error getting CFDI history: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e),
+        )
 
 
 @router.get(
     "/history/{uuid}",
-    response_model=List[CFDIHistoryResponse],
+    status_code=status.HTTP_200_OK,
     summary="Get CFDI History by UUID",
-    description="""
-            Obtiene el historial de consultas de un CFDI específico
-
-            Esta API devuelve el historial de consultas realizadas para un CFDI específico.
-            Requiere autenticación mediante Bearer token.
-
-            Returns:
-                List[CFDIHistoryResponse]: Lista de verificaciones realizadas para el CFDI
-            """,
+    description="Obtiene el historial de un CFDI específico por su UUID",
 )
 async def get_cfdi_history_by_uuid_endpoint(
     uuid: str,
-    token: str = Depends(get_current_token),
-    user_id: int = Depends(get_user_id_from_token),
     db: Session = Depends(get_db),
-) -> List[CFDIHistoryResponse]:
+    token_id: str = Depends(get_current_token),
+    user_id: str = Depends(get_user_id_from_token),
+):
     """
-    Get history for a specific CFDI
+    Gets the history of a specific CFDI by its UUID.
     """
-    history_items = get_cfdi_history_by_uuid(db, uuid=uuid)
-    return history_items
+    try:
+        history = get_cfdi_history_by_uuid(db, uuid, token_id)
+        return {
+            "status": "success",
+            "message": "Historial obtenido exitosamente",
+            "data": history,
+        }
+    except Exception as e:
+        logging.error(f"Error getting CFDI history for UUID {uuid}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e),
+        )
