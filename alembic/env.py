@@ -12,7 +12,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 # Import models for autogenerate
 from app.models import user
-from app.db.database import Base
+from app.db.database import Base, get_db_url
 from app.core.config import settings
 
 # this is the Alembic Config object, which provides
@@ -34,9 +34,10 @@ target_metadata = Base.metadata
 
 def get_url():
     """
-    Get database URL from settings
+    Get database URL from settings with proper format for SQLAlchemy
     """
-    return settings.DATABASE_URL
+    # Use the same function we created in database.py to handle Heroku's postgres:// format
+    return get_db_url()
 
 def run_migrations_offline():
     """Run migrations in 'offline' mode.
