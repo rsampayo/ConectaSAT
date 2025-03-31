@@ -62,9 +62,9 @@ Local Development → GitHub CI → Review App → Production (Eco Dyno)
 - Pin all dependency versions for stability
 - Prefer packages with long-term support
 - Update dependencies on a scheduled basis, not ad-hoc
-- Specify Python version in `runtime.txt`:
+- Specify Python version in `.python-version`:
   ```
-  python-3.10.13
+  3.10
   ```
 - Use dependency version constraints that specify minimum compatible versions
 ---
@@ -114,7 +114,7 @@ app/
 │   └── test_integration/ # Integration tests
 ├── .env          # Local environment
 ├── requirements.txt
-├── runtime.txt   # Specify Python version
+├── .python-version  # Specify Python version
 ├── .github/workflows/ # CI/CD pipelines
 └── openapi.json  # API specification
 ```
@@ -212,9 +212,9 @@ jobs:
   release: alembic upgrade head
   web: uvicorn app.main:app --host=0.0.0.0 --port=$PORT
   ```
-- **runtime.txt**:
+- **.python-version**:
   ```
-  python-3.10.13
+  3.10
   ```
 - **app.json**: 
   ```json
