@@ -12,7 +12,7 @@ router = APIRouter()
     summary="Health Check",
     description="""
            Simple health check endpoint
-           
+
            Permite verificar si el servicio está funcionando correctamente.
            Este endpoint no requiere autenticación.
            """,

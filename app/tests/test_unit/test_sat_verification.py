@@ -15,9 +15,9 @@ VALID_CFDI_XML = """<?xml version="1.0" encoding="utf-8"?>
 <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
     <s:Body>
         <ConsultaResponse xmlns="http://tempuri.org/">
-            <ConsultaResult CodigoEstatus="S - Comprobante obtenido satisfactoriamente." 
-                           Estado="Vigente" 
-                           EsCancelable="Cancelable sin aceptación" 
+            <ConsultaResult CodigoEstatus="S - Comprobante obtenido satisfactoriamente."
+                           Estado="Vigente"
+                           EsCancelable="Cancelable sin aceptación"
                            EstatusCancelacion=""/>
         </ConsultaResponse>
     </s:Body>
@@ -28,9 +28,9 @@ CANCELED_CFDI_XML = """<?xml version="1.0" encoding="utf-8"?>
 <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
     <s:Body>
         <ConsultaResponse xmlns="http://tempuri.org/">
-            <ConsultaResult CodigoEstatus="S - Comprobante obtenido satisfactoriamente." 
-                           Estado="Cancelado" 
-                           EsCancelable="No cancelable" 
+            <ConsultaResult CodigoEstatus="S - Comprobante obtenido satisfactoriamente."
+                           Estado="Cancelado"
+                           EsCancelable="No cancelable"
                            EstatusCancelacion="Cancelado sin aceptación"/>
         </ConsultaResponse>
     </s:Body>
@@ -58,9 +58,9 @@ XML_WITH_VALIDATION_EFOS = """<?xml version="1.0" encoding="utf-8"?>
 <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
     <s:Body>
         <ConsultaResponse xmlns="http://tempuri.org/">
-            <ConsultaResult CodigoEstatus="S - Comprobante obtenido satisfactoriamente." 
-                           Estado="Vigente" 
-                           EsCancelable="Cancelable sin aceptación" 
+            <ConsultaResult CodigoEstatus="S - Comprobante obtenido satisfactoriamente."
+                           Estado="Vigente"
+                           EsCancelable="Cancelable sin aceptación"
                            EstatusCancelacion=""
                            ValidacionEFOS="200"/>
         </ConsultaResponse>
@@ -309,8 +309,8 @@ async def test_verify_cfdi_special_xml_format():
     <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
         <s:Body>
             <ConsultaResponse xmlns="http://tempuri.org/">
-                <ConsultaResult Estado="Vigente" 
-                               EsCancelable="Cancelable sin aceptación" 
+                <ConsultaResult Estado="Vigente"
+                               EsCancelable="Cancelable sin aceptación"
                                EstatusCancelacion="No cancelado"
                                CodigoEstatus="S - Comprobante obtenido satisfactoriamente."/>
             </ConsultaResponse>
@@ -398,8 +398,8 @@ async def test_verify_cfdi_special_xml_empty_estado():
     <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
         <s:Body>
             <ConsultaResponse xmlns="http://tempuri.org/">
-                <ConsultaResult Estado="Vigente" 
-                               EsCancelable="Cancelable sin aceptación" 
+                <ConsultaResult Estado="Vigente"
+                               EsCancelable="Cancelable sin aceptación"
                                EstatusCancelacion="No cancelado"
                                CodigoEstatus="S - Comprobante obtenido satisfactoriamente."/>
             </ConsultaResponse>
