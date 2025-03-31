@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 import secrets
 
 from app.db.database import get_db
-from app.models.user import SuperAdmin
+from app.models.user import SuperAdmin, APIToken, User
 from app.core.security import authenticate_admin, verify_api_token
 
 # Security schemes
@@ -35,6 +35,45 @@ async def get_current_token(
         raise credentials_exception
     
     return token.credentials
+
+async def get_user_id_from_token(
+    token: str = Depends(get_current_token),
+    db: Session = Depends(get_db)
+) -> int:
+    """
+    Get the user ID associated with the current token
+    
+    For now, since we don't have user-specific tokens, return a default user ID.
+    In a real implementation, this would look up the token in the database and
+    return the associated user ID.
+    """
+    # Find the API token in the database
+    api_token = db.query(APIToken).filter(APIToken.token == token).first()
+    
+    if api_token and api_token.user_id:
+        # Return the associated user ID
+        return api_token.user_id
+    
+    # If there's no user association, create or get the default user
+    default_user = db.query(User).filter(User.email == "default@conectasat.com").first()
+    
+    if not default_user:
+        # Create a default user if one doesn't exist
+        default_user = User(
+            name="Default User",
+            email="default@conectasat.com",
+            is_active=True
+        )
+        db.add(default_user)
+        db.commit()
+        db.refresh(default_user)
+        
+        # Associate the token with this user
+        if api_token:
+            api_token.user_id = default_user.id
+            db.commit()
+    
+    return default_user.id
 
 async def get_current_admin(
     credentials: HTTPBasicCredentials = Depends(security_basic),

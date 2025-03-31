@@ -56,7 +56,7 @@ def test_verify_cfdi_endpoint(mock_verify_cfdi):
     headers = {"Authorization": "Bearer fake_token"}
     
     # Send request to the endpoint
-    response = client.post("/verify-cfdi", json=request_data, headers=headers)
+    response = client.post("/cfdi/verify-cfdi", json=request_data, headers=headers)
     
     # Assert the response
     assert response.status_code == 200
@@ -94,7 +94,7 @@ def test_verify_cfdi_batch_endpoint(mock_verify_cfdi):
     headers = {"Authorization": "Bearer fake_token"}
     
     # Send request to the endpoint
-    response = client.post("/verify-cfdi-batch", json=request_data, headers=headers)
+    response = client.post("/cfdi/verify-cfdi-batch", json=request_data, headers=headers)
     
     # Assert the response
     assert response.status_code == 200

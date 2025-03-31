@@ -10,7 +10,7 @@ from app.api import cfdi, health, admin
 from app.core.config import settings
 from app.db.database import get_db, engine
 from app.db.init_db import init_db
-from app.models import user
+from app.models import user, cfdi_history
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 # Create database tables
 user.Base.metadata.create_all(bind=engine)
+cfdi_history.Base.metadata.create_all(bind=engine)
 
 # Lifespan context manager
 @asynccontextmanager
@@ -41,9 +42,9 @@ app = FastAPI(
 )
 
 # Include routers
-app.include_router(cfdi.router, tags=["CFDI"])
+app.include_router(cfdi.router, prefix="/cfdi", tags=["CFDI"])
 app.include_router(health.router, tags=["Health"])
-app.include_router(admin.router, tags=["Admin"])
+app.include_router(admin.router, prefix="/admin", tags=["Admin"])
 
 # Root endpoint
 @app.get("/", tags=["Root"])
