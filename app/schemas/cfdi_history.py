@@ -3,7 +3,7 @@ Pydantic models for CFDI History
 """
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class CFDIHistoryBase(BaseModel):
@@ -34,8 +34,7 @@ class CFDIHistoryResponse(CFDIHistoryBase):
     validacion_efos: Optional[str] = Field(None, description="Validación EFOS")
     created_at: datetime = Field(..., description="Fecha de creación del registro")
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class CFDIHistoryList(BaseModel):
@@ -43,5 +42,4 @@ class CFDIHistoryList(BaseModel):
     items: List[CFDIHistoryResponse]
     total_count: int = Field(..., description="Total number of history items")
     
-    class Config:
-        from_attributes = True 
+    model_config = ConfigDict(from_attributes=True) 

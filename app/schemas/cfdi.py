@@ -1,7 +1,7 @@
 """
 Pydantic models for CFDI verification
 """
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional, Any
 
 class CFDIRequest(BaseModel):
@@ -13,8 +13,8 @@ class CFDIRequest(BaseModel):
     receptor_rfc: str = Field(..., description="RFC del receptor")
     total: str = Field(..., description="Monto total del CFDI")
     
-    model_config = {
-        "json_schema_extra": {
+    model_config = ConfigDict(
+        json_schema_extra = {
             "example": {
                 "uuid": "6128396f-c09b-4ec6-8699-43c5f7e3b230",
                 "emisor_rfc": "CDZ050722LA9",
@@ -22,7 +22,7 @@ class CFDIRequest(BaseModel):
                 "total": "12000.00"
             }
         }
-    }
+    )
 
 class CFDIResponse(BaseModel):
     """
