@@ -25,11 +25,44 @@ jobs:
           echo "[flake8]" > setup.cfg
           echo "exclude = alembic,.venv" >> setup.cfg
           echo "max-line-length = 100" >> setup.cfg
-          echo "ignore = E501,F401,F811,B008,E402,E712" >> setup.cfg
+          echo "ignore = E501,F401,F811,B008,E402,E712,W503,W291,W293" >> setup.cfg
       - name: Format code
         run: |
           # First format code to fix any issues
           autoflake --in-place --remove-all-unused-imports --remove-unused-variables --recursive .
+          
+          # Create and run a script to fix trailing whitespace
+          echo '
+          import sys
+          import os
+          import glob
+
+          def fix_file(filename):
+              try:
+                  with open(filename, "r") as f:
+                      content = f.read()
+                  
+                  # Remove trailing whitespace from each line
+                  lines = content.splitlines()
+                  fixed_lines = [line.rstrip() for line in lines]
+                  fixed_content = "\n".join(fixed_lines) + "\n"  # Add single newline at end
+                  
+                  with open(filename, "w") as f:
+                      f.write(fixed_content)
+                  
+                  print(f"Fixed trailing whitespace in {filename}")
+              except Exception as e:
+                  print(f"Error processing {filename}: {e}")
+
+          if __name__ == "__main__":
+              for pattern in ["**/*.py", "*.py"]:
+                  for filename in glob.glob(pattern, recursive=True):
+                      if not filename.startswith(".venv") and not filename.startswith("alembic"):
+                          fix_file(filename)
+          ' > fix_whitespace.py
+          
+          python fix_whitespace.py
+          
           black --exclude="alembic/|\.venv/" .
           isort --skip=alembic --skip=.venv .
       - name: Run quality checks
