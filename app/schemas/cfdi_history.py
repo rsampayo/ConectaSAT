@@ -12,6 +12,8 @@ class CFDIHistoryBase(BaseModel):
     emisor_rfc: str = Field(..., description="RFC del emisor")
     receptor_rfc: str = Field(..., description="RFC del receptor")
     total: str = Field(..., description="Monto total del CFDI")
+    
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class CFDIHistoryCreate(CFDIHistoryBase):
@@ -22,6 +24,8 @@ class CFDIHistoryCreate(CFDIHistoryBase):
     estatus_cancelacion: Optional[str] = Field(None, description="Estatus de cancelación")
     codigo_estatus: Optional[str] = Field(None, description="Código de estatus")
     validacion_efos: Optional[str] = Field(None, description="Validación EFOS")
+    
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class CFDIHistoryResponse(CFDIHistoryBase):

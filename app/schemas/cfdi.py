@@ -50,9 +50,13 @@ class CFDIBatchItem(BaseModel):
     request: CFDIRequest
     response: CFDIResponse
     error: Optional[str] = Field(None, description="Error message if validation failed")
+    
+    model_config = ConfigDict(populate_by_name=True)
 
 class BatchCFDIResponse(BaseModel):
     """
     Batch CFDI verification response
     """
-    results: List[CFDIBatchItem] 
+    results: List[CFDIBatchItem]
+    
+    model_config = ConfigDict(populate_by_name=True) 

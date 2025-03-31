@@ -349,6 +349,14 @@ async def deactivate_admin_account_endpoint(
             detail="Cannot deactivate your own account"
         )
     
+    # Check if this is the last active admin
+    active_admins_count = db.query(SuperAdmin).filter(SuperAdmin.is_active == True).count()
+    if active_admins_count <= 1:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot deactivate the last active admin account"
+        )
+    
     # Deactivate account instead of deletion
     admin.is_active = False
     
