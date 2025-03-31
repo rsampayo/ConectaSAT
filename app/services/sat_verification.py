@@ -168,18 +168,28 @@ async def verify_cfdi(
                 # Special handling for our test XML format
                 if not result["estado"]:
                     # Try with broader XPath expressions to find the elements
-                    for path in [".//*Estado", ".//Estado", ".//a:Estado", ".//*[contains(local-name(),'Estado')]"]:
+                    for path in [
+                        ".//*Estado",
+                        ".//Estado",
+                        ".//a:Estado",
+                        ".//*[contains(local-name(),'Estado')]",
+                    ]:
                         estado_elem = root.find(path, namespaces)
                         if estado_elem is not None and estado_elem.text:
                             result["estado"] = estado_elem.text
                             break
-                            
-                    for path in [".//*EsCancelable", ".//EsCancelable", ".//a:EsCancelable", ".//*[contains(local-name(),'EsCancelable')]"]:
+
+                    for path in [
+                        ".//*EsCancelable",
+                        ".//EsCancelable",
+                        ".//a:EsCancelable",
+                        ".//*[contains(local-name(),'EsCancelable')]",
+                    ]:
                         cancelable_elem = root.find(path, namespaces)
                         if cancelable_elem is not None and cancelable_elem.text:
                             result["es_cancelable"] = cancelable_elem.text
                             break
-                            
+
                     # Try a direct attribute lookup approach for ConsultaResult
                     consulta_result = root.find(".//ConsultaResult")
                     if consulta_result is not None:

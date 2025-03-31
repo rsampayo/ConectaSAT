@@ -23,8 +23,8 @@ from app.schemas.auth import (
     SuperAdminCreate,
     SuperAdminUpdate,
     TokenCreate,
-    TokenUpdate,
     TokenResponse,
+    TokenUpdate,
 )
 
 
@@ -80,7 +80,7 @@ async def test_list_api_tokens_endpoint(mock_db, mock_admin, mock_token):
         mock_token
     ]
     mock_db.query.return_value.count.return_value = 1
-    
+
     # Configure the mock token with attributes needed for TokenResponse
     mock_token.id = 1
     mock_token.token = "test-token"
@@ -90,7 +90,7 @@ async def test_list_api_tokens_endpoint(mock_db, mock_admin, mock_token):
     mock_token.updated_at = datetime.now()
 
     # Call the endpoint with patched list_api_tokens_endpoint
-    with patch('app.api.admin.TokenResponse') as mock_token_response:
+    with patch("app.api.admin.TokenResponse") as mock_token_response:
         # Setup the mock to return a proper token response
         mock_token_response.return_value = TokenResponse(
             id=mock_token.id,
@@ -98,9 +98,9 @@ async def test_list_api_tokens_endpoint(mock_db, mock_admin, mock_token):
             description=mock_token.description,
             is_active=mock_token.is_active,
             created_at=mock_token.created_at,
-            updated_at=mock_token.updated_at
+            updated_at=mock_token.updated_at,
         )
-        
+
         result = await list_api_tokens_endpoint(0, 100, mock_db, mock_admin)
 
     # Assertions
@@ -213,9 +213,7 @@ async def test_create_new_superadmin_endpoint(mock_db, mock_admin):
     """Test creating a new superadmin."""
     # Setup
     admin_data = SuperAdminCreate(
-        username="newadmin", 
-        password="password123",
-        full_name="New Admin"
+        username="newadmin", password="password123", full_name="New Admin"
     )
     mock_db.query.return_value.filter.return_value.first.return_value = None
 

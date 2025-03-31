@@ -1,10 +1,13 @@
 """Integration tests for the Admin API endpoints."""
 
 import os
+
 import requests
 
 # Base URL for the API - can be overridden with environment variable
-BASE_URL = os.environ.get("API_BASE_URL", "https://conecta-sat-70222b8ec91a.herokuapp.com")
+BASE_URL = os.environ.get(
+    "API_BASE_URL", "https://conecta-sat-70222b8ec91a.herokuapp.com"
+)
 
 # Admin credentials for testing
 # These should match the credentials in the environment being tested

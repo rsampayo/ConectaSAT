@@ -9,7 +9,7 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
 from app.core.security import authenticate_admin, verify_api_token, verify_password
-from app.db.database import get_db, SessionLocal
+from app.db.database import SessionLocal, get_db
 from app.models.user import APIToken, SuperAdmin, User
 
 # Security schemes
@@ -18,6 +18,7 @@ security_basic = HTTPBasic()
 
 # Create fixed variable for get_db dependency
 db_dependency = Depends(get_db)
+
 
 async def get_current_token(
     token: str = Depends(security_bearer), db: Session = db_dependency
@@ -94,7 +95,9 @@ def get_current_admin(
         )
 
     # Check if superadmin exists and password is correct
-    admin = db.query(SuperAdmin).filter(SuperAdmin.username == credentials.username).first()
+    admin = (
+        db.query(SuperAdmin).filter(SuperAdmin.username == credentials.username).first()
+    )
     if not admin or not verify_password(credentials.password, admin.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -111,6 +114,7 @@ def get_current_admin(
         )
 
     return admin
+
 
 # Create fixed variable for get_current_admin dependency
 current_admin_dependency = Depends(get_current_admin)

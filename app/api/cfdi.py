@@ -69,7 +69,10 @@ async def verify_cfdi_endpoint(
 
         # Record the verification in history
         create_cfdi_history_from_verification(
-            db=db, user_id=user_id, cfdi_request=cfdi.dict(), verification_result=verification_result
+            db=db,
+            user_id=user_id,
+            cfdi_request=cfdi.dict(),
+            verification_result=verification_result,
         )
 
         # Return the verification result
@@ -86,7 +89,7 @@ async def verify_cfdi_endpoint(
         # Re-raise the exception
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error verifying CFDI: {str(e)}"
+            detail=f"Error verifying CFDI: {str(e)}",
         )
 
 
@@ -126,13 +129,13 @@ async def verify_cfdi_batch_endpoint(
                 receptor_rfc=cfdi_request.receptor_rfc,
                 total=cfdi_request.total,
             )
-            
+
             # Convert boolean values to strings to match CFDIResponse schema
             if "efos_emisor" in cfdi_result and cfdi_result["efos_emisor"] is False:
                 cfdi_result["efos_emisor"] = None
             if "efos_receptor" in cfdi_result and cfdi_result["efos_receptor"] is False:
                 cfdi_result["efos_receptor"] = None
-                
+
             response = CFDIResponse(**cfdi_result)
             item["response"] = response
 

@@ -50,9 +50,7 @@ async def create_api_token_endpoint(
     return TokenResponse(
         id=int(db_token.id),
         token=str(db_token.token),
-        description=(
-            str(db_token.description) if db_token.description else None
-        ),
+        description=(str(db_token.description) if db_token.description else None),
         is_active=bool(db_token.is_active),
         created_at=db_token.created_at,
         updated_at=db_token.updated_at,
@@ -76,9 +74,13 @@ async def list_api_tokens_endpoint(
 ) -> TokenList:
     """List all API tokens."""
     # Get active tokens only
-    active_tokens = db.query(APIToken).filter(
-        APIToken.is_active.is_(True)
-    ).offset(skip).limit(limit).all()
+    active_tokens = (
+        db.query(APIToken)
+        .filter(APIToken.is_active.is_(True))
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
     total = db.query(APIToken).count()
 
     # Convert to response models
@@ -86,9 +88,7 @@ async def list_api_tokens_endpoint(
         TokenResponse(
             id=int(token.id),
             token=str(token.token),
-            description=(
-                str(token.description) if token.description else None
-            ),
+            description=(str(token.description) if token.description else None),
             is_active=bool(token.is_active),
             created_at=token.created_at,
             updated_at=token.updated_at,
@@ -126,9 +126,7 @@ async def get_api_token_endpoint(
     return TokenResponse(
         id=int(token.id),
         token=str(token.token),
-        description=(
-            str(token.description) if token.description else None
-        ),
+        description=(str(token.description) if token.description else None),
         is_active=bool(token.is_active),
         created_at=token.created_at,
         updated_at=token.updated_at,
@@ -171,9 +169,7 @@ async def update_api_token_endpoint(
     return TokenResponse(
         id=int(token.id),
         token=str(token.token),
-        description=(
-            str(token.description) if token.description else None
-        ),
+        description=(str(token.description) if token.description else None),
         is_active=bool(token.is_active),
         created_at=token.created_at,
         updated_at=token.updated_at,
@@ -242,9 +238,7 @@ async def regenerate_api_token_endpoint(
     return TokenResponse(
         id=int(token.id),
         token=str(token.token),
-        description=(
-            str(token.description) if token.description else None
-        ),
+        description=(str(token.description) if token.description else None),
         is_active=bool(token.is_active),
         created_at=token.created_at,
         updated_at=token.updated_at,
@@ -268,9 +262,9 @@ async def create_new_superadmin_endpoint(
 ) -> SuperAdminResponse:
     """Create a new superadmin account."""
     # Check if superadmin exists with this username
-    existing_admin = db.query(SuperAdmin).filter(
-        SuperAdmin.username == admin_data.username
-    ).first()
+    existing_admin = (
+        db.query(SuperAdmin).filter(SuperAdmin.username == admin_data.username).first()
+    )
     if existing_admin:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -324,8 +318,7 @@ async def update_admin_password_endpoint(
     if admin.id == current_admin.id:
         if not verify_password(password_data.old_password, admin.hashed_password):
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Incorrect old password"
+                status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect old password"
             )
 
     # Update password
@@ -366,9 +359,7 @@ async def deactivate_admin_account_endpoint(
         )
 
     # Check if this is the last active admin
-    active_admins = db.query(SuperAdmin).filter(
-        SuperAdmin.is_active.is_(True)
-    ).count()
+    active_admins = db.query(SuperAdmin).filter(SuperAdmin.is_active.is_(True)).count()
     if active_admins <= 1:
         detail = "Cannot deactivate the last active admin account"
         raise HTTPException(

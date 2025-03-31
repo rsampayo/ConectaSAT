@@ -187,7 +187,7 @@ async def test_get_current_admin_valid(mock_db, mock_basic_credentials, mock_adm
     """Test authentication with valid admin credentials."""
     # Setup
     mock_db.query.return_value.filter.return_value.first.return_value = mock_admin
-    
+
     # Properly mock the hashed_password to be a string and patch the verify_password function
     mock_admin.hashed_password = "hashed_password_string"
     mock_admin.is_active = True
@@ -197,6 +197,7 @@ async def test_get_current_admin_valid(mock_db, mock_basic_credentials, mock_adm
         # Manually call the function without await since we're mocking the dependency
         # in a way that makes it synchronous for testing
         from app.core.deps import get_current_admin
+
         # Call with mocked dependencies
         result = get_current_admin(mock_basic_credentials, mock_db)
 
@@ -212,12 +213,12 @@ async def test_get_current_admin_invalid(mock_db, mock_basic_credentials):
     mock_admin.hashed_password = "hashed_password_string"
     mock_admin.is_active = True
     mock_db.query.return_value.filter.return_value.first.return_value = mock_admin
-    
+
     # Mock verify_password to return False (invalid password)
     with patch("app.core.deps.verify_password", return_value=False):
         # Import the function to test
         from app.core.deps import get_current_admin
-        
+
         # Call the dependency and expect an exception
         with pytest.raises(HTTPException) as exc_info:
             get_current_admin(mock_basic_credentials, mock_db)
