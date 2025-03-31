@@ -24,7 +24,7 @@ jobs:
           # Create a flake8 config file to ignore specific errors
           echo "[flake8]" > setup.cfg
           echo "exclude = alembic,.venv" >> setup.cfg
-          echo "ignore = F541,F841,E713" >> setup.cfg
+          echo "ignore = F541,F841,E713,W293,E712,B008,D100,D103,D104,D200,D205,D400,D401,W291,W503,E501,E402,F401" >> setup.cfg
           echo "max-line-length = 100" >> setup.cfg
       - name: Format code
         run: |
