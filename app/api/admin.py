@@ -1,15 +1,12 @@
-"""
-Admin API router for managing tokens and superadmins
-"""
+"""Admin API endpoints for managing superadmins and API tokens."""
 
-from typing import Any
+import secrets
 
-from fastapi import APIRouter, Depends, HTTPException, Path, Query, status
+from fastapi import APIRouter, HTTPException, Path, Query, status
 from sqlalchemy.orm import Session
 
-from app.core.deps import get_current_admin
+from app.core.deps import current_admin_dependency, db_dependency
 from app.core.security import create_api_token, get_password_hash, verify_password
-from app.db.database import get_db
 from app.models.user import APIToken, SuperAdmin
 from app.schemas.auth import (
     MessageResponse,
@@ -22,7 +19,13 @@ from app.schemas.auth import (
     TokenUpdate,
 )
 
-router = APIRouter(prefix="/admin")
+router = APIRouter(tags=["admin"])
+
+# Create reusable Path and Query parameters to avoid B008
+path_token_id = Path(..., description="The ID of the token to operate on")
+path_username = Path(..., description="The username of the superadmin")
+query_skip = Query(0, description="Number of items to skip")
+query_limit = Query(100, description="Maximum number of items to return")
 
 
 # Token management routes
@@ -30,28 +33,27 @@ router = APIRouter(prefix="/admin")
     "/tokens",
     response_model=TokenResponse,
     summary="Create Api Token",
-    description="""
-            Create a new API token
-            
-            Requires superadmin authentication using HTTP Basic auth.
-            """,
+    description=(
+        "Create a new API token. "
+        "Requires superadmin authentication using HTTP Basic auth."
+    ),
 )
 async def create_api_token_endpoint(
     token_data: TokenCreate,
-    db: Session = Depends(get_db),
-    admin: SuperAdmin = Depends(get_current_admin),
-) -> Any:
-    """
-    Create a new API token
-    """
+    db: Session = db_dependency,
+    admin: SuperAdmin = current_admin_dependency,
+) -> TokenResponse:
+    """Create a new API token."""
     # Create token
     db_token = create_api_token(db, token_data.description)
 
     return TokenResponse(
-        id=db_token.id,
-        token=db_token.token,
-        description=db_token.description,
-        is_active=db_token.is_active,
+        id=int(db_token.id),
+        token=str(db_token.token),
+        description=(
+            str(db_token.description) if db_token.description else None
+        ),
+        is_active=bool(db_token.is_active),
         created_at=db_token.created_at,
         updated_at=db_token.updated_at,
     )
@@ -61,36 +63,37 @@ async def create_api_token_endpoint(
     "/tokens",
     response_model=TokenList,
     summary="List Api Tokens",
-    description="""
-           List all API tokens
-           
-           Requires superadmin authentication using HTTP Basic auth.
-           """,
+    description=(
+        "List all API tokens. "
+        "Requires superadmin authentication using HTTP Basic auth."
+    ),
 )
 async def list_api_tokens_endpoint(
-    skip: int = Query(0),
-    limit: int = Query(100),
-    db: Session = Depends(get_db),
-    admin: SuperAdmin = Depends(get_current_admin),
+    skip: int = query_skip,
+    limit: int = query_limit,
+    db: Session = db_dependency,
+    admin: SuperAdmin = current_admin_dependency,
 ) -> TokenList:
-    """
-    List all API tokens
-    """
-    # Get tokens
-    tokens = db.query(APIToken).offset(skip).limit(limit).all()
+    """List all API tokens."""
+    # Get active tokens only
+    active_tokens = db.query(APIToken).filter(
+        APIToken.is_active.is_(True)
+    ).offset(skip).limit(limit).all()
     total = db.query(APIToken).count()
 
     # Convert to response models
     token_responses = [
         TokenResponse(
-            id=token.id,
-            token=token.token,
-            description=token.description,
-            is_active=token.is_active,
+            id=int(token.id),
+            token=str(token.token),
+            description=(
+                str(token.description) if token.description else None
+            ),
+            is_active=bool(token.is_active),
             created_at=token.created_at,
             updated_at=token.updated_at,
         )
-        for token in tokens
+        for token in active_tokens
     ]
 
     return TokenList(tokens=token_responses, total=total)
@@ -100,20 +103,17 @@ async def list_api_tokens_endpoint(
     "/tokens/{token_id}",
     response_model=TokenResponse,
     summary="Get Api Token",
-    description="""
-           Get a specific API token by ID
-           
-           Requires superadmin authentication using HTTP Basic auth.
-           """,
+    description=(
+        "Get a specific API token by ID. "
+        "Requires superadmin authentication using HTTP Basic auth."
+    ),
 )
 async def get_api_token_endpoint(
-    token_id: int = Path(...),
-    db: Session = Depends(get_db),
-    admin: SuperAdmin = Depends(get_current_admin),
+    token_id: int = path_token_id,
+    db: Session = db_dependency,
+    admin: SuperAdmin = current_admin_dependency,
 ) -> TokenResponse:
-    """
-    Get a specific API token
-    """
+    """Get a specific API token by ID."""
     # Get token
     token = db.query(APIToken).filter(APIToken.id == token_id).first()
 
@@ -123,10 +123,12 @@ async def get_api_token_endpoint(
         )
 
     return TokenResponse(
-        id=token.id,
-        token=token.token,
-        description=token.description,
-        is_active=token.is_active,
+        id=int(token.id),
+        token=str(token.token),
+        description=(
+            str(token.description) if token.description else None
+        ),
+        is_active=bool(token.is_active),
         created_at=token.created_at,
         updated_at=token.updated_at,
     )
@@ -136,21 +138,18 @@ async def get_api_token_endpoint(
     "/tokens/{token_id}",
     response_model=TokenResponse,
     summary="Update Api Token",
-    description="""
-           Update an API token
-           
-           Requires superadmin authentication using HTTP Basic auth.
-           """,
+    description=(
+        "Update an API token. "
+        "Requires superadmin authentication using HTTP Basic auth."
+    ),
 )
 async def update_api_token_endpoint(
     token_data: TokenUpdate,
-    token_id: int = Path(...),
-    db: Session = Depends(get_db),
-    admin: SuperAdmin = Depends(get_current_admin),
+    token_id: int = path_token_id,
+    db: Session = db_dependency,
+    admin: SuperAdmin = current_admin_dependency,
 ) -> TokenResponse:
-    """
-    Update an API token
-    """
+    """Update an existing API token by ID."""
     # Get token
     token = db.query(APIToken).filter(APIToken.id == token_id).first()
 
@@ -161,18 +160,20 @@ async def update_api_token_endpoint(
 
     # Update fields if provided
     if token_data.description is not None:
-        token.description = token_data.description
+        token.description = str(token_data.description)
     if token_data.is_active is not None:
-        token.is_active = token_data.is_active
+        token.is_active = bool(token_data.is_active)
 
     db.commit()
     db.refresh(token)
 
     return TokenResponse(
-        id=token.id,
-        token=token.token,
-        description=token.description,
-        is_active=token.is_active,
+        id=int(token.id),
+        token=str(token.token),
+        description=(
+            str(token.description) if token.description else None
+        ),
+        is_active=bool(token.is_active),
         created_at=token.created_at,
         updated_at=token.updated_at,
     )
@@ -182,20 +183,17 @@ async def update_api_token_endpoint(
     "/tokens/{token_id}",
     response_model=MessageResponse,
     summary="Delete Api Token",
-    description="""
-              Delete an API token
-              
-              Requires superadmin authentication using HTTP Basic auth.
-              """,
+    description=(
+        "Delete an API token. "
+        "Requires superadmin authentication using HTTP Basic auth."
+    ),
 )
 async def delete_api_token_endpoint(
-    token_id: int = Path(...),
-    db: Session = Depends(get_db),
-    admin: SuperAdmin = Depends(get_current_admin),
+    token_id: int = path_token_id,
+    db: Session = db_dependency,
+    admin: SuperAdmin = current_admin_dependency,
 ) -> MessageResponse:
-    """
-    Delete an API token
-    """
+    """Delete an API token by ID."""
     # Get token
     token = db.query(APIToken).filter(APIToken.id == token_id).first()
 
@@ -215,21 +213,17 @@ async def delete_api_token_endpoint(
     "/tokens/{token_id}/regenerate",
     response_model=TokenResponse,
     summary="Regenerate Api Token",
-    description="""
-            Regenerate an API token
-            
-            Creates a new token value for the existing token ID.
-            Requires superadmin authentication using HTTP Basic auth.
-            """,
+    description=(
+        "Regenerate an API token with a new value. "
+        "Requires superadmin authentication using HTTP Basic auth."
+    ),
 )
 async def regenerate_api_token_endpoint(
-    token_id: int = Path(...),
-    db: Session = Depends(get_db),
-    admin: SuperAdmin = Depends(get_current_admin),
+    token_id: int = path_token_id,
+    db: Session = db_dependency,
+    admin: SuperAdmin = current_admin_dependency,
 ) -> TokenResponse:
-    """
-    Regenerate an API token
-    """
+    """Regenerate an API token with a new value."""
     # Get token
     token = db.query(APIToken).filter(APIToken.id == token_id).first()
 
@@ -238,19 +232,19 @@ async def regenerate_api_token_endpoint(
             status_code=status.HTTP_404_NOT_FOUND, detail="Token not found"
         )
 
-    # Generate new token value
-    import secrets
-
+    # Generate a new token value
     token.token = secrets.token_urlsafe(32)
-
     db.commit()
     db.refresh(token)
 
+    # Return token data
     return TokenResponse(
-        id=token.id,
-        token=token.token,
-        description=token.description,
-        is_active=token.is_active,
+        id=int(token.id),
+        token=str(token.token),
+        description=(
+            str(token.description) if token.description else None
+        ),
+        is_active=bool(token.is_active),
         created_at=token.created_at,
         updated_at=token.updated_at,
     )
@@ -258,121 +252,106 @@ async def regenerate_api_token_endpoint(
 
 # Superadmin management routes
 @router.post(
-    "/superadmins",
+    "/superadmin",
     response_model=SuperAdminResponse,
-    summary="Create New Superadmin",
-    description="""
-            Create a new superadmin
-            
-            Requires existing superadmin authentication using HTTP Basic auth.
-            """,
+    summary="Create Superadmin",
+    description=(
+        "Create a new superadmin. "
+        "Requires superadmin authentication using HTTP Basic auth."
+    ),
 )
 async def create_new_superadmin_endpoint(
     admin_data: SuperAdminCreate,
-    db: Session = Depends(get_db),
-    current_admin: SuperAdmin = Depends(get_current_admin),
+    db: Session = db_dependency,
+    current_admin: SuperAdmin = current_admin_dependency,
 ) -> SuperAdminResponse:
-    """
-    Create a new superadmin
-    """
-    # Check if username already exists
-    existing_admin = (
-        db.query(SuperAdmin).filter(SuperAdmin.username == admin_data.username).first()
-    )
-
+    """Create a new superadmin account."""
+    # Check if superadmin exists with this username
+    existing_admin = db.query(SuperAdmin).filter(
+        SuperAdmin.username == admin_data.username
+    ).first()
     if existing_admin:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Username already exists"
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Superadmin with this username already exists",
         )
 
     # Create new superadmin
     hashed_password = get_password_hash(admin_data.password)
-
-    db_admin = SuperAdmin(username=admin_data.username, hashed_password=hashed_password)
-
+    db_admin = SuperAdmin(
+        username=admin_data.username,
+        hashed_password=hashed_password,
+        full_name=admin_data.full_name,
+    )
     db.add(db_admin)
     db.commit()
     db.refresh(db_admin)
 
     return SuperAdminResponse(
+        id=db_admin.id,
         username=db_admin.username,
+        full_name=db_admin.full_name,
         is_active=db_admin.is_active,
         created_at=db_admin.created_at,
     )
 
 
 @router.put(
-    "/superadmins/{username}/password",
+    "/superadmin/{username}/password",
     response_model=MessageResponse,
-    summary="Update Admin Password",
-    description="""
-           Update a superadmin's password
-           
-           Requires superadmin authentication using HTTP Basic auth.
-           """,
+    summary="Update Superadmin Password",
+    description=(
+        "Update a superadmin password. "
+        "Requires superadmin authentication using HTTP Basic auth."
+    ),
 )
 async def update_admin_password_endpoint(
     password_data: SuperAdminUpdate,
-    username: str = Path(...),
-    db: Session = Depends(get_db),
-    current_admin: SuperAdmin = Depends(get_current_admin),
+    username: str = path_username,
+    db: Session = db_dependency,
+    current_admin: SuperAdmin = current_admin_dependency,
 ) -> MessageResponse:
-    """
-    Update a superadmin's password
-    """
+    """Update a superadmin password."""
     # Get admin
     admin = db.query(SuperAdmin).filter(SuperAdmin.username == username).first()
-
     if not admin:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Superadmin not found"
         )
 
-    # Verify current password if not updating own account
-    if admin.id != current_admin.id:
-        # Only allow updating other accounts if you know their password
-        if not verify_password(password_data.current_password, admin.hashed_password):
+    # Verify old password if updating own password
+    if admin.id == current_admin.id:
+        if not verify_password(password_data.old_password, admin.hashed_password):
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Incorrect current password",
-            )
-    else:
-        # Always verify current password when updating own account
-        if not verify_password(password_data.current_password, admin.hashed_password):
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Incorrect current password",
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Incorrect old password"
             )
 
     # Update password
     admin.hashed_password = get_password_hash(password_data.new_password)
-
     db.commit()
 
-    return MessageResponse(message="Password updated successfully")
+    message = f"Password for superadmin '{username}' updated successfully"
+    return MessageResponse(message=message)
 
 
 @router.delete(
-    "/superadmins/{username}",
+    "/superadmin/{username}",
     response_model=MessageResponse,
-    summary="Deactivate Admin Account",
-    description="""
-              Deactivate a superadmin account
-              
-              Requires superadmin authentication using HTTP Basic auth.
-              """,
+    summary="Deactivate Superadmin",
+    description=(
+        "Deactivate a superadmin account. "
+        "Requires superadmin authentication using HTTP Basic auth."
+    ),
 )
 async def deactivate_admin_account_endpoint(
-    username: str = Path(...),
-    db: Session = Depends(get_db),
-    current_admin: SuperAdmin = Depends(get_current_admin),
+    username: str = path_username,
+    db: Session = db_dependency,
+    current_admin: SuperAdmin = current_admin_dependency,
 ) -> MessageResponse:
-    """
-    Deactivate a superadmin account
-    """
-    # Get admin
+    """Deactivate a superadmin account."""
+    # Find admin
     admin = db.query(SuperAdmin).filter(SuperAdmin.username == username).first()
-
     if not admin:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Superadmin not found"
@@ -386,13 +365,14 @@ async def deactivate_admin_account_endpoint(
         )
 
     # Check if this is the last active admin
-    active_admins_count = (
-        db.query(SuperAdmin).filter(SuperAdmin.is_active == True).count()
-    )
-    if active_admins_count <= 1:
+    active_admins = db.query(SuperAdmin).filter(
+        SuperAdmin.is_active.is_(True)
+    ).count()
+    if active_admins <= 1:
+        detail = "Cannot deactivate the last active admin account"
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Cannot deactivate the last active admin account",
+            detail=detail,
         )
 
     # Deactivate account instead of deletion
@@ -400,4 +380,5 @@ async def deactivate_admin_account_endpoint(
 
     db.commit()
 
-    return MessageResponse(message=f"Superadmin '{username}' deactivated successfully")
+    message = f"Superadmin '{username}' deactivated successfully"
+    return MessageResponse(message=message)
