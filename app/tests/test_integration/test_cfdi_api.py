@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 from app.main import app
 from app.core.deps import get_current_token
 
+# Create TestClient
 client = TestClient(app)
 
 # Mock data
