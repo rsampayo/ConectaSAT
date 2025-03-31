@@ -1,9 +1,10 @@
 [flake8]
+ignore = D104, D200, D212, D415, B008, W293, W291, D205, E501
 max-line-length = 88
-extend-ignore = E203, W503
-exclude = .git,__pycache__,docs/conf.py,old,build,dist,alembic
+exclude = .git,__pycache__,docs/source/conf.py,old,build,dist,alembic,.venv
 max-complexity = 10
 docstring-convention = google
 per-file-ignores =
     __init__.py:F401
-    tests/*:D103,D100 
+    tests/*:D103,D100
+    app/tests/*:D103,D100,F401 
