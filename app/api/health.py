@@ -2,10 +2,7 @@
 Health check API router
 """
 
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
-
-from app.db.database import get_db
+from fastapi import APIRouter
 
 router = APIRouter()
 

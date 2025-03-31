@@ -2,8 +2,6 @@
 Database configuration for the application
 """
 
-import re
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 

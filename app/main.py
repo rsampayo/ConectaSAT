@@ -5,8 +5,7 @@ Main FastAPI application
 import logging
 from contextlib import asynccontextmanager
 
-from fastapi import Depends, FastAPI
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
 
 from app.api import admin, cfdi, health
 from app.core.config import settings

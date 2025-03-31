@@ -3,8 +3,6 @@
 from datetime import timedelta
 from unittest.mock import patch
 
-import pytest
-
 from app.core.auth import (
     create_access_token,
     get_token_data,
@@ -39,7 +37,7 @@ def test_create_access_token_with_custom_expiration():
 
     with patch("app.core.auth.create_token") as mock_create_token:
         mock_create_token.return_value = "dummy-token"
-        token = create_access_token(user_id=1, expires_delta=custom_exp)
+        create_access_token(user_id=1, expires_delta=custom_exp)
 
         # Verify create_token was called
         mock_create_token.assert_called_once()

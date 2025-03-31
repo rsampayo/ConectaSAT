@@ -60,6 +60,7 @@ class SuperAdminCreate(BaseModel):
 
     username: str = Field(..., description="Username for the superadmin")
     password: str = Field(..., description="Password for the superadmin")
+    full_name: Optional[str] = Field(None, description="Full name of the superadmin")
 
     model_config = ConfigDict(populate_by_name=True)
 
@@ -79,6 +80,7 @@ class SuperAdminResponse(BaseModel):
     username: str
     is_active: bool
     created_at: datetime
+    full_name: Optional[str] = None
 
     model_config = ConfigDict(populate_by_name=True)
 

@@ -2,8 +2,6 @@
 Test the database module with direct module inspection.
 """
 
-import pytest
-
 
 def test_database_direct_coverage():
     """

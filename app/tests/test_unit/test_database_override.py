@@ -2,9 +2,6 @@
 Test that directly tests database engine creation branches.
 """
 
-from unittest.mock import patch
-
-import pytest
 import sqlalchemy
 
 

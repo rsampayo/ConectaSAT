@@ -3,7 +3,7 @@ Security utilities for authentication and authorization
 """
 
 from datetime import datetime, timedelta
-from typing import Any, Optional, Union
+from typing import Optional
 
 from jose import jwt
 from passlib.context import CryptContext
@@ -54,7 +54,7 @@ def authenticate_admin(
     admin = db.query(SuperAdmin).filter(SuperAdmin.username == username).first()
     if (
         not admin
-        or not verify_password(password, admin.hashed_password)
+        or not verify_password(password, str(admin.hashed_password))
         or not admin.is_active
     ):
         return None
@@ -67,7 +67,7 @@ def verify_api_token(db: Session, token: str) -> bool:
     """
     api_token = (
         db.query(APIToken)
-        .filter(APIToken.token == token, APIToken.is_active == True)
+        .filter(APIToken.token == token, APIToken.is_active is True)
         .first()
     )
     return api_token is not None

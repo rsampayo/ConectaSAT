@@ -96,6 +96,7 @@ async def list_api_tokens_endpoint(
         for token in active_tokens
     ]
 
+    # Return TokenList with tokens and total count
     return TokenList(tokens=token_responses, total=total)
 
 

@@ -1,0 +1,462 @@
+app/__init__.py:1:1: D104 Missing docstring in public package
+app/api/__init__.py:1:1: D104 Missing docstring in public package
+app/api/admin.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/api/admin.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/api/admin.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/api/admin.py:5:1: F401 'typing.List' imported but unused
+app/api/admin.py:5:1: F401 'typing.Optional' imported but unused
+app/api/admin.py:35:1: W293 blank line contains whitespace
+app/api/admin.py:41:19: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:42:25: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:44:1: D200 One-line docstring should fit on one line with quotes
+app/api/admin.py:44:1: D212 Multi-line docstring summary should start at the first line
+app/api/admin.py:44:1: D415 First line should end with a period, question mark, or exclamation point
+app/api/admin.py:66:1: W293 blank line contains whitespace
+app/api/admin.py:71:17: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:72:18: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:73:19: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:74:25: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:76:1: D200 One-line docstring should fit on one line with quotes
+app/api/admin.py:76:1: D212 Multi-line docstring summary should start at the first line
+app/api/admin.py:76:1: D415 First line should end with a period, question mark, or exclamation point
+app/api/admin.py:105:1: W293 blank line contains whitespace
+app/api/admin.py:110:21: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:111:19: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:112:25: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:114:1: D200 One-line docstring should fit on one line with quotes
+app/api/admin.py:114:1: D212 Multi-line docstring summary should start at the first line
+app/api/admin.py:114:1: D415 First line should end with a period, question mark, or exclamation point
+app/api/admin.py:141:1: W293 blank line contains whitespace
+app/api/admin.py:147:21: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:148:19: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:149:25: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:151:1: D200 One-line docstring should fit on one line with quotes
+app/api/admin.py:151:1: D212 Multi-line docstring summary should start at the first line
+app/api/admin.py:151:1: D415 First line should end with a period, question mark, or exclamation point
+app/api/admin.py:187:1: W293 blank line contains whitespace
+app/api/admin.py:192:21: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:193:19: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:194:25: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:196:1: D200 One-line docstring should fit on one line with quotes
+app/api/admin.py:196:1: D212 Multi-line docstring summary should start at the first line
+app/api/admin.py:196:1: D415 First line should end with a period, question mark, or exclamation point
+app/api/admin.py:220:1: W293 blank line contains whitespace
+app/api/admin.py:226:21: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:227:19: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:228:25: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:230:1: D200 One-line docstring should fit on one line with quotes
+app/api/admin.py:230:1: D212 Multi-line docstring summary should start at the first line
+app/api/admin.py:230:1: D415 First line should end with a period, question mark, or exclamation point
+app/api/admin.py:266:1: W293 blank line contains whitespace
+app/api/admin.py:272:19: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:273:33: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:275:1: D200 One-line docstring should fit on one line with quotes
+app/api/admin.py:275:1: D212 Multi-line docstring summary should start at the first line
+app/api/admin.py:275:1: D415 First line should end with a period, question mark, or exclamation point
+app/api/admin.py:310:1: W293 blank line contains whitespace
+app/api/admin.py:316:21: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:317:19: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:318:33: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:320:1: D200 One-line docstring should fit on one line with quotes
+app/api/admin.py:320:1: D212 Multi-line docstring summary should start at the first line
+app/api/admin.py:320:1: D415 First line should end with a period, question mark, or exclamation point
+app/api/admin.py:361:1: W293 blank line contains whitespace
+app/api/admin.py:366:21: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:367:19: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:368:33: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/admin.py:370:1: D200 One-line docstring should fit on one line with quotes
+app/api/admin.py:370:1: D212 Multi-line docstring summary should start at the first line
+app/api/admin.py:370:1: D415 First line should end with a period, question mark, or exclamation point
+app/api/admin.py:390:58: E712 comparison to True should be 'if cond is True:' or 'if cond:'
+app/api/cfdi.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/api/cfdi.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/api/cfdi.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/api/cfdi.py:5:1: F401 'typing.Any' imported but unused
+app/api/cfdi.py:36:1: W293 blank line contains whitespace
+app/api/cfdi.py:37:89: E501 line too long (95 > 88 characters)
+app/api/cfdi.py:39:1: W293 blank line contains whitespace
+app/api/cfdi.py:46:18: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/cfdi.py:47:20: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/cfdi.py:48:19: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/cfdi.py:50:1: D200 One-line docstring should fit on one line with quotes
+app/api/cfdi.py:50:1: D212 Multi-line docstring summary should start at the first line
+app/api/cfdi.py:50:1: D415 First line should end with a period, question mark, or exclamation point
+app/api/cfdi.py:83:1: W293 blank line contains whitespace
+app/api/cfdi.py:84:89: E501 line too long (103 > 88 characters)
+app/api/cfdi.py:85:89: E501 line too long (107 > 88 characters)
+app/api/cfdi.py:87:1: W293 blank line contains whitespace
+app/api/cfdi.py:89:89: E501 line too long (94 > 88 characters)
+app/api/cfdi.py:94:18: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/cfdi.py:95:20: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/cfdi.py:96:19: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/cfdi.py:98:1: D200 One-line docstring should fit on one line with quotes
+app/api/cfdi.py:98:1: D212 Multi-line docstring summary should start at the first line
+app/api/cfdi.py:98:1: D415 First line should end with a period, question mark, or exclamation point
+app/api/cfdi.py:137:1: W293 blank line contains whitespace
+app/api/cfdi.py:138:89: E501 line too long (103 > 88 characters)
+app/api/cfdi.py:140:1: W293 blank line contains whitespace
+app/api/cfdi.py:148:18: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/cfdi.py:149:20: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/cfdi.py:150:19: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/cfdi.py:152:1: D200 One-line docstring should fit on one line with quotes
+app/api/cfdi.py:152:1: D212 Multi-line docstring summary should start at the first line
+app/api/cfdi.py:152:1: D415 First line should end with a period, question mark, or exclamation point
+app/api/cfdi.py:165:1: W293 blank line contains whitespace
+app/api/cfdi.py:166:89: E501 line too long (91 > 88 characters)
+app/api/cfdi.py:168:1: W293 blank line contains whitespace
+app/api/cfdi.py:170:89: E501 line too long (90 > 88 characters)
+app/api/cfdi.py:175:18: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/cfdi.py:176:20: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/cfdi.py:177:19: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/api/cfdi.py:179:1: D200 One-line docstring should fit on one line with quotes
+app/api/cfdi.py:179:1: D212 Multi-line docstring summary should start at the first line
+app/api/cfdi.py:179:1: D415 First line should end with a period, question mark, or exclamation point
+app/api/health.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/api/health.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/api/health.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/api/health.py:5:1: F401 'fastapi.Depends' imported but unused
+app/api/health.py:6:1: F401 'sqlalchemy.orm.Session' imported but unused
+app/api/health.py:8:1: F401 'app.db.database.get_db' imported but unused
+app/api/health.py:18:1: W293 blank line contains whitespace
+app/api/health.py:24:1: D200 One-line docstring should fit on one line with quotes
+app/api/health.py:24:1: D212 Multi-line docstring summary should start at the first line
+app/api/health.py:24:1: D415 First line should end with a period, question mark, or exclamation point
+app/core/__init__.py:1:1: D104 Missing docstring in public package
+app/core/auth.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/core/auth.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/core/auth.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/core/auth.py:5:1: F401 'datetime.datetime' imported but unused
+app/core/auth.py:6:1: F401 'typing.Union' imported but unused
+app/core/auth.py:15:1: D212 Multi-line docstring summary should start at the first line
+app/core/auth.py:15:1: D415 First line should end with a period, question mark, or exclamation point
+app/core/auth.py:33:1: D212 Multi-line docstring summary should start at the first line
+app/core/auth.py:33:1: D415 First line should end with a period, question mark, or exclamation point
+app/core/auth.py:46:1: D212 Multi-line docstring summary should start at the first line
+app/core/auth.py:46:1: D415 First line should end with a period, question mark, or exclamation point
+app/core/config.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/core/config.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/core/config.py:5:1: F401 'os' imported but unused
+app/core/config.py:13:1: D415 First line should end with a period, question mark, or exclamation point
+app/core/deps.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/core/deps.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/core/deps.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/core/deps.py:5:1: F401 'secrets' imported but unused
+app/core/deps.py:21:18: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/core/deps.py:21:58: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/core/deps.py:23:1: D200 One-line docstring should fit on one line with quotes
+app/core/deps.py:23:1: D212 Multi-line docstring summary should start at the first line
+app/core/deps.py:23:1: D415 First line should end with a period, question mark, or exclamation point
+app/core/deps.py:43:18: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/core/deps.py:43:60: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/core/deps.py:45:1: D212 Multi-line docstring summary should start at the first line
+app/core/deps.py:45:1: D415 First line should end with a period, question mark, or exclamation point
+app/core/deps.py:80:41: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/core/deps.py:81:19: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+app/core/deps.py:83:1: D200 One-line docstring should fit on one line with quotes
+app/core/deps.py:83:1: D212 Multi-line docstring summary should start at the first line
+app/core/deps.py:83:1: D415 First line should end with a period, question mark, or exclamation point
+app/core/security.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/core/security.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/core/security.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/core/security.py:6:1: F401 'typing.Any' imported but unused
+app/core/security.py:6:1: F401 'typing.Union' imported but unused
+app/core/security.py:20:1: D200 One-line docstring should fit on one line with quotes
+app/core/security.py:20:1: D212 Multi-line docstring summary should start at the first line
+app/core/security.py:20:1: D415 First line should end with a period, question mark, or exclamation point
+app/core/security.py:35:1: D200 One-line docstring should fit on one line with quotes
+app/core/security.py:35:1: D212 Multi-line docstring summary should start at the first line
+app/core/security.py:35:1: D415 First line should end with a period, question mark, or exclamation point
+app/core/security.py:42:1: D200 One-line docstring should fit on one line with quotes
+app/core/security.py:42:1: D212 Multi-line docstring summary should start at the first line
+app/core/security.py:42:1: D415 First line should end with a period, question mark, or exclamation point
+app/core/security.py:51:1: D200 One-line docstring should fit on one line with quotes
+app/core/security.py:51:1: D212 Multi-line docstring summary should start at the first line
+app/core/security.py:51:1: D415 First line should end with a period, question mark, or exclamation point
+app/core/security.py:65:1: D200 One-line docstring should fit on one line with quotes
+app/core/security.py:65:1: D212 Multi-line docstring summary should start at the first line
+app/core/security.py:65:1: D415 First line should end with a period, question mark, or exclamation point
+app/core/security.py:70:61: E712 comparison to True should be 'if cond is True:' or 'if cond:'
+app/core/security.py:77:1: D200 One-line docstring should fit on one line with quotes
+app/core/security.py:77:1: D212 Multi-line docstring summary should start at the first line
+app/core/security.py:77:1: D415 First line should end with a period, question mark, or exclamation point
+app/core/utils/check_admin.py:1:1: D100 Missing docstring in public module
+app/core/utils/get_tokens.py:1:1: D100 Missing docstring in public module
+app/core/utils/get_tokens.py:8:55: E712 comparison to True should be 'if cond is True:' or 'if cond:'
+app/db/__init__.py:1:1: D104 Missing docstring in public package
+app/db/database.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/db/database.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/db/database.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/db/database.py:5:1: F401 're' imported but unused
+app/db/database.py:14:1: D103 Missing docstring in public function
+app/db/database.py:36:1: D103 Missing docstring in public function
+app/db/init_db.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/db/init_db.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/db/init_db.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/db/init_db.py:21:1: D200 One-line docstring should fit on one line with quotes
+app/db/init_db.py:21:1: D212 Multi-line docstring summary should start at the first line
+app/db/init_db.py:21:1: D415 First line should end with a period, question mark, or exclamation point
+app/main.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/main.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/main.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/main.py:8:1: F401 'fastapi.Depends' imported but unused
+app/main.py:9:1: F401 'sqlalchemy.orm.Session' imported but unused
+app/main.py:30:1: D103 Missing docstring in public function
+app/main.py:43:89: E501 line too long (103 > 88 characters)
+app/main.py:58:1: D103 Missing docstring in public function
+app/models/__init__.py:1:1: D104 Missing docstring in public package
+app/models/cfdi_history.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/models/cfdi_history.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/models/cfdi_history.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/models/cfdi_history.py:13:1: D200 One-line docstring should fit on one line with quotes
+app/models/cfdi_history.py:13:1: D212 Multi-line docstring summary should start at the first line
+app/models/cfdi_history.py:13:1: D415 First line should end with a period, question mark, or exclamation point
+app/models/user.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/models/user.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/models/user.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/models/user.py:13:1: D200 One-line docstring should fit on one line with quotes
+app/models/user.py:13:1: D212 Multi-line docstring summary should start at the first line
+app/models/user.py:13:1: D415 First line should end with a period, question mark, or exclamation point
+app/models/user.py:28:1: D200 One-line docstring should fit on one line with quotes
+app/models/user.py:28:1: D212 Multi-line docstring summary should start at the first line
+app/models/user.py:28:1: D415 First line should end with a period, question mark, or exclamation point
+app/models/user.py:49:1: D200 One-line docstring should fit on one line with quotes
+app/models/user.py:49:1: D212 Multi-line docstring summary should start at the first line
+app/models/user.py:49:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/__init__.py:1:1: D104 Missing docstring in public package
+app/schemas/auth.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/schemas/auth.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/schemas/auth.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/auth.py:13:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/auth.py:23:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/auth.py:34:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/auth.py:49:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/auth.py:59:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/auth.py:68:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/auth.py:77:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/auth.py:88:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/cfdi.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/schemas/cfdi.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/schemas/cfdi.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/cfdi.py:5:1: F401 'typing.Any' imported but unused
+app/schemas/cfdi.py:11:1: D200 One-line docstring should fit on one line with quotes
+app/schemas/cfdi.py:11:1: D212 Multi-line docstring summary should start at the first line
+app/schemas/cfdi.py:11:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/cfdi.py:33:1: D200 One-line docstring should fit on one line with quotes
+app/schemas/cfdi.py:33:1: D212 Multi-line docstring summary should start at the first line
+app/schemas/cfdi.py:33:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/cfdi.py:50:1: D200 One-line docstring should fit on one line with quotes
+app/schemas/cfdi.py:50:1: D212 Multi-line docstring summary should start at the first line
+app/schemas/cfdi.py:50:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/cfdi.py:60:1: D200 One-line docstring should fit on one line with quotes
+app/schemas/cfdi.py:60:1: D212 Multi-line docstring summary should start at the first line
+app/schemas/cfdi.py:60:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/cfdi.py:72:1: D200 One-line docstring should fit on one line with quotes
+app/schemas/cfdi.py:72:1: D212 Multi-line docstring summary should start at the first line
+app/schemas/cfdi.py:72:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/cfdi_history.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/schemas/cfdi_history.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/schemas/cfdi_history.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/cfdi_history.py:12:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/cfdi_history.py:23:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/cfdi_history.py:38:1: D415 First line should end with a period, question mark, or exclamation point
+app/schemas/cfdi_history.py:54:1: D415 First line should end with a period, question mark, or exclamation point
+app/services/__init__.py:1:1: D104 Missing docstring in public package
+app/services/cfdi_history.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/services/cfdi_history.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/services/cfdi_history.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/services/cfdi_history.py:10:1: F401 'app.schemas.cfdi_history.CFDIHistoryCreate' imported but unused
+app/services/cfdi_history.py:26:1: D212 Multi-line docstring summary should start at the first line
+app/services/cfdi_history.py:26:1: D415 First line should end with a period, question mark, or exclamation point
+app/services/cfdi_history.py:64:1: D212 Multi-line docstring summary should start at the first line
+app/services/cfdi_history.py:64:1: D415 First line should end with a period, question mark, or exclamation point
+app/services/cfdi_history.py:85:1: D212 Multi-line docstring summary should start at the first line
+app/services/cfdi_history.py:85:1: D415 First line should end with a period, question mark, or exclamation point
+app/services/cfdi_history.py:108:1: D212 Multi-line docstring summary should start at the first line
+app/services/cfdi_history.py:108:1: D415 First line should end with a period, question mark, or exclamation point
+app/services/cfdi_history.py:124:1: D212 Multi-line docstring summary should start at the first line
+app/services/cfdi_history.py:124:1: D415 First line should end with a period, question mark, or exclamation point
+app/services/sat_verification.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/services/sat_verification.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/services/sat_verification.py:9:1: F401 'typing.Optional' imported but unused
+app/services/sat_verification.py:21:1: C901 'verify_cfdi' is too complex (31)
+app/services/sat_verification.py:24:1: D212 Multi-line docstring summary should start at the first line
+app/services/sat_verification.py:24:1: D415 First line should end with a period, question mark, or exclamation point
+app/services/sat_verification.py:47:89: E501 line too long (106 > 88 characters)
+app/services/sat_verification.py:89:89: E501 line too long (106 > 88 characters)
+app/services/sat_verification.py:190:89: E501 line too long (91 > 88 characters)
+app/tests/__init__.py:1:1: D104 Missing docstring in public package
+app/tests/conftest.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/tests/conftest.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/tests/conftest.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/conftest.py:7:1: F401 'unittest.mock.AsyncMock' imported but unused
+app/tests/conftest.py:7:1: F401 'unittest.mock.MagicMock' imported but unused
+app/tests/conftest.py:7:1: F401 'unittest.mock.patch' imported but unused
+app/tests/conftest.py:12:1: F401 'sqlalchemy.ext.declarative.declarative_base' imported but unused
+app/tests/conftest.py:13:1: F401 'sqlalchemy.orm.Session' imported but unused
+app/tests/conftest.py:17:1: F401 'app.core.config.settings' imported but unused
+app/tests/conftest.py:18:1: F401 'app.core.security.create_api_token' imported but unused
+app/tests/conftest.py:41:1: D205 1 blank line required between summary line and description
+app/tests/conftest.py:41:1: D212 Multi-line docstring summary should start at the first line
+app/tests/conftest.py:41:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/conftest.py:62:1: D103 Missing docstring in public function
+app/tests/conftest.py:113:1: D205 1 blank line required between summary line and description
+app/tests/conftest.py:113:1: D212 Multi-line docstring summary should start at the first line
+app/tests/conftest.py:123:1: D200 One-line docstring should fit on one line with quotes
+app/tests/conftest.py:123:1: D212 Multi-line docstring summary should start at the first line
+app/tests/conftest.py:131:1: D200 One-line docstring should fit on one line with quotes
+app/tests/conftest.py:131:1: D212 Multi-line docstring summary should start at the first line
+app/tests/conftest.py:138:1: D103 Missing docstring in public function
+app/tests/conftest.py:146:1: D200 One-line docstring should fit on one line with quotes
+app/tests/conftest.py:146:1: D212 Multi-line docstring summary should start at the first line
+app/tests/conftest.py:146:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_integration/__init__.py:1:1: D104 Missing docstring in public package
+app/tests/test_integration/test_cfdi_api.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/tests/test_integration/test_cfdi_api.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/tests/test_integration/test_cfdi_api.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_integration/test_cfdi_api.py:32:1: D200 One-line docstring should fit on one line with quotes
+app/tests/test_integration/test_cfdi_api.py:32:1: D212 Multi-line docstring summary should start at the first line
+app/tests/test_integration/test_cfdi_api.py:32:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_integration/test_cfdi_api.py:45:1: D103 Missing docstring in public function
+app/tests/test_integration/test_cfdi_api.py:52:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_integration/test_cfdi_api.py:81:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_integration/test_cfdi_api.py:124:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_integration/test_cfdi_history_api.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/tests/test_integration/test_cfdi_history_api.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/tests/test_integration/test_cfdi_history_api.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_integration/test_cfdi_history_api.py:7:1: F401 'sqlalchemy.orm.Session' imported but unused
+app/tests/test_integration/test_cfdi_history_api.py:9:1: F401 'app.core.auth.create_access_token' imported but unused
+app/tests/test_integration/test_cfdi_history_api.py:17:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_integration/test_cfdi_history_api.py:24:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_integration/test_cfdi_history_api.py:47:56: F541 f-string is missing placeholders
+app/tests/test_integration/test_cfdi_history_api.py:79:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_integration/test_cfdi_history_api.py:103:64: F541 f-string is missing placeholders
+app/tests/test_integration/test_cfdi_history_api.py:130:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_integration/test_cfdi_history_api.py:152:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_integration/test_cfdi_history_api.py:167:89: E501 line too long (93 > 88 characters)
+app/tests/test_integration/test_cfdi_history_api.py:187:43: F541 f-string is missing placeholders
+app/tests/test_integration/test_cfdi_history_api.py:196:39: F541 f-string is missing placeholders
+app/tests/test_unit/__init__.py:1:1: D104 Missing docstring in public package
+app/tests/test_unit/database_override.py:1:1: D205 1 blank line required between summary line and description
+app/tests/test_unit/database_override.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/tests/test_unit/database_override.py:6:1: F401 'importlib' imported but unused
+app/tests/test_unit/database_override.py:14:1: F401 'app.db.database.Base' imported but unused
+app/tests/test_unit/database_override.py:14:1: F401 'app.db.database.SessionLocal' imported but unused
+app/tests/test_unit/database_override.py:14:1: F401 'app.db.database.engine' imported but unused
+app/tests/test_unit/database_override.py:14:1: F401 'app.db.database.get_db' imported but unused
+app/tests/test_unit/database_override.py:14:1: E402 module level import not at top of file
+app/tests/test_unit/database_override.py:19:1: D200 One-line docstring should fit on one line with quotes
+app/tests/test_unit/database_override.py:19:1: D212 Multi-line docstring summary should start at the first line
+app/tests/test_unit/test_admin_api.py:78:89: E501 line too long (90 > 88 characters)
+app/tests/test_unit/test_admin_api.py:126:5: F841 local variable 'result' is assigned to but never used
+app/tests/test_unit/test_admin_api.py:185:9: F841 local variable 'result' is assigned to but never used
+app/tests/test_unit/test_admin_api.py:347:89: E501 line too long (92 > 88 characters)
+app/tests/test_unit/test_auth.py:6:1: F401 'pytest' imported but unused
+app/tests/test_unit/test_auth.py:42:9: F841 local variable 'token' is assigned to but never used
+app/tests/test_unit/test_cfdi_api.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/tests/test_unit/test_cfdi_api.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/tests/test_unit/test_cfdi_api.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_cfdi_api.py:58:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_cfdi_api.py:99:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_cfdi_api.py:126:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_cfdi_api.py:168:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_cfdi_api.py:213:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_cfdi_api.py:243:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_cfdi_history.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/tests/test_unit/test_cfdi_history.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/tests/test_unit/test_cfdi_history.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_cfdi_history.py:5:1: F401 'datetime.datetime' imported but unused
+app/tests/test_unit/test_cfdi_history.py:6:1: F401 'unittest.mock.MagicMock' imported but unused
+app/tests/test_unit/test_cfdi_history.py:6:1: F401 'unittest.mock.patch' imported but unused
+app/tests/test_unit/test_cfdi_history.py:8:1: F401 'pytest' imported but unused
+app/tests/test_unit/test_cfdi_history.py:11:1: F401 'app.models.cfdi_history.CFDIHistory' imported but unused
+app/tests/test_unit/test_cfdi_history.py:22:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_cfdi_history.py:52:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_cfdi_history.py:80:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_cfdi_history.py:124:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_cfdi_history.py:165:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_database.py:1:1: D100 Missing docstring in public module
+app/tests/test_unit/test_database.py:1:1: F401 'sys' imported but unused
+app/tests/test_unit/test_database.py:4:1: F401 'pytest' imported but unused
+app/tests/test_unit/test_database.py:12:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_database.py:26:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_database.py:38:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_database.py:40:89: E501 line too long (93 > 88 characters)
+app/tests/test_unit/test_database.py:57:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_database.py:66:12: E713 test for membership should be 'not in'
+app/tests/test_unit/test_database.py:70:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_database.py:85:89: E501 line too long (91 > 88 characters)
+app/tests/test_unit/test_database.py:103:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_database.py:104:89: E501 line too long (93 > 88 characters)
+app/tests/test_unit/test_database.py:116:89: E501 line too long (91 > 88 characters)
+app/tests/test_unit/test_database.py:136:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_database.py:138:89: E501 line too long (91 > 88 characters)
+app/tests/test_unit/test_database.py:163:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_database.py:165:42: E712 comparison to False should be 'if cond is False:' or 'if not cond:'
+app/tests/test_unit/test_database.py:166:41: E712 comparison to False should be 'if cond is False:' or 'if not cond:'
+app/tests/test_unit/test_database.py:171:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_database.py:174:89: E501 line too long (92 > 88 characters)
+app/tests/test_unit/test_database.py:179:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_database_custom.py:1:1: D205 1 blank line required between summary line and description
+app/tests/test_unit/test_database_custom.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/tests/test_unit/test_database_custom.py:7:1: F401 'importlib' imported but unused
+app/tests/test_unit/test_database_custom.py:9:1: F401 'unittest.mock.patch' imported but unused
+app/tests/test_unit/test_database_custom.py:11:1: F401 'pytest' imported but unused
+app/tests/test_unit/test_database_custom.py:15:1: D205 1 blank line required between summary line and description
+app/tests/test_unit/test_database_custom.py:15:1: D212 Multi-line docstring summary should start at the first line
+app/tests/test_unit/test_database_direct.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/tests/test_unit/test_database_direct.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/tests/test_unit/test_database_direct.py:5:1: F401 'pytest' imported but unused
+app/tests/test_unit/test_database_direct.py:9:1: D205 1 blank line required between summary line and description
+app/tests/test_unit/test_database_direct.py:9:1: D212 Multi-line docstring summary should start at the first line
+app/tests/test_unit/test_database_direct.py:44:1: D205 1 blank line required between summary line and description
+app/tests/test_unit/test_database_direct.py:44:1: D212 Multi-line docstring summary should start at the first line
+app/tests/test_unit/test_database_override.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/tests/test_unit/test_database_override.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/tests/test_unit/test_database_override.py:5:1: F401 'unittest.mock.patch' imported but unused
+app/tests/test_unit/test_database_override.py:7:1: F401 'pytest' imported but unused
+app/tests/test_unit/test_database_override.py:12:1: D212 Multi-line docstring summary should start at the first line
+app/tests/test_unit/test_database_override.py:44:1: D212 Multi-line docstring summary should start at the first line
+app/tests/test_unit/test_database_override.py:76:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_database_override.py:95:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_database_special.py:1:1: D205 1 blank line required between summary line and description
+app/tests/test_unit/test_database_special.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/tests/test_unit/test_database_special.py:12:1: D212 Multi-line docstring summary should start at the first line
+app/tests/test_unit/test_deps.py:6:1: F401 'fastapi.Depends' imported but unused
+app/tests/test_unit/test_init_db.py:47:14: F841 local variable 'mock_hash' is assigned to but never used
+app/tests/test_unit/test_sat_verification.py:1:1: D200 One-line docstring should fit on one line with quotes
+app/tests/test_unit/test_sat_verification.py:1:1: D212 Multi-line docstring summary should start at the first line
+app/tests/test_unit/test_sat_verification.py:1:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_sat_verification.py:18:89: W291 trailing whitespace
+app/tests/test_unit/test_sat_verification.py:19:44: W291 trailing whitespace
+app/tests/test_unit/test_sat_verification.py:20:68: W291 trailing whitespace
+app/tests/test_unit/test_sat_verification.py:31:89: W291 trailing whitespace
+app/tests/test_unit/test_sat_verification.py:32:46: W291 trailing whitespace
+app/tests/test_unit/test_sat_verification.py:33:56: W291 trailing whitespace
+app/tests/test_unit/test_sat_verification.py:46:89: E501 line too long (184 > 88 characters)
+app/tests/test_unit/test_sat_verification.py:47:89: E501 line too long (133 > 88 characters)
+app/tests/test_unit/test_sat_verification.py:48:89: E501 line too long (163 > 88 characters)
+app/tests/test_unit/test_sat_verification.py:49:89: E501 line too long (150 > 88 characters)
+app/tests/test_unit/test_sat_verification.py:50:89: E501 line too long (145 > 88 characters)
+app/tests/test_unit/test_sat_verification.py:61:89: W291 trailing whitespace
+app/tests/test_unit/test_sat_verification.py:62:44: W291 trailing whitespace
+app/tests/test_unit/test_sat_verification.py:63:68: W291 trailing whitespace
+app/tests/test_unit/test_sat_verification.py:74:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_sat_verification.py:103:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_sat_verification.py:132:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_sat_verification.py:149:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_sat_verification.py:172:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_sat_verification.py:191:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_sat_verification.py:216:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_sat_verification.py:246:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_sat_verification.py:276:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_sat_verification.py:306:1: D415 First line should end with a period, question mark, or exclamation point
+app/tests/test_unit/test_sat_verification.py:306:89: E501 line too long (109 > 88 characters)
+app/tests/test_unit/test_sat_verification.py:312:49: W291 trailing whitespace
+app/tests/test_unit/test_sat_verification.py:313:72: W291 trailing whitespace
+app/tests/test_unit/test_sat_verification.py:315:89: E501 line too long (93 > 88 characters)
+app/tests/test_unit/test_sat_verification.py:395:89: E501 line too long (101 > 88 characters)
+app/tests/test_unit/test_sat_verification.py:401:49: W291 trailing whitespace
+app/tests/test_unit/test_sat_verification.py:402:72: W291 trailing whitespace
+app/tests/test_unit/test_sat_verification.py:404:89: E501 line too long (93 > 88 characters)
+app/tests/test_unit/test_security.py:3:1: F401 'datetime.datetime' imported but unused
+app/tests/test_unit/test_security.py:187:9: F841 local variable 'result' is assigned to but never used

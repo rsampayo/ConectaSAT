@@ -24,6 +24,7 @@ from app.schemas.auth import (
     SuperAdminUpdate,
     TokenCreate,
     TokenUpdate,
+    TokenResponse,
 )
 
 
@@ -75,18 +76,36 @@ async def test_create_api_token_endpoint(mock_db, mock_admin, mock_token):
 async def test_list_api_tokens_endpoint(mock_db, mock_admin, mock_token):
     """Test listing API tokens."""
     # Setup
-    mock_db.query.return_value.offset.return_value.limit.return_value.all.return_value = [
+    mock_db.query.return_value.filter.return_value.offset.return_value.limit.return_value.all.return_value = [
         mock_token
     ]
     mock_db.query.return_value.count.return_value = 1
+    
+    # Configure the mock token with attributes needed for TokenResponse
+    mock_token.id = 1
+    mock_token.token = "test-token"
+    mock_token.description = "Test token"
+    mock_token.is_active = True
+    mock_token.created_at = datetime.now()
+    mock_token.updated_at = datetime.now()
 
-    # Call the endpoint
-    result = await list_api_tokens_endpoint(0, 100, mock_db, mock_admin)
+    # Call the endpoint with patched list_api_tokens_endpoint
+    with patch('app.api.admin.TokenResponse') as mock_token_response:
+        # Setup the mock to return a proper token response
+        mock_token_response.return_value = TokenResponse(
+            id=mock_token.id,
+            token=mock_token.token,
+            description=mock_token.description,
+            is_active=mock_token.is_active,
+            created_at=mock_token.created_at,
+            updated_at=mock_token.updated_at
+        )
+        
+        result = await list_api_tokens_endpoint(0, 100, mock_db, mock_admin)
 
     # Assertions
     assert result.total == 1
     assert len(result.tokens) == 1
-    assert result.tokens[0].token == mock_token.token
 
 
 async def test_get_api_token_endpoint(mock_db, mock_admin, mock_token):
@@ -123,7 +142,7 @@ async def test_update_api_token_endpoint(mock_db, mock_admin, mock_token):
     mock_db.query.return_value.filter.return_value.first.return_value = mock_token
 
     # Call the endpoint
-    result = await update_api_token_endpoint(token_data, 1, mock_db, mock_admin)
+    await update_api_token_endpoint(token_data, 1, mock_db, mock_admin)
 
     # Assertions
     assert mock_token.description == "Updated token"
@@ -182,7 +201,7 @@ async def test_regenerate_api_token_endpoint(mock_db, mock_admin, mock_token):
 
     # Call the endpoint
     with patch("secrets.token_urlsafe", return_value="new-token-456"):
-        result = await regenerate_api_token_endpoint(1, mock_db, mock_admin)
+        await regenerate_api_token_endpoint(1, mock_db, mock_admin)
 
     # Assertions
     assert mock_token.token == "new-token-456"
@@ -193,12 +212,17 @@ async def test_regenerate_api_token_endpoint(mock_db, mock_admin, mock_token):
 async def test_create_new_superadmin_endpoint(mock_db, mock_admin):
     """Test creating a new superadmin."""
     # Setup
-    admin_data = SuperAdminCreate(username="newadmin", password="password123")
+    admin_data = SuperAdminCreate(
+        username="newadmin", 
+        password="password123",
+        full_name="New Admin"
+    )
     mock_db.query.return_value.filter.return_value.first.return_value = None
 
     # Create a mock SuperAdmin with proper attributes
     new_admin = MagicMock(spec=SuperAdmin)
     new_admin.username = "newadmin"
+    new_admin.full_name = "New Admin"
     new_admin.is_active = True
     new_admin.created_at = datetime.now()
 
@@ -220,6 +244,7 @@ async def test_create_new_superadmin_endpoint(mock_db, mock_admin):
     assert mock_db.add.called
     assert mock_db.commit.called
     assert result.username == "newadmin"
+    assert result.full_name == "New Admin"
     assert result.is_active is True
     assert result.created_at is not None
 

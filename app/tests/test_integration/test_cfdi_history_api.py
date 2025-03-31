@@ -4,9 +4,7 @@ Integration tests for CFDI History API endpoints
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy.orm import Session
 
-from app.core.auth import create_access_token
 from app.core.deps import get_current_token, get_user_id_from_token
 from app.main import app
 from app.services.cfdi_history import create_cfdi_history
@@ -44,7 +42,7 @@ def test_get_cfdi_history_authenticated(
     try:
         # Make request
         response = client.get(
-            "/cfdi/history", headers={"Authorization": f"Bearer test-token"}
+            "/cfdi/history", headers={"Authorization": "Bearer test-token"}
         )
 
         # Assert response
@@ -100,7 +98,7 @@ def test_get_cfdi_history_by_uuid(client, db_session, override_get_token_depende
     try:
         # Make request
         response = client.get(
-            f"/cfdi/history/{uuid}", headers={"Authorization": f"Bearer test-token"}
+            f"/cfdi/history/{uuid}", headers={"Authorization": "Bearer test-token"}
         )
 
         # Assert response
@@ -184,7 +182,7 @@ def test_verify_cfdi_creates_history(client, db_session, override_get_token_depe
             response = client.post(
                 "/cfdi/verify-cfdi",
                 json=test_data,
-                headers={"Authorization": f"Bearer test-token"},
+                headers={"Authorization": "Bearer test-token"},
             )
 
         # Assert verify response is successful
@@ -193,7 +191,7 @@ def test_verify_cfdi_creates_history(client, db_session, override_get_token_depe
         # Now get history to check if entry was created
         history_response = client.get(
             f"/cfdi/history/{test_data['uuid']}",
-            headers={"Authorization": f"Bearer test-token"},
+            headers={"Authorization": "Bearer test-token"},
         )
 
         # Assert history response

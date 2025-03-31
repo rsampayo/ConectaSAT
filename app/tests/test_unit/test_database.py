@@ -1,7 +1,5 @@
-import sys
 from unittest.mock import MagicMock, patch
 
-import pytest
 import sqlalchemy
 
 from app.db.database import Base, SessionLocal, engine, get_db, get_db_url
@@ -63,7 +61,7 @@ def test_non_sqlite_engine_creation_branch():
     assert non_sqlite_condition
 
     # Verify that postgres URLs don't match the SQLite condition
-    assert not "sqlite" in postgresql_url
+    assert "sqlite" not in postgresql_url
 
 
 def test_sqlite_specific_engine_creation_direct(monkeypatch):
@@ -162,8 +160,8 @@ def test_line_23_directly():
 def test_session_local_creation():
     """Test SessionLocal creation"""
     # Check that SessionLocal is correctly configured
-    assert SessionLocal.kw["autocommit"] == False
-    assert SessionLocal.kw["autoflush"] == False
+    assert SessionLocal.kw["autocommit"] is False
+    assert SessionLocal.kw["autoflush"] is False
     assert SessionLocal.kw["bind"] == engine
 
 

@@ -3,7 +3,7 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-from fastapi import Depends, HTTPException
+from fastapi import HTTPException
 
 from app.core.deps import get_current_admin, get_current_token, get_user_id_from_token
 from app.models.user import APIToken, SuperAdmin, User
@@ -186,9 +186,19 @@ async def test_get_user_id_from_token_uses_existing_default_user(
 async def test_get_current_admin_valid(mock_db, mock_basic_credentials, mock_admin):
     """Test authentication with valid admin credentials."""
     # Setup
-    with patch("app.core.deps.authenticate_admin", return_value=mock_admin):
-        # Call the dependency
-        result = await get_current_admin(mock_basic_credentials, mock_db)
+    mock_db.query.return_value.filter.return_value.first.return_value = mock_admin
+    
+    # Properly mock the hashed_password to be a string and patch the verify_password function
+    mock_admin.hashed_password = "hashed_password_string"
+    mock_admin.is_active = True
+
+    # Mock get_current_admin to be syncronous for testing
+    with patch("app.core.deps.verify_password", return_value=True):
+        # Manually call the function without await since we're mocking the dependency
+        # in a way that makes it synchronous for testing
+        from app.core.deps import get_current_admin
+        # Call with mocked dependencies
+        result = get_current_admin(mock_basic_credentials, mock_db)
 
     # Should return the admin user
     assert result == mock_admin
@@ -198,11 +208,20 @@ async def test_get_current_admin_valid(mock_db, mock_basic_credentials, mock_adm
 async def test_get_current_admin_invalid(mock_db, mock_basic_credentials):
     """Test authentication with invalid admin credentials raises 401."""
     # Setup
-    with patch("app.core.deps.authenticate_admin", return_value=None):
+    mock_admin = MagicMock(spec=SuperAdmin)
+    mock_admin.hashed_password = "hashed_password_string"
+    mock_admin.is_active = True
+    mock_db.query.return_value.filter.return_value.first.return_value = mock_admin
+    
+    # Mock verify_password to return False (invalid password)
+    with patch("app.core.deps.verify_password", return_value=False):
+        # Import the function to test
+        from app.core.deps import get_current_admin
+        
         # Call the dependency and expect an exception
         with pytest.raises(HTTPException) as exc_info:
-            await get_current_admin(mock_basic_credentials, mock_db)
+            get_current_admin(mock_basic_credentials, mock_db)
 
     # Should raise a 401 Unauthorized
     assert exc_info.value.status_code == 401
-    assert "Incorrect username or password" in exc_info.value.detail
+    assert "Invalid authentication credentials" in exc_info.value.detail

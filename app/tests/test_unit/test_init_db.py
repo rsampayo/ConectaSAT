@@ -42,9 +42,7 @@ def test_init_db_creates_admin(mock_db):
     # Configure settings and hash_password mocks
     with (
         patch("app.db.init_db.settings", autospec=True) as mock_settings,
-        patch(
-            "app.db.init_db.get_password_hash", return_value="hashed_password"
-        ) as mock_hash,
+        patch("app.db.init_db.get_password_hash", return_value="hashed_password"),
     ):
         mock_settings.ADMIN_USERNAME = "testadmin"
         mock_settings.ADMIN_PASSWORD = "testpassword"

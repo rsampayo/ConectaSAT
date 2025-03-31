@@ -4,18 +4,14 @@ Pytest configuration file with common fixtures
 
 import os
 import warnings
-from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from app.core.auth import create_access_token
-from app.core.config import settings
-from app.core.security import create_api_token
 from app.db.database import Base, get_db
 from app.main import app
 from app.models.user import APIToken, User

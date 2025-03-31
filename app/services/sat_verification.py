@@ -6,7 +6,7 @@ Functions for verifying CFDIs with the SAT service and checking EFOS status.
 
 import logging
 import xml.etree.ElementTree as ET
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 from xml.dom import minidom
 
 import requests
@@ -22,17 +22,32 @@ async def verify_cfdi(
     uuid: str, emisor_rfc: str, receptor_rfc: str, total: str
 ) -> Dict[str, Any]:
     """
-    Verify a CFDI with the SAT service
+    Verify a CFDI with the SAT verification service.
 
     Args:
-        uuid: The UUID of the CFDI
-        emisor_rfc: The RFC of the emisor
-        receptor_rfc: The RFC of the receptor
+        uuid: The UUID of the CFDI to verify
+        emisor_rfc: The RFC of the emitter
+        receptor_rfc: The RFC of the receiver
         total: The total amount of the CFDI
 
     Returns:
         A dictionary with the verification results
+
+    Raises:
+        Exception: If there is an error connecting to the SAT service
     """
+    # Initialize result with default values
+    result: Dict[str, Any] = {
+        "estado": "",
+        "es_cancelable": "",
+        "estatus_cancelacion": "",
+        "codigo_estatus": "",
+        "validacion_efos": "",
+        "raw_response": "",
+        "efos_emisor": False,
+        "efos_receptor": False,
+    }
+
     # SAT verification endpoint
     url = "https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc"
 
@@ -53,17 +68,6 @@ async def verify_cfdi(
        </soap:Body>
     </soap:Envelope>
     """
-
-    result = {
-        "estado": None,
-        "es_cancelable": None,
-        "estatus_cancelacion": None,
-        "codigo_estatus": None,
-        "validacion_efos": None,
-        "efos_emisor": None,
-        "efos_receptor": None,
-        "raw_response": None,
-    }
 
     # Send request to SAT service
     try:
@@ -118,7 +122,7 @@ async def verify_cfdi(
                                 result["validacion_efos"] = elem.attrib[attr_name]
 
                 # If we didn't find attributes, look for child elements with those names
-                if result["estado"] is None:
+                if not result["estado"]:
                     for ns_prefix in ["a:", ""]:
                         estado_elem = root.find(f".//*{ns_prefix}Estado", namespaces)
                         if estado_elem is not None and estado_elem.text:
@@ -162,10 +166,20 @@ async def verify_cfdi(
                             break
 
                 # Special handling for our test XML format
-                if (
-                    not root.findall(".//*a:Estado", namespaces)
-                    and not result["estado"]
-                ):
+                if not result["estado"]:
+                    # Try with broader XPath expressions to find the elements
+                    for path in [".//*Estado", ".//Estado", ".//a:Estado", ".//*[contains(local-name(),'Estado')]"]:
+                        estado_elem = root.find(path, namespaces)
+                        if estado_elem is not None and estado_elem.text:
+                            result["estado"] = estado_elem.text
+                            break
+                            
+                    for path in [".//*EsCancelable", ".//EsCancelable", ".//a:EsCancelable", ".//*[contains(local-name(),'EsCancelable')]"]:
+                        cancelable_elem = root.find(path, namespaces)
+                        if cancelable_elem is not None and cancelable_elem.text:
+                            result["es_cancelable"] = cancelable_elem.text
+                            break
+                            
                     # Try a direct attribute lookup approach for ConsultaResult
                     consulta_result = root.find(".//ConsultaResult")
                     if consulta_result is not None:

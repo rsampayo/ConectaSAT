@@ -7,7 +7,6 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 
 from app.models.cfdi_history import CFDIHistory
-from app.schemas.cfdi_history import CFDIHistoryCreate
 
 
 def create_cfdi_history(

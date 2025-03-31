@@ -2,13 +2,8 @@
 Unit tests for CFDI History service
 """
 
-from datetime import datetime
-from unittest.mock import MagicMock, patch
-
-import pytest
 from sqlalchemy.orm import Session
 
-from app.models.cfdi_history import CFDIHistory
 from app.services.cfdi_history import (
     create_cfdi_history,
     create_cfdi_history_from_verification,

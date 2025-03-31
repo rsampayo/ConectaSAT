@@ -1,6 +1,6 @@
 """Unit tests for security functions."""
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -184,7 +184,7 @@ def test_create_api_token(mock_db):
 
     # Mock the secrets module
     with patch("secrets.token_urlsafe", return_value="new-token-456"):
-        result = create_api_token(mock_db, description)
+        create_api_token(mock_db, description)
 
     # Should call db methods
     assert mock_db.add.called

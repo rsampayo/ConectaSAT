@@ -2,8 +2,8 @@
 Authentication utilities
 """
 
-from datetime import datetime, timedelta
-from typing import Any, Dict, Optional, Union
+from datetime import timedelta
+from typing import Any, Dict, Optional
 
 from jose import jwt
 

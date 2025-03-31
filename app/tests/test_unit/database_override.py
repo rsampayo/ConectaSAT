@@ -3,15 +3,13 @@ This module is used to directly test the conditional branches in database.py.
 It's intentionally separate to allow direct execution of the uncovered line.
 """
 
-import importlib
-
 # First, set up the environment to run the "else" branch
 import os
 
 os.environ["DATABASE_URL"] = "postgresql://fake:fake@localhost:5432/fakedb"
 
 # Now import the module to execute the code
-from app.db.database import Base, SessionLocal, engine, get_db, get_db_url
+from app.db.database import get_db_url
 
 
 # Test function to execute when imported

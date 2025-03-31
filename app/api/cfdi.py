@@ -2,12 +2,13 @@
 CFDI verification API router
 """
 
-from typing import Any, List
+import logging
+from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
-from app.core.deps import get_current_token, get_user_id_from_token
+from app.core.deps import get_current_token, get_db, get_user_id_from_token
 from app.db.database import get_db
 from app.schemas.cfdi import (
     BatchCFDIRequest,
@@ -24,22 +25,20 @@ from app.services.cfdi_history import (
 )
 from app.services.sat_verification import verify_cfdi
 
+# Configure logging
+logger = logging.getLogger(__name__)
+
 router = APIRouter()
 
 
 @router.post(
     "/verify-cfdi",
     response_model=CFDIResponse,
-    summary="Verify Cfdi",
-    description="""
-            Verifica la validez de un CFDI con el SAT
-            
-            Esta API consulta el servicio oficial del SAT para verificar el estatus de un CFDI.
-            Requiere autenticación mediante Bearer token.
-            
-            Returns:
-                CFDIResponse: Información sobre la validez del CFDI
-            """,
+    summary="Verify Single CFDI",
+    description=(
+        "Verify a single CFDI with the SAT service. "
+        "Requires API token authentication."
+    ),
 )
 async def verify_cfdi_endpoint(
     cfdi: CFDIRequest,
@@ -48,29 +47,46 @@ async def verify_cfdi_endpoint(
     db: Session = Depends(get_db),
 ) -> CFDIResponse:
     """
-    Verify a CFDI with the SAT service
+    Verify a single CFDI with the SAT (Mexican tax authority).
+
+    Args:
+        cfdi: CFDI request data containing UUID, RFCs, and total
+        token: API token
+        user_id: User ID
+        db: Database session
+
+    Returns:
+        Verification result from SAT
     """
     try:
-        result = await verify_cfdi(
+        # Call the SAT verification service
+        verification_result = await verify_cfdi(
             uuid=cfdi.uuid,
             emisor_rfc=cfdi.emisor_rfc,
             receptor_rfc=cfdi.receptor_rfc,
             total=cfdi.total,
         )
 
-        # Save verification to history
+        # Record the verification in history
         create_cfdi_history_from_verification(
-            db=db,
-            user_id=user_id,
-            cfdi_request=cfdi.model_dump(),
-            verification_result=result,
+            db=db, user_id=user_id, cfdi_request=cfdi.dict(), verification_result=verification_result
         )
 
-        return CFDIResponse(**result)
+        # Return the verification result
+        return CFDIResponse(
+            estado=verification_result["estado"],
+            es_cancelable=verification_result["es_cancelable"],
+            estatus_cancelacion=verification_result["estatus_cancelacion"],
+            codigo_estatus=verification_result["codigo_estatus"],
+            raw_response=verification_result.get("raw_response"),
+        )
     except Exception as e:
+        # Log the error
+        logger.error(f"Error verifying CFDI: {str(e)}")
+        # Re-raise the exception
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error verifying CFDI: {str(e)}",
+            detail=f"Error verifying CFDI: {str(e)}"
         )
 
 

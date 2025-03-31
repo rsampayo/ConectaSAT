@@ -2,11 +2,10 @@
 Application settings configuration.
 """
 
-import os
 from typing import Optional
 
-from pydantic import ConfigDict, Field
-from pydantic_settings import BaseSettings
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -38,7 +37,9 @@ class Settings(BaseSettings):
     )
     API_V1_STR: str = Field(default="", description="API version prefix")
 
-    model_config = ConfigDict(env_file=".env", case_sensitive=True)
+    model_config: SettingsConfigDict = SettingsConfigDict(
+        env_file=".env", case_sensitive=True
+    )
 
 
 # Create settings instance

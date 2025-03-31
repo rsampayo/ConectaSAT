@@ -5,7 +5,7 @@ from app.models.user import APIToken
 db = next(get_db())
 
 # Get all active tokens
-tokens = db.query(APIToken).filter(APIToken.is_active == True).all()
+tokens = db.query(APIToken).filter(APIToken.is_active is True).all()
 
 print("Available API tokens:")
 if tokens:
