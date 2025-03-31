@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from fastapi import HTTPException
 
-from app.core.deps import get_current_admin, get_current_token, get_user_id_from_token
+from app.core.deps import get_current_token, get_user_id_from_token
 from app.models.user import APIToken, SuperAdmin, User
 
 

@@ -2,14 +2,13 @@
 Dependency injection functions
 """
 
-from typing import Iterator, Optional
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
-from app.core.security import authenticate_admin, verify_api_token, verify_password
-from app.db.database import SessionLocal, get_db
+from app.core.security import verify_api_token, verify_password
+from app.db.database import get_db
 from app.models.user import APIToken, SuperAdmin, User
 
 # Security schemes

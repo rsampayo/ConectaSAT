@@ -3,9 +3,9 @@ CFDI verification API router
 """
 
 import logging
-from typing import List, Optional
+from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.core.deps import get_current_token, get_db, get_user_id_from_token
@@ -99,11 +99,11 @@ async def verify_cfdi_endpoint(
     summary="Verify Cfdi Batch",
     description="""
             Verifica la validez de múltiples CFDIs con el SAT en una sola petición
-            
+
             Esta API consulta el servicio oficial del SAT para verificar el estatus de múltiples CFDIs.
             Cada CFDI se procesa de forma independiente y los resultados se devuelven en un único response.
             Requiere autenticación mediante Bearer token.
-            
+
             Returns:
                 BatchCFDIResponse: Información sobre la validez de todos los CFDIs solicitados
             """,
@@ -162,10 +162,10 @@ async def verify_cfdi_batch_endpoint(
     summary="Get CFDI History",
     description="""
             Obtiene el historial de consultas de CFDIs realizadas por el usuario
-            
+
             Esta API devuelve el historial de consultas de CFDIs realizadas por el usuario autenticado.
             Requiere autenticación mediante Bearer token.
-            
+
             Returns:
                 List[CFDIHistoryResponse]: Lista de verificaciones de CFDIs realizadas
             """,
@@ -190,10 +190,10 @@ async def get_cfdi_history_endpoint(
     summary="Get CFDI History by UUID",
     description="""
             Obtiene el historial de consultas de un CFDI específico
-            
+
             Esta API devuelve el historial de consultas realizadas para un CFDI específico.
             Requiere autenticación mediante Bearer token.
-            
+
             Returns:
                 List[CFDIHistoryResponse]: Lista de verificaciones realizadas para el CFDI
             """,
