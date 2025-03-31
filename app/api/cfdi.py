@@ -117,7 +117,7 @@ async def verify_cfdi_batch_endpoint(
     results = []
 
     for cfdi_request in batch_request.cfdis:
-        item = {"request": cfdi_request, "response": CFDIResponse(), "error": None}
+        item = {"request": cfdi_request, "response": None, "error": None}
 
         try:
             cfdi_result = await verify_cfdi(
@@ -126,7 +126,15 @@ async def verify_cfdi_batch_endpoint(
                 receptor_rfc=cfdi_request.receptor_rfc,
                 total=cfdi_request.total,
             )
-            item["response"] = CFDIResponse(**cfdi_result)
+            
+            # Convert boolean values to strings to match CFDIResponse schema
+            if "efos_emisor" in cfdi_result and cfdi_result["efos_emisor"] is False:
+                cfdi_result["efos_emisor"] = None
+            if "efos_receptor" in cfdi_result and cfdi_result["efos_receptor"] is False:
+                cfdi_result["efos_receptor"] = None
+                
+            response = CFDIResponse(**cfdi_result)
+            item["response"] = response
 
             # Save verification to history
             create_cfdi_history_from_verification(
@@ -137,6 +145,7 @@ async def verify_cfdi_batch_endpoint(
             )
 
         except Exception as e:
+            item["response"] = CFDIResponse()
             item["error"] = str(e)
 
         results.append(CFDIBatchItem(**item))

@@ -44,8 +44,8 @@ async def verify_cfdi(
         "codigo_estatus": "",
         "validacion_efos": "",
         "raw_response": "",
-        "efos_emisor": False,
-        "efos_receptor": False,
+        "efos_emisor": None,
+        "efos_receptor": None,
     }
 
     # SAT verification endpoint
