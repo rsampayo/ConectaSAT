@@ -67,7 +67,7 @@ def verify_api_token(db: Session, token: str) -> bool:
     """
     api_token = (
         db.query(APIToken)
-        .filter(APIToken.token == token, APIToken.is_active is True)
+        .filter(APIToken.token == token, APIToken.is_active == True)
         .first()
     )
     return api_token is not None
