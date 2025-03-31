@@ -1,0 +1,28 @@
+{
+  "name": "CFDI Verification API",
+  "description": "A FastAPI application for verifying CFDIs with SAT",
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "eco"
+    }
+  },
+  "addons": [
+    "heroku-postgresql:mini"
+  ],
+  "env": {
+    "ADMIN_USERNAME": {
+      "description": "Initial admin username",
+      "value": "admin"
+    },
+    "ADMIN_PASSWORD": {
+      "description": "Initial admin password",
+      "value": "changeme",
+      "required": true
+    },
+    "SECRET_KEY": {
+      "description": "Secret key for JWT token generation",
+      "generator": "secret"
+    }
+  }
+} 
