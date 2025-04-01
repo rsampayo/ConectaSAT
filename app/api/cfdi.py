@@ -220,6 +220,7 @@ async def get_cfdi_history_by_uuid_endpoint(
 async def legacy_verify_cfdi_endpoint(
     cfdi_data: CFDIRequest,
     db: Session = Depends(get_db),
+    token_id: str = Depends(get_current_token),
     user_id: int = 1,  # Default user ID for legacy endpoints
 ):
     """
@@ -280,6 +281,7 @@ async def legacy_verify_cfdi_endpoint(
 async def legacy_verify_batch_endpoint(
     batch_request: BatchCFDIRequest,
     db: Session = Depends(get_db),
+    token_id: str = Depends(get_current_token),
     user_id: int = 1,  # Default user ID for legacy endpoints
 ):
     """
