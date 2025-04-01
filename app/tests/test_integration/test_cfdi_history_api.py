@@ -18,7 +18,7 @@ def client():
 @pytest.fixture
 def mock_cfdi_history_responses():
     """Mock CFDI history API responses for integration tests.
-    
+
     This fixture patches the SQLAlchemy error during tests caused by
     missing token_id column in the test database.
     """
@@ -26,7 +26,7 @@ def mock_cfdi_history_responses():
     mock_history_data = [
         {
             "uuid": "6128396f-c09b-4ec6-8699-43c5f7e3b230",
-            "emisor_rfc": "TEST", 
+            "emisor_rfc": "TEST",
             "receptor_rfc": "TEST",
             "total": "0.00",
             "estado": "Vigente",
@@ -37,35 +37,33 @@ def mock_cfdi_history_responses():
             "created_at": "2023-01-01T00:00:00",
         }
     ]
-    
+
     # Create patch context managers
     get_history_patcher = patch(
-        "app.services.cfdi_history.get_user_cfdi_history", 
-        return_value=mock_history_data
+        "app.services.cfdi_history.get_user_cfdi_history",
+        return_value=mock_history_data,
     )
     get_history_by_uuid_patcher = patch(
         "app.services.cfdi_history.get_cfdi_history_by_uuid",
-        return_value=mock_history_data
+        return_value=mock_history_data,
     )
     create_history_patcher = patch(
-        "app.services.cfdi_history.create_cfdi_history",
-        return_value=None
+        "app.services.cfdi_history.create_cfdi_history", return_value=None
     )
-    
+
     # Patch the legacy endpoint directly
     legacy_cfdi_history_patcher = patch(
-        "app.api.cfdi.legacy_get_cfdi_history_endpoint", 
-        return_value=mock_history_data
+        "app.api.cfdi.legacy_get_cfdi_history_endpoint", return_value=mock_history_data
     )
-    
+
     # Start the patchers
-    get_history_mock = get_history_patcher.start()
-    get_history_by_uuid_mock = get_history_by_uuid_patcher.start()
-    create_history_mock = create_history_patcher.start()
-    legacy_cfdi_history_mock = legacy_cfdi_history_patcher.start()
-    
+    _get_history_mock = get_history_patcher.start()  # noqa: F841
+    _get_history_by_uuid_mock = get_history_by_uuid_patcher.start()  # noqa: F841
+    _create_history_mock = create_history_patcher.start()  # noqa: F841
+    _legacy_cfdi_history_mock = legacy_cfdi_history_patcher.start()  # noqa: F841
+
     yield mock_history_data
-    
+
     # Stop the patchers
     get_history_patcher.stop()
     get_history_by_uuid_patcher.stop()
@@ -80,7 +78,7 @@ def test_get_cfdi_history_authenticated(
     # In testing environment, this test only validates that the endpoint
     # returns a 200 status code, as the actual data response may be empty
     # due to the test database not having the token_id column.
-    
+
     # Override the get_user_id_from_token dependency
     original_get_user_id = app.dependency_overrides.get(get_user_id_from_token, None)
     app.dependency_overrides[get_user_id_from_token] = lambda: 1
@@ -93,7 +91,7 @@ def test_get_cfdi_history_authenticated(
 
         # Assert response
         assert response.status_code == 200
-        
+
         # As the test database might not have the full schema,
         # we don't validate the content of the response
         # and consider the test successful if the status code is 200
@@ -126,7 +124,7 @@ def test_get_cfdi_history_by_uuid(
         "codigo_estatus": "S - Comprobante verificado",
         "validacion_efos": "200",
     }
-    
+
     # Not actually calling the database but keeping for test clarity
     create_cfdi_history(db_session, **cfdi_data)
 
@@ -151,11 +149,17 @@ def test_get_cfdi_history_by_uuid(
         # Verify the data
         item = history_data[0]
         assert item["uuid"] == uuid
-        
+
         # Check the RFC values - accept either test or production values
         # due to differences between environments
-        assert item["emisor_rfc"] in [cfdi_data["emisor_rfc"], cfdi_data["real_emisor_rfc"]]
-        assert item["receptor_rfc"] in [cfdi_data["receptor_rfc"], cfdi_data["real_receptor_rfc"]]
+        assert item["emisor_rfc"] in [
+            cfdi_data["emisor_rfc"],
+            cfdi_data["real_emisor_rfc"],
+        ]
+        assert item["receptor_rfc"] in [
+            cfdi_data["receptor_rfc"],
+            cfdi_data["real_receptor_rfc"],
+        ]
         assert item["estado"] == cfdi_data["estado"]
     finally:
         # Restore the original dependency
@@ -198,7 +202,7 @@ def test_verify_cfdi_creates_history(
         "receptor_rfc": "XIN06112344A",  # Original value from request
         "total": "12000.00",  # Original value from request
     }
-    
+
     # Expect either TEST values (in local test environment)
     # or the original values (in production environment)
     expected_response = {
@@ -259,8 +263,14 @@ def test_verify_cfdi_creates_history(
             if item["uuid"] == test_data["uuid"]:
                 found = True
                 # Accept either test or production values due to environment differences
-                assert item["emisor_rfc"] in [expected_response["test_emisor_rfc"], expected_response["prod_emisor_rfc"]]
-                assert item["receptor_rfc"] in [expected_response["test_receptor_rfc"], expected_response["prod_receptor_rfc"]]
+                assert item["emisor_rfc"] in [
+                    expected_response["test_emisor_rfc"],
+                    expected_response["prod_emisor_rfc"],
+                ]
+                assert item["receptor_rfc"] in [
+                    expected_response["test_receptor_rfc"],
+                    expected_response["prod_receptor_rfc"],
+                ]
                 break
 
         assert found, "CFDI history entry not created during verification"

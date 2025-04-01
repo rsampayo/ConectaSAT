@@ -33,7 +33,7 @@ def test_create_cfdi_history(db_session: Session):
 
     # Create a proper CFDIHistoryCreate model
     history_create = CFDIHistoryCreate(**cfdi_data)
-    
+
     # Call function under test
     history_item = create_cfdi_history(db_session, history_create)
 
@@ -66,7 +66,7 @@ def test_get_cfdi_history_by_uuid(db_session: Session):
 
     # Create a proper CFDIHistoryCreate model
     history_create = CFDIHistoryCreate(**cfdi_data)
-    
+
     # Create test record
     create_cfdi_history(db_session, history_create)
 
@@ -113,7 +113,7 @@ def test_get_user_cfdi_history(db_session: Session):
     # Create proper CFDIHistoryCreate models
     history_create1 = CFDIHistoryCreate(**cfdi_data1)
     history_create2 = CFDIHistoryCreate(**cfdi_data2)
-    
+
     # Create test records
     create_cfdi_history(db_session, history_create1)
     create_cfdi_history(db_session, history_create2)
@@ -161,7 +161,7 @@ def test_get_user_cfdi_history_count(db_session: Session):
     # Create proper CFDIHistoryCreate models
     history_create1 = CFDIHistoryCreate(**cfdi_data1)
     history_create2 = CFDIHistoryCreate(**cfdi_data2)
-    
+
     # Create test records
     create_cfdi_history(db_session, history_create1)
     create_cfdi_history(db_session, history_create2)
