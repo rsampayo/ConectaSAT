@@ -1,7 +1,7 @@
 ---
-description: 
+description: start or create a new project
 globs: 
-alwaysApply: true
+alwaysApply: false
 ---
 ---
 description: Guidelines for setup guidelines and feature development with a strong emphasis on TDD, incremental progress, and environment-aware testing.
@@ -174,9 +174,9 @@ jobs:
         with:
           python-version: '3.10'  # LTS version
       - name: Run quality checks
-        run: | 
+        run: |
           # Install and run black, isort, flake8, mypy
-  
+
   test:
     name: Run Test Suite
     needs: quality
@@ -190,7 +190,7 @@ jobs:
           python-version: '3.10'  # LTS version
       - name: Run tests with coverage
         run: pytest --cov=app
-  
+
   deploy:
     name: Deploy
     needs: test
@@ -211,7 +211,7 @@ jobs:
 ```
 
 ### Heroku Configuration:
-- **Procfile**: 
+- **Procfile**:
   ```
   release: alembic upgrade head
   web: uvicorn app.main:app --host=0.0.0.0 --port=$PORT
@@ -220,7 +220,7 @@ jobs:
   ```
   3.10
   ```
-- **app.json**: 
+- **app.json**:
   ```json
   {
     "name": "FastAPI TDD App",

@@ -1,0 +1,141 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Guidelines for ongoing feature development and bug fixing in the FastAPI project, emphasizing TDD, iterative code quality, CI/CD integration, and environment-aware testing.
+globs:
+  - "**/*.py"
+  - "/app/**"
+---
+## Summary:
+Enforce a strict test-driven development (TDD) workflow with iterative code quality checks integrated into the development cycle. Each feature or bug fix must follow the Red-Green-Refactor cycle. Code must adhere to Python best practices, pass all automated quality checks (formatting, linting, type checking), and tests must pass in all environments. Continuous integration ensures only tested, quality code is merged and deployed.
+
+## Goals:
+- **Prioritize TDD**: Write tests before implementation for all new code/changes.
+- **Automate Everything**: Rely on automated tests, linting, formatting, deployment.
+- **Continuous Verification**: Ensure tests pass locally and in CI (simulating production env).
+- **Incremental Progress**: Develop in small, tested, working steps.
+- **Maintain Code Quality**: Apply quality tools frequently and fix issues immediately.
+- **Stability**: Use pinned dependencies and manage updates carefully.
+
+## 🧪 Test-Driven Development (TDD) Workflow
+### The TDD Cycle (Red-Green-Refactor):
+1. **RED**: Write a failing test first.
+   - Create/update test file in `app/tests/` (unit or integration).
+   - Define the expected behavior clearly in the test assertion.
+   - Run the test(s) to confirm failure for the intended reason.
+2. **GREEN**: Write the minimum amount of application code required to make the test pass.
+   - Focus solely on fulfilling the test's requirements.
+   - Run the test(s) frequently to confirm they pass.
+3. **REFACTOR**: Improve the implementation code and test code while keeping tests green.
+   - Clean up, clarify, and optimize the code.
+   - Apply code quality tools (Black, isort, Flake8, Mypy) and fix issues.
+   - Ensure all tests still pass after refactoring.
+### TDD Requirements:
+- **No application code without a failing test first.**
+- **Test coverage targets**: Aim for >90% code coverage. Monitor via `pytest-cov`.
+- **Test isolation**: Ensure tests can run independently and in any order.
+- **Fast test suite**: Keep tests fast for quick feedback.
+
+## 🔧 Python Best Practices
+- Follow **PEP 8** style guidelines rigorously.
+- Use **type hints** for all function signatures and variables where practical.
+- Write **Pythonic code** using language features appropriately (e.g., comprehensions, context managers).
+- Keep functions and methods small, focused, and modular (Single Responsibility Principle).
+- Use meaningful names for variables, functions, classes, and modules.
+- Raise specific, helpful exceptions. Log appropriately for debugging and monitoring.
+
+## 🧹 Code Quality Tool Usage (Iterative Application)
+**Crucially, apply Black, isort, Flake8, and Mypy frequently during development.**
+- **After completing a function, method, or significant block of code**:
+    1. Run `black .` to format the code.
+    2. Run `isort .` to organize imports.
+    3. Run `flake8 .` to check for style issues and potential bugs. Fix all reported issues.
+    4. Run `mypy app` to perform static type checking. Fix all reported type errors.
+- **Do not wait until the end of a feature or commit** to run these tools. Address quality issues immediately to prevent accumulating technical debt.
+- Ensure code passes all quality checks in the CI pipeline before merging.
+
+## 🚀 FastAPI & Pydantic Usage
+- Use **Pydantic** for request/response models (`app/schemas/`) and data validation. Leverage V2 features.
+- Utilize **FastAPI's dependency injection** system for managing dependencies like database sessions or service classes.
+- Organize API endpoints using **APIRouter** (`app/api/`), typically one router per logical domain/resource.
+- Place business logic in service layers (`app/services/`).
+- Define database models using SQLAlchemy (`app/models/`).
+
+## 📄 OpenAPI Specification Maintenance
+- Ensure the OpenAPI specification (`openapi.json`) is kept up-to-date as API endpoints are added or modified.
+- Use FastAPI's automatic documentation generation (`/docs`, `/redoc`) and enhance it with clear descriptions, summaries, and examples in the code docstrings and Pydantic models.
+- Regularly regenerate and commit the `openapi.json` file if needed.
+
+## 📊 Test Coverage and Reporting
+- Use `pytest-cov` to measure test coverage during test runs.
+- Command: `pytest --cov=app --cov-report=term-missing --cov-report=xml` (for CI).
+- Strive to maintain or increase test coverage with each change. Analyze reports to identify untested code paths.
+
+## 🔄 Feature Development & Bug Fixing Workflow
+1. **Create a feature/bugfix branch** from the `develop` or `main` branch.
+2. **Follow the TDD cycle**: Write failing test(s), write code to pass, refactor (including running quality tools).
+3. **Commit small, logical changes** frequently.
+4. **Ensure all tests and quality checks pass locally** before pushing.
+5. **Push the branch** to GitHub.
+6. **Create a Pull Request** targeting `develop` or `main`.
+7. **CI pipeline runs automatically**: Verifies quality checks and tests. Address any failures.
+8. **Code review** (if applicable).
+9. **Merge the PR** once CI passes and review is complete.
+10. **CI/CD deploys** automatically to the appropriate environment (e.g., review app, staging, production via Heroku based on branch/merge context).
+
+## 🧪 Environment-Aware Testing Principles
+- Write tests that can run against different database backends (e.g., SQLite locally, PostgreSQL in CI/production).
+- Use the `Settings` class (`app/core/config.py`) to manage environment-specific configurations like `DATABASE_URL`.
+- Ensure test fixtures correctly set up and tear down resources (like database sessions) based on the environment.
+- When running tests locally, ensure the environment (e.g., `.env` file or exported variables) reflects the local setup (usually SQLite).
+- The CI pipeline should configure the testing environment to mimic production (e.g., using a PostgreSQL service).
+
+## 📦 Dependencies Management Process
+- Add new direct dependencies to `requirements.in` or `requirements-dev.in`.
+- **Do not manually edit `requirements.txt` or `requirements-dev.txt`.**
+- After modifying `.in` files, run `pip-compile requirements.in` and/or `pip-compile requirements-dev.in` to regenerate the corresponding `.txt` files with pinned versions.
+- Commit both the `.in` and `.txt` files together.
+- Prefer stable/LTS versions of dependencies. Schedule periodic reviews/updates of dependencies rather than updating ad-hoc.
+
+## 🗃️ Database Migrations Usage (Alembic)
+- For any change to SQLAlchemy models (`app/models/`), generate a new Alembic migration script: `alembic revision --autogenerate -m "Description of changes"`.
+- Review the generated migration script carefully for correctness.
+- Apply the migration locally: `alembic upgrade head`.
+- Test the application thoroughly after applying migrations.
+- Include migration scripts in commits. The `release` command in the `Procfile` (`alembic upgrade head`) will run migrations automatically during deployment on Heroku.
+- Ensure migrations can be reversed (`alembic downgrade -1`) if needed.
+
+## 🔒 Security Practices During Development
+- Never commit secrets (API keys, passwords). Use environment variables managed via the `Settings` class and `.env` (local) / Heroku config vars (production).
+- Implement proper authentication/authorization (e.g., JWT, OAuth2) for protected endpoints.
+- Validate and sanitize all user inputs (FastAPI/Pydantic helps significantly here).
+- Be mindful of potential security vulnerabilities (e.g., injection attacks, insecure direct object references).
+
+## ⚠️ Error Handling Implementation
+- Define custom exception classes for specific application errors where appropriate.
+- Implement FastAPI exception handlers to catch custom exceptions and standard HTTPExceptions, returning consistent, informative JSON error responses.
+- Avoid leaking sensitive information in error messages.
+
+## 📚 API Documentation During Development
+- Write clear docstrings for API routes (`@app.get`, `@app.post`, etc.) explaining the endpoint's purpose.
+- Use Pydantic model descriptions and examples to enhance the automatically generated OpenAPI documentation.
+
+## ⚡ Performance Considerations During Development
+- Use `async def` for route handlers and I/O-bound operations (database calls, external API requests).
+- Be mindful of database query performance: use appropriate filtering, select only necessary columns, consider eager/lazy loading, and add database indices for frequently queried fields.
+- Implement pagination for list endpoints returning potentially large datasets.
+- Consider caching strategies for frequently accessed, computationally expensive data.
+- Optimize code for efficiency, especially considering Heroku Eco dyno resource limitations (memory, CPU).
+
+## 🧠 Apply this rule when:
+- Writing or modifying any Python code (`.py` files within the `/app` directory).
+- Writing or modifying tests (`app/tests/`).
+- Adding a new feature or fixing a bug.
+- Refactoring existing code.
+- Adding or updating dependencies.
+- Making changes to database models that require migrations.
+- Working on any part of the TDD cycle.
+- Preparing code for a Pull Request.

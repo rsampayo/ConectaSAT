@@ -751,4 +751,4 @@
     ],
     "description": "Create a base CRUD class for SQLAlchemy 2.0 models with async operations"
   }
-} 
+}

@@ -61,16 +61,25 @@ def authenticate_admin(
     return admin
 
 
-def verify_api_token(db: Session, token: str) -> bool:
+async def verify_api_token(db: Session, token: str) -> Optional[int]:
     """
-    Verify an API token
+    Verify an API token and return the associated user_id if valid.
     """
-    api_token = (
-        db.query(APIToken)
-        .filter(APIToken.token == token, APIToken.is_active == True)
-        .first()
-    )
-    return api_token is not None
+    try:
+        api_token = (
+            db.query(APIToken).filter(APIToken.token == token).first()
+        )
+        
+        if api_token is None:
+            return None
+            
+        if api_token.is_active:
+            return api_token.user_id
+            
+        return None
+    except Exception as e:
+        logging.error(f"Error verifying API token: {e}")
+        return None
 
 
 def create_api_token(db: Session, description: Optional[str] = None) -> APIToken:
