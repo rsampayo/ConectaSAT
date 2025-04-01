@@ -19,29 +19,35 @@ from app.schemas.cfdi import (
     BatchCFDIResponse,
     CFDIBatch,
     CFDIBatchItem,
-    CFDIRequest, 
+    CFDIRequest,
     CFDIResponse,
     CFDIVerifyRequest,
-    VerifyCFDI
+    VerifyCFDI,
 )
 from app.schemas.cfdi_history import (
     CFDIHistoryBase,
     CFDIHistoryCreate,
     CFDIHistoryList,
-    CFDIHistoryResponse
+    CFDIHistoryResponse,
 )
+
 
 # Define classes that might be missing
 class Token(BaseModel):
     """Token authentication schema."""
+
     access_token: str
     token_type: str
 
+
 class TokenData(BaseModel):
     """Token data schema."""
+
     username: Optional[str] = None
+
 
 # Define a new class for verification response
 class CFDIVerificationResponse(CFDIResponse):
     """CFDI verification response for the verification endpoint."""
+
     pass

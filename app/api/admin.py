@@ -28,6 +28,7 @@ path_username = Path(..., description="The username of the superadmin")
 query_skip = Query(0, description="Number of items to skip")
 query_limit = Query(100, description="Maximum number of items to return")
 
+
 def safe_datetime_convert(dt_value):
     """Safely convert a datetime value for response models, handling mock objects in tests."""
     if dt_value is None:
@@ -39,13 +40,16 @@ def safe_datetime_convert(dt_value):
     except (AttributeError, TypeError):
         return dt_value
 
+
 def safe_str_assign(column, value):
     """Safely assign a string value to a Column, handling type conversion."""
     return value  # SQLAlchemy will handle the actual assignment
 
+
 def safe_bool_assign(column, value):
     """Safely assign a boolean value to a Column, handling type conversion."""
     return value  # SQLAlchemy will handle the actual assignment
+
 
 # Token management routes
 @router.post(
@@ -178,7 +182,9 @@ async def update_api_token_endpoint(
 
     # Update fields if provided
     if token_data.description is not None:
-        token.description = safe_str_assign(token.description, str(token_data.description))
+        token.description = safe_str_assign(
+            token.description, str(token_data.description)
+        )
     if token_data.is_active is not None:
         token.is_active = safe_bool_assign(token.is_active, bool(token_data.is_active))
 
@@ -334,13 +340,17 @@ async def update_admin_password_endpoint(
 
     # Verify old password if updating own password
     if admin.id == current_admin.id:
-        if not verify_password(password_data.current_password, str(admin.hashed_password)):
+        if not verify_password(
+            password_data.current_password, str(admin.hashed_password)
+        ):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect old password"
             )
 
     # Update password
-    admin.hashed_password = safe_str_assign(admin.hashed_password, str(get_password_hash(password_data.new_password)))
+    admin.hashed_password = safe_str_assign(
+        admin.hashed_password, str(get_password_hash(password_data.new_password))
+    )
     db.commit()
 
     message = f"Password for superadmin '{username}' updated successfully"

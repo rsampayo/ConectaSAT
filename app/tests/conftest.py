@@ -64,21 +64,21 @@ if not hasattr(CFDIHistory, "details") or CFDIHistory.details is None:
 def patch_cfdi_history_model():
     """Patch the CFDIHistory model to ensure it has all necessary columns for tests."""
     original_columns = {}
-    
+
     # Save original columns if they exist
     if hasattr(CFDIHistory, "__table__") and hasattr(CFDIHistory.__table__, "columns"):
         for column_name in ["token_id", "details"]:
             original_columns[column_name] = getattr(CFDIHistory, column_name, None)
-    
+
     # Apply patches
     if not hasattr(CFDIHistory, "token_id") or CFDIHistory.token_id is None:
         CFDIHistory.token_id = Column(String, index=True, nullable=True)
-    
+
     if not hasattr(CFDIHistory, "details") or CFDIHistory.details is None:
         CFDIHistory.details = Column(JSON, nullable=True)
-    
+
     yield
-    
+
     # Restore original columns after tests
     for column_name, original_column in original_columns.items():
         if original_column is not None:

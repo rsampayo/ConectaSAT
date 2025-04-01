@@ -226,7 +226,7 @@ class CFDIVerification:
                                 ]
 
                     logger.info(f"CFDI status: {uuid}={result['estado']}")
-                    
+
                     # Set default value for validacion_efos if it's empty
                     if not result["validacion_efos"]:
                         result["validacion_efos"] = "200"
