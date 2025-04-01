@@ -1,5 +1,4 @@
-"""
-SAT Verification Service
+"""SAT Verification Service.
 
 Functions for verifying CFDIs with the SAT service and checking EFOS status.
 """
@@ -19,12 +18,10 @@ logger = logging.getLogger(__name__)
 
 
 class CFDIVerification:
-    """
-    Class for verifying CFDIs with the SAT service
-    """
+    """Class for verifying CFDIs with the SAT service."""
 
     def __init__(self):
-        """Initialize the CFDI verification service"""
+        """Initialize the CFDI verification service."""
         self.url = (
             "https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc"
         )
@@ -36,20 +33,15 @@ class CFDIVerification:
     def validate_cfdi(
         self, uuid: str, emisor_rfc: str, receptor_rfc: str, total: float
     ) -> Dict[str, Any]:
-        """
-        Verify a CFDI with the SAT verification service.
+        """Verify a CFDI with the SAT verification service.
 
-        Args:
-            uuid: The UUID of the CFDI to verify
-            emisor_rfc: The RFC of the emitter
-            receptor_rfc: The RFC of the receiver
-            total: The total amount of the CFDI
+        Args:     uuid: The UUID of the CFDI to verify     emisor_rfc: The RFC of the
+        emitter     receptor_rfc: The RFC of the receiver     total: The total amount of
+        the CFDI
 
-        Returns:
-            A dictionary with the verification results
+        Returns:     A dictionary with the verification results
 
-        Raises:
-            Exception: If there is an error connecting to the SAT service
+        Raises:     Exception: If there is an error connecting to the SAT service
         """
         total_str = str(total)
 
@@ -250,8 +242,7 @@ class CFDIVerification:
 async def verify_cfdi(
     uuid: str, emisor_rfc: str, receptor_rfc: str, total: str
 ) -> Dict[str, Any]:
-    """
-    Legacy function to verify a CFDI with the SAT verification service.
+    """Legacy function to verify a CFDI with the SAT verification service.
 
     Uses the new CFDIVerification class internally.
     """

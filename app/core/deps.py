@@ -1,6 +1,4 @@
-"""
-Dependency injection functions
-"""
+"""Dependency injection functions."""
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials, HTTPBearer
@@ -21,9 +19,7 @@ db_dependency = Depends(get_db)
 async def get_current_token(
     token: str = Depends(security_bearer), db: Session = db_dependency
 ) -> str:
-    """
-    Get and validate the current API token
-    """
+    """Get and validate the current API token."""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -44,12 +40,11 @@ async def get_current_token(
 async def get_user_id_from_token(
     token: str = Depends(get_current_token), db: Session = db_dependency
 ) -> int:
-    """
-    Get the user ID associated with the current token
+    """Get the user ID associated with the current token.
 
-    For now, since we don't have user-specific tokens, return a default user ID.
-    In a real implementation, this would look up the token in the database and
-    return the associated user ID.
+    For now, since we don't have user-specific tokens, return a default user ID. In a
+    real implementation, this would look up the token in the database and return the
+    associated user ID.
     """
     # Find the API token in the database
     api_token = db.query(APIToken).filter(APIToken.token == token).first()
@@ -82,9 +77,7 @@ def get_current_admin(
     credentials: HTTPBasicCredentials = Depends(security_basic),
     db: Session = db_dependency,
 ) -> SuperAdmin:
-    """
-    Get the current superadmin from HTTP Basic auth credentials
-    """
+    """Get the current superadmin from HTTP Basic auth credentials."""
     # Check if credentials are provided
     if not credentials.username or not credentials.password:
         raise HTTPException(

@@ -1,6 +1,4 @@
-"""
-Database model for CFDI History
-"""
+"""Database model for CFDI History."""
 
 from sqlalchemy import JSON, Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
@@ -10,9 +8,7 @@ from app.models.user import Base
 
 
 class CFDIHistory(Base):
-    """
-    CFDI History model to store verification results
-    """
+    """CFDI History model to store verification results."""
 
     __tablename__ = "cfdi_history"
 

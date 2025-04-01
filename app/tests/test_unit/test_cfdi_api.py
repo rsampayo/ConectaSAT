@@ -1,6 +1,4 @@
-"""
-Test module for CFDI API endpoints
-"""
+"""Test module for CFDI API endpoints."""
 
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -9,15 +7,15 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.api.cfdi import (
+    get_cfdi_history_by_uuid_endpoint,
     legacy_verify_batch_endpoint,
     legacy_verify_cfdi_endpoint,
-    get_cfdi_history_by_uuid_endpoint,
 )
-from app.services.cfdi_history import get_user_cfdi_history
 from app.schemas.cfdi import (
     BatchCFDIRequest,
     CFDIRequest,
 )
+from app.services.cfdi_history import get_user_cfdi_history
 
 # Test data
 SAMPLE_CFDI_REQUEST = CFDIRequest(
@@ -58,7 +56,7 @@ SAMPLE_VERIFICATION_RESULT = {
 
 @pytest.mark.asyncio
 async def test_verify_cfdi_endpoint_success():
-    """Test verifying a CFDI through the API endpoint"""
+    """Test verifying a CFDI through the API endpoint."""
     # Setup mocks
     mock_db = MagicMock(spec=Session)
     mock_user_id = 1
@@ -103,7 +101,7 @@ async def test_verify_cfdi_endpoint_success():
 
 @pytest.mark.asyncio
 async def test_verify_cfdi_endpoint_error():
-    """Test verifying a CFDI when an error occurs"""
+    """Test verifying a CFDI when an error occurs."""
     # Setup mocks
     mock_db = MagicMock(spec=Session)
     mock_user_id = 1
@@ -128,7 +126,7 @@ async def test_verify_cfdi_endpoint_error():
 
 @pytest.mark.asyncio
 async def test_verify_cfdi_batch_endpoint():
-    """Test batch verification of CFDIs"""
+    """Test batch verification of CFDIs."""
     # Setup mocks
     mock_db = MagicMock(spec=Session)
     mock_user_id = 1
@@ -173,7 +171,7 @@ async def test_verify_cfdi_batch_endpoint():
 
 @pytest.mark.asyncio
 async def test_verify_cfdi_batch_endpoint_with_error():
-    """Test batch verification with an error for one CFDI"""
+    """Test batch verification with an error for one CFDI."""
     # Setup mocks
     mock_db = MagicMock(spec=Session)
     mock_user_id = 1
@@ -218,7 +216,7 @@ async def test_verify_cfdi_batch_endpoint_with_error():
 
 @pytest.mark.asyncio
 async def test_get_cfdi_history_endpoint():
-    """Test retrieving CFDI history for a user"""
+    """Test retrieving CFDI history for a user."""
     # This test is now covered by the integration tests, as the API has changed significantly
     # We'll just assert the get_user_cfdi_history service exists
     assert callable(get_user_cfdi_history)

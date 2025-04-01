@@ -1,5 +1,5 @@
-"""
-Special test module for database.py coverage.
+"""Special test module for database.py coverage.
+
 This aims to directly test the conditional branches during module import.
 """
 
@@ -9,11 +9,10 @@ from unittest import mock
 
 
 def test_sqlite_engine_creation():
-    """
-    Test the SQLite engine creation branch (line 23).
+    """Test the SQLite engine creation branch (line 23).
 
-    This test directly covers line 23 in database.py by modifying the module state
-    and forcing reimporting the module to trigger the if branch for SQLite.
+    This test directly covers line 23 in database.py by modifying the module state and
+    forcing reimporting the module to trigger the if branch for SQLite.
     """
     # Save original modules
     orig_modules = dict(sys.modules)

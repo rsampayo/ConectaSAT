@@ -1,6 +1,4 @@
-"""
-Pytest configuration file with common fixtures
-"""
+"""Pytest configuration file with common fixtures."""
 
 import os
 import warnings
@@ -35,10 +33,8 @@ SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
 
 @pytest.fixture(scope="session", autouse=True)
 def configure_database_url():
-    """
-    Configure a non-SQLite database URL to ensure database.py's
-    non-SQLite code branch is covered during tests.
-    """
+    """Configure a non-SQLite database URL to ensure database.py's non-SQLite code
+    branch is covered during tests."""
     # Save original value if it exists
     original_database_url = os.environ.get("DATABASE_URL", None)
 
@@ -115,27 +111,23 @@ def test_db():
 
 @pytest.fixture
 def db_session(test_db):
-    """
-    Fixture that provides a database session for unit tests.
-    This is an alias for test_db to maintain naming consistency
-    with the rest of the codebase.
+    """Fixture that provides a database session for unit tests.
+
+    This is an alias for test_db to maintain naming consistency with the rest of the
+    codebase.
     """
     yield test_db
 
 
 @pytest.fixture
 def test_token():
-    """
-    Fixture that provides a test JWT token.
-    """
+    """Fixture that provides a test JWT token."""
     return create_access_token(user_id=1)
 
 
 @pytest.fixture
 def api_token():
-    """
-    Fixture that provides a test API token string.
-    """
+    """Fixture that provides a test API token string."""
     return "test-token"
 
 
@@ -148,9 +140,7 @@ def client(test_db):
 
 @pytest.fixture
 def override_get_token_dependency():
-    """
-    Override the token dependency to use a test token for integration tests
-    """
+    """Override the token dependency to use a test token for integration tests."""
     # Store the original dependency
     original_dependency = app.dependency_overrides.get(get_db, None)
 

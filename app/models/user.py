@@ -1,6 +1,4 @@
-"""
-Database models for users and tokens
-"""
+"""Database models for users and tokens."""
 
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
@@ -10,9 +8,7 @@ from app.db.database import Base
 
 
 class SuperAdmin(Base):
-    """
-    SuperAdmin model for admin users who can manage tokens
-    """
+    """SuperAdmin model for admin users who can manage tokens."""
 
     __tablename__ = "superadmins"
 
@@ -26,9 +22,7 @@ class SuperAdmin(Base):
 
 
 class User(Base):
-    """
-    User model for API users
-    """
+    """User model for API users."""
 
     __tablename__ = "users"
 
@@ -47,9 +41,7 @@ class User(Base):
 
 
 class APIToken(Base):
-    """
-    API Token model for API authentication
-    """
+    """API Token model for API authentication."""
 
     __tablename__ = "api_tokens"
 

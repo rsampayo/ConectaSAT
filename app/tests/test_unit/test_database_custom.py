@@ -1,7 +1,7 @@
-"""
-Custom tests to cover database.py completely.
-These tests use special techniques to overcome the challenge of testing
-module-level code that executes on import.
+"""Custom tests to cover database.py completely.
+
+These tests use special techniques to overcome the challenge of testing module-level
+code that executes on import.
 """
 
 import sys
@@ -9,8 +9,8 @@ from unittest.mock import MagicMock
 
 
 class TestModuleImport:
-    """
-    Tests for module-level code using a special technique.
+    """Tests for module-level code using a special technique.
+
     This class uses a separate testing approach to test code that runs on import.
     """
 

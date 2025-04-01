@@ -1,9 +1,6 @@
-"""initial migration
+"""Initial migration.
 
-Revision ID: 1a1a1a1a1a1a
-Revises:
-Create Date: 2023-05-01 00:00:00.000000
-
+Revision ID: 1a1a1a1a1a1a Revises: Create Date: 2023-05-01 00:00:00.000000
 """
 
 import sqlalchemy as sa

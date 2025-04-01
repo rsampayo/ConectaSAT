@@ -1,9 +1,6 @@
-"""Add full_name to SuperAdmin
+"""Add full_name to SuperAdmin.
 
-Revision ID: 945f8533c50d
-Revises: 4b5f455a555c
-Create Date: 2025-03-31 15:45:07.843272
-
+Revision ID: 945f8533c50d Revises: 4b5f455a555c Create Date: 2025-03-31 15:45:07.843272
 """
 
 import sqlalchemy as sa

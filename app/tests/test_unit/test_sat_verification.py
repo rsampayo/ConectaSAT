@@ -1,6 +1,4 @@
-"""
-Unit tests for the SAT Verification service
-"""
+"""Unit tests for the SAT Verification service."""
 
 import xml.etree.ElementTree as ET
 from unittest.mock import MagicMock, patch
@@ -71,7 +69,7 @@ XML_WITH_VALIDATION_EFOS = """<?xml version="1.0" encoding="utf-8"?>
 
 @pytest.mark.asyncio
 async def test_verify_cfdi_valid():
-    """Test verify_cfdi with a valid CFDI"""
+    """Test verify_cfdi with a valid CFDI."""
     # Mock the requests.post response
     with patch("requests.post") as mock_post:
         # Configure the mock
@@ -100,7 +98,7 @@ async def test_verify_cfdi_valid():
 
 @pytest.mark.asyncio
 async def test_verify_cfdi_canceled():
-    """Test verify_cfdi with a canceled CFDI"""
+    """Test verify_cfdi with a canceled CFDI."""
     # Mock the requests.post response
     with patch("requests.post") as mock_post:
         # Configure the mock
@@ -129,7 +127,7 @@ async def test_verify_cfdi_canceled():
 
 @pytest.mark.asyncio
 async def test_verify_cfdi_connection_error():
-    """Test verify_cfdi with a connection error"""
+    """Test verify_cfdi with a connection error."""
     # Mock the requests.post to raise an exception
     with patch("requests.post", side_effect=Exception("Connection error")):
         # Call the function and expect an exception
@@ -146,7 +144,7 @@ async def test_verify_cfdi_connection_error():
 
 @pytest.mark.asyncio
 async def test_verify_cfdi_http_error():
-    """Test verify_cfdi with an HTTP error from the SAT service"""
+    """Test verify_cfdi with an HTTP error from the SAT service."""
     # Mock the requests.post response with a non-200 status code
     with patch("requests.post") as mock_post:
         # Configure the mock
@@ -169,7 +167,7 @@ async def test_verify_cfdi_http_error():
 
 @pytest.mark.asyncio
 async def test_verify_cfdi_request_exception():
-    """Test verify_cfdi with a requests.RequestException"""
+    """Test verify_cfdi with a requests.RequestException."""
     # Mock the requests.post to raise a RequestException
     with patch(
         "requests.post", side_effect=requests.RequestException("Connection refused")
@@ -188,7 +186,7 @@ async def test_verify_cfdi_request_exception():
 
 @pytest.mark.asyncio
 async def test_verify_cfdi_invalid_xml():
-    """Test verify_cfdi with an invalid XML response"""
+    """Test verify_cfdi with an invalid XML response."""
     # Mock the requests.post response
     with patch("requests.post") as mock_post:
         # Configure the mock
@@ -213,7 +211,7 @@ async def test_verify_cfdi_invalid_xml():
 
 @pytest.mark.asyncio
 async def test_verify_cfdi_alternative_xml_format():
-    """Test verify_cfdi with an alternative XML format"""
+    """Test verify_cfdi with an alternative XML format."""
     # Mock the requests.post response
     with patch("requests.post") as mock_post:
         # Configure the mock
@@ -243,7 +241,7 @@ async def test_verify_cfdi_alternative_xml_format():
 
 @pytest.mark.asyncio
 async def test_verify_cfdi_with_validacion_efos():
-    """Test verify_cfdi with EFOS validation in the response"""
+    """Test verify_cfdi with EFOS validation in the response."""
     # Mock the requests.post response
     with patch("requests.post") as mock_post:
         # Configure the mock
@@ -273,7 +271,7 @@ async def test_verify_cfdi_with_validacion_efos():
 
 @pytest.mark.asyncio
 async def test_verify_cfdi_with_xml_parsing_error():
-    """Test verify_cfdi with an error during XML parsing"""
+    """Test verify_cfdi with an error during XML parsing."""
     # Mock the requests.post response
     with (
         patch("requests.post") as mock_post,
@@ -303,7 +301,8 @@ async def test_verify_cfdi_with_xml_parsing_error():
 
 @pytest.mark.asyncio
 async def test_verify_cfdi_special_xml_format():
-    """Test verify_cfdi with special XML format where findall returns empty and direct attributes are used"""
+    """Test verify_cfdi with special XML format where findall returns empty and direct
+    attributes are used."""
     # XML with direct attributes on ConsultaResult
     SPECIAL_XML_FORMAT = """<?xml version="1.0" encoding="utf-8"?>
     <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
@@ -392,7 +391,8 @@ async def test_verify_cfdi_special_xml_format():
 
 @pytest.mark.asyncio
 async def test_verify_cfdi_special_xml_empty_estado():
-    """Test verify_cfdi with the specific case where both conditions for special handling are met."""
+    """Test verify_cfdi with the specific case where both conditions for special
+    handling are met."""
     # XML with direct attributes on ConsultaResult
     SPECIAL_XML_FORMAT = """<?xml version="1.0" encoding="utf-8"?>
     <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">

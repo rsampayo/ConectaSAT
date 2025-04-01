@@ -1,11 +1,9 @@
-"""
-Test the database module with direct module inspection.
-"""
+"""Test the database module with direct module inspection."""
 
 
 def test_database_direct_coverage():
-    """
-    Test the database module by directly inspecting the module attributes.
+    """Test the database module by directly inspecting the module attributes.
+
     This is a way to trigger code coverage for line 23.
     """
     # Import the module
@@ -39,8 +37,8 @@ else:
 
 
 def test_database_both_branches():
-    """
-    Test both branches of the database engine creation.
+    """Test both branches of the database engine creation.
+
     This test directly executes both code paths to ensure coverage.
     """
     import sqlalchemy

@@ -367,7 +367,8 @@ async def test_deactivate_last_active_admin_account(mock_db, mock_admin):
 
 
 async def test_deactivate_last_active_admin_account_prevention(mock_db, mock_admin):
-    """Test that deactivating the last active admin account raises an HTTP 400 exception."""
+    """Test that deactivating the last active admin account raises an HTTP 400
+    exception."""
     # Setup - trying to deactivate the last admin (not yourself)
     mock_admin.username = "adminuser"  # The admin making the request
 

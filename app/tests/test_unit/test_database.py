@@ -7,7 +7,7 @@ from app.db.database import Base, SessionLocal, engine, get_db, get_db_url
 
 @patch("app.db.database.settings")
 def test_get_db_url_postgres(mock_settings):
-    """Test get_db_url with a postgres URL"""
+    """Test get_db_url with a postgres URL."""
     # Setup mock
     mock_settings.DATABASE_URL = "postgres://user:pass@localhost:5432/db"
 
@@ -21,7 +21,7 @@ def test_get_db_url_postgres(mock_settings):
 
 @patch("app.db.database.settings")
 def test_get_db_url_postgresql(mock_settings):
-    """Test get_db_url with a postgresql URL"""
+    """Test get_db_url with a postgresql URL."""
     # Setup mock
     mock_settings.DATABASE_URL = "postgresql://user:pass@localhost:5432/db"
 
@@ -33,7 +33,7 @@ def test_get_db_url_postgresql(mock_settings):
 
 
 def test_sqlite_engine_creation_branch():
-    """Test the SQLite engine creation branch in database.py"""
+    """Test the SQLite engine creation branch in database.py."""
     # This tests the line 23 branch in database.py
     # We test the branch condition rather than trying to trigger the engine creation directly
 
@@ -52,7 +52,7 @@ def test_sqlite_engine_creation_branch():
 
 
 def test_non_sqlite_engine_creation_branch():
-    """Test the non-SQLite engine creation branch in database.py"""
+    """Test the non-SQLite engine creation branch in database.py."""
     # This tests the line 13 branch in database.py
     postgresql_url = "postgresql://user:pass@localhost:5432/db"
 
@@ -65,7 +65,7 @@ def test_non_sqlite_engine_creation_branch():
 
 
 def test_sqlite_specific_engine_creation_direct(monkeypatch):
-    """Test SQLite specific engine creation branch directly"""
+    """Test SQLite specific engine creation branch directly."""
     # This is the critical test for line 23
     # we'll validate the engine creation directly by executing the code
     # similar to what's in database.py
@@ -131,7 +131,7 @@ def test_postgresql_specific_engine_creation_direct(monkeypatch):
 
 
 def test_line_23_directly():
-    """Test line 23 directly by executing similar code"""
+    """Test line 23 directly by executing similar code."""
     # This is a direct test of the line we need to cover
     # Line 23 is: engine = create_engine(db_url, connect_args={"check_same_thread": False})
 
@@ -158,7 +158,7 @@ def test_line_23_directly():
 
 
 def test_session_local_creation():
-    """Test SessionLocal creation"""
+    """Test SessionLocal creation."""
     # Check that SessionLocal is correctly configured
     assert SessionLocal.kw["autocommit"] is False
     assert SessionLocal.kw["autoflush"] is False
@@ -166,7 +166,7 @@ def test_session_local_creation():
 
 
 def test_base_creation():
-    """Test Base class creation"""
+    """Test Base class creation."""
     # Check that Base is a declarative base
     assert hasattr(Base, "metadata")
     # __tablename__ is not a class attribute but an instance attribute, so we don't check it
@@ -174,7 +174,7 @@ def test_base_creation():
 
 @patch("app.db.database.SessionLocal")
 def test_get_db(mock_session_local):
-    """Test get_db dependency function"""
+    """Test get_db dependency function."""
     # Setup mock
     mock_db = MagicMock()
     mock_session_local.return_value = mock_db

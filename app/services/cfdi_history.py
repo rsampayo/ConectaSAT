@@ -1,6 +1,4 @@
-"""
-Service functions for CFDI history
-"""
+"""Service functions for CFDI history."""
 
 from typing import Any, Dict, List, Optional
 
@@ -13,20 +11,17 @@ from app.schemas.cfdi_history import CFDIHistoryCreate
 def create_cfdi_history(
     db: Session, cfdi_history: Optional[CFDIHistoryCreate] = None, **kwargs
 ) -> CFDIHistory:
-    """
-    Create a new CFDI history entry - supports both new and old parameter formats for compatibility
+    """Create a new CFDI history entry - supports both new and old parameter formats for
+    compatibility.
 
-    Can be called with either:
-    1. A CFDIHistoryCreate object: create_cfdi_history(db, cfdi_history_obj)
-    2. Old style kwargs: create_cfdi_history(db, uuid="123", emisor_rfc="ABC", ...)
+    Can be called with either: 1. A CFDIHistoryCreate object: create_cfdi_history(db,
+    cfdi_history_obj) 2. Old style kwargs: create_cfdi_history(db, uuid="123",
+    emisor_rfc="ABC", ...)
 
-    Args:
-        db: Database session
-        cfdi_history: CFDI history data as object (new style)
-        **kwargs: Individual fields (old style)
+    Args:     db: Database session     cfdi_history: CFDI history data as object (new
+    style)     **kwargs: Individual fields (old style)
 
-    Returns:
-        The created CFDIHistory object
+    Returns:     The created CFDIHistory object
     """
     # Handle old-style parameter format
     if cfdi_history is None and kwargs:
@@ -84,24 +79,15 @@ def create_cfdi_history_old(
     codigo_estatus: Optional[str] = None,
     validacion_efos: Optional[str] = None,
 ) -> CFDIHistory:
-    """
-    Create a new CFDI history entry (legacy function)
+    """Create a new CFDI history entry (legacy function)
 
-    Args:
-        db: Database session
-        uuid: CFDI UUID
-        emisor_rfc: Issuer RFC
-        receptor_rfc: Recipient RFC
-        total: CFDI total amount
-        user_id: ID of the user who performed the verification
-        estado: CFDI status
-        es_cancelable: Whether the CFDI is cancellable
-        estatus_cancelacion: Cancellation status
-        codigo_estatus: Status code
-        validacion_efos: EFOS validation
+    Args:     db: Database session     uuid: CFDI UUID     emisor_rfc: Issuer RFC
+    receptor_rfc: Recipient RFC     total: CFDI total amount     user_id: ID of the user
+    who performed the verification     estado: CFDI status     es_cancelable: Whether
+    the CFDI is cancellable     estatus_cancelacion: Cancellation status
+    codigo_estatus: Status code     validacion_efos: EFOS validation
 
-    Returns:
-        The created CFDIHistory object
+    Returns:     The created CFDIHistory object
     """
     # Now just calls the main function with old-style parameters
     return create_cfdi_history(
@@ -123,16 +109,12 @@ def create_cfdi_history_old(
 def get_cfdi_history_by_uuid(
     db: Session, uuid: str, token_id: Optional[str] = None
 ) -> List[Dict[str, Any]]:
-    """
-    Get CFDI history entries by UUID
+    """Get CFDI history entries by UUID.
 
-    Args:
-        db: Database session
-        uuid: CFDI UUID
-        token_id: Optional token ID to filter by
+    Args:     db: Database session     uuid: CFDI UUID     token_id: Optional token ID
+    to filter by
 
-    Returns:
-        List of CFDIHistory objects for the given UUID
+    Returns:     List of CFDIHistory objects for the given UUID
     """
     query = db.query(CFDIHistory).filter(CFDIHistory.uuid == uuid)
 
@@ -156,16 +138,14 @@ def get_cfdi_history_by_uuid(
     ]
 
 
-async def get_verified_cfdis_by_token_id(db: Session, token_id: str) -> List[Dict[str, Any]]:
-    """
-    Get all CFDI history entries for a token ID
+async def get_verified_cfdis_by_token_id(
+    db: Session, token_id: str
+) -> List[Dict[str, Any]]:
+    """Get all CFDI history entries for a token ID.
 
-    Args:
-        db: Database session
-        token_id: Token ID
+    Args:     db: Database session     token_id: Token ID
 
-    Returns:
-        List of CFDIHistory objects for the given token ID
+    Returns:     List of CFDIHistory objects for the given token ID
     """
     results = (
         db.query(CFDIHistory)
@@ -192,17 +172,12 @@ async def get_verified_cfdis_by_token_id(db: Session, token_id: str) -> List[Dic
 def get_user_cfdi_history(
     db: Session, user_id: int, skip: int = 0, limit: int = 100
 ) -> List[CFDIHistory]:
-    """
-    Get CFDI history entries for a user
+    """Get CFDI history entries for a user.
 
-    Args:
-        db: Database session
-        user_id: User ID
-        skip: Number of records to skip (for pagination)
-        limit: Maximum number of records to return
+    Args:     db: Database session     user_id: User ID     skip: Number of records to
+    skip (for pagination)     limit: Maximum number of records to return
 
-    Returns:
-        List of CFDIHistory objects for the given user
+    Returns:     List of CFDIHistory objects for the given user
     """
     return (
         db.query(CFDIHistory)
@@ -215,15 +190,11 @@ def get_user_cfdi_history(
 
 
 def get_user_cfdi_history_count(db: Session, user_id: int) -> int:
-    """
-    Get count of CFDI history entries for a user
+    """Get count of CFDI history entries for a user.
 
-    Args:
-        db: Database session
-        user_id: User ID
+    Args:     db: Database session     user_id: User ID
 
-    Returns:
-        Count of CFDIHistory objects for the given user
+    Returns:     Count of CFDIHistory objects for the given user
     """
     return db.query(CFDIHistory).filter(CFDIHistory.user_id == user_id).count()
 
@@ -231,17 +202,13 @@ def get_user_cfdi_history_count(db: Session, user_id: int) -> int:
 def create_cfdi_history_from_verification(
     db: Session, user_id: int, cfdi_request: dict, verification_result: dict
 ) -> CFDIHistory:
-    """
-    Create a CFDI history entry from verification request and result
+    """Create a CFDI history entry from verification request and result.
 
-    Args:
-        db: Database session
-        user_id: User ID
-        cfdi_request: CFDI request dict with uuid, emisor_rfc, receptor_rfc, total
-        verification_result: Verification result with estado, es_cancelable, etc.
+    Args:     db: Database session     user_id: User ID     cfdi_request: CFDI request
+    dict with uuid, emisor_rfc, receptor_rfc, total     verification_result:
+    Verification result with estado, es_cancelable, etc.
 
-    Returns:
-        Created CFDIHistory object
+    Returns:     Created CFDIHistory object
     """
     return create_cfdi_history_old(
         db=db,

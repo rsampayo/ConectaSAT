@@ -146,7 +146,7 @@ async def test_verify_api_token_valid(mock_db, mock_token):
     """Test verification of a valid API token."""
     # Setup
     mock_db.query.return_value.filter.return_value.first.return_value = mock_token
-    mock_token.is_active = True 
+    mock_token.is_active = True
     mock_token.user_id = 123
 
     # Test verification

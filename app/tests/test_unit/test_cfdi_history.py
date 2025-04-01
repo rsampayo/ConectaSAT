@@ -1,6 +1,4 @@
-"""
-Unit tests for CFDI History service
-"""
+"""Unit tests for CFDI History service."""
 
 from sqlalchemy.orm import Session
 
@@ -14,7 +12,7 @@ from app.services.cfdi_history import (
 
 
 def test_create_cfdi_history(db_session: Session):
-    """Test creating a CFDI history entry"""
+    """Test creating a CFDI history entry."""
     # Setup test data
     cfdi_data = {
         "uuid": "6128396f-c09b-4ec6-8699-43c5f7e3b230",
@@ -44,7 +42,7 @@ def test_create_cfdi_history(db_session: Session):
 
 
 def test_get_cfdi_history_by_uuid(db_session: Session):
-    """Test retrieving CFDI history by UUID"""
+    """Test retrieving CFDI history by UUID."""
     # Setup test data
     cfdi_data = {
         "uuid": "6128396f-c09b-4ec6-8699-43c5f7e3b230",
@@ -73,7 +71,7 @@ def test_get_cfdi_history_by_uuid(db_session: Session):
 
 
 def test_get_user_cfdi_history(db_session: Session):
-    """Test retrieving CFDI history for a specific user"""
+    """Test retrieving CFDI history for a specific user."""
     # Setup test data
     user_id = 1
     cfdi_data1 = {
@@ -117,7 +115,7 @@ def test_get_user_cfdi_history(db_session: Session):
 
 
 def test_get_user_cfdi_history_count(db_session: Session):
-    """Test counting CFDI history entries for a specific user"""
+    """Test counting CFDI history entries for a specific user."""
     # Setup test data
     user_id = 2  # Using a different user_id to avoid interference with other tests
     cfdi_data1 = {
@@ -158,7 +156,7 @@ def test_get_user_cfdi_history_count(db_session: Session):
 
 
 def test_create_cfdi_history_from_verification(db_session: Session):
-    """Test creating a CFDI history entry from verification data"""
+    """Test creating a CFDI history entry from verification data."""
     # Setup test data
     user_id = 3
     cfdi_request = {

@@ -1,6 +1,4 @@
-"""
-Database initialization script
-"""
+"""Database initialization script."""
 
 import logging
 
@@ -18,9 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 def init_db(db: Session) -> None:
-    """
-    Initialize database with admin user if it doesn't exist
-    """
+    """Initialize database with admin user if it doesn't exist."""
     # Check if admin user already exists
     admin = (
         db.query(SuperAdmin)

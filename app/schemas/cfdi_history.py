@@ -1,6 +1,4 @@
-"""
-Pydantic models for CFDI History
-"""
+"""Pydantic models for CFDI History."""
 
 from datetime import datetime
 from typing import Any, Dict, List, Optional
@@ -9,7 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class CFDIHistoryBase(BaseModel):
-    """Base CFDI History attributes"""
+    """Base CFDI History attributes."""
 
     uuid: str = Field(..., description="UUID del CFDI")
     emisor_rfc: str = Field(..., description="RFC del emisor")
@@ -20,7 +18,7 @@ class CFDIHistoryBase(BaseModel):
 
 
 class CFDIHistoryCreate(BaseModel):
-    """CFDI History attributes for creating a record"""
+    """CFDI History attributes for creating a record."""
 
     uuid: str = Field(..., description="UUID del CFDI")
     rfc_emisor: str = Field(..., description="RFC del emisor")
@@ -49,7 +47,7 @@ class CFDIHistoryCreate(BaseModel):
 
 
 class CFDIHistoryResponse(CFDIHistoryBase):
-    """CFDI History data returned to client"""
+    """CFDI History data returned to client."""
 
     id: int = Field(..., description="ID del registro")
     estado: Optional[str] = Field(None, description="Estado del CFDI")
@@ -65,7 +63,7 @@ class CFDIHistoryResponse(CFDIHistoryBase):
 
 
 class CFDIHistoryList(BaseModel):
-    """Response model for a list of CFDI History items"""
+    """Response model for a list of CFDI History items."""
 
     items: List[CFDIHistoryResponse]
     total_count: int = Field(..., description="Total number of history items")

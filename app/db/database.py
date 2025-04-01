@@ -1,6 +1,4 @@
-"""
-Database configuration for the application
-"""
+"""Database configuration for the application."""
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker

@@ -1,6 +1,4 @@
-"""
-CFDI verification API router
-"""
+"""CFDI verification API router."""
 
 import logging
 from typing import List
@@ -44,18 +42,14 @@ legacy_router = APIRouter(tags=["cfdi-legacy"])
 def create_cfdi_history_from_verification(
     db, user_id, cfdi_request, verification_result
 ):
-    """
-    Expose the service function at the module level for test compatibility
-    """
+    """Expose the service function at the module level for test compatibility."""
     return service_create_cfdi_history_from_verification(
         db, user_id, cfdi_request, verification_result
     )
 
 
 def get_user_cfdi_history(db, user_id, skip=0, limit=100):
-    """
-    Expose the service function at the module level for test compatibility
-    """
+    """Expose the service function at the module level for test compatibility."""
     return service_get_user_cfdi_history(db, user_id, skip, limit)
 
 
@@ -75,9 +69,8 @@ async def verify_cfdi_endpoint(
     token_id: str = Depends(get_current_token),
     user_id: str = Depends(get_user_id_from_token),
 ):
-    """
-    Verifies a CFDI with the SAT and returns the validation result along with CFDI information.
-    """
+    """Verifies a CFDI with the SAT and returns the validation result along with CFDI
+    information."""
     cfdi_verification = CFDIVerification()
     try:
         cfdi_info = cfdi_verification.validate_cfdi(
@@ -129,8 +122,8 @@ async def verify_cfdi_batch_endpoint(
     token_id: str = Depends(get_current_token),
     user_id: str = Depends(get_user_id_from_token),
 ):
-    """
-    Verifies multiple CFDIs with the SAT in a single request.
+    """Verifies multiple CFDIs with the SAT in a single request.
+
     Returns an object with results for each CFDI processed.
     """
     results = []
@@ -182,9 +175,7 @@ async def get_cfdi_history_endpoint(
     token_id: str = Depends(get_current_token),
     user_id: str = Depends(get_user_id_from_token),
 ):
-    """
-    Gets the history of verified CFDIs.
-    """
+    """Gets the history of verified CFDIs."""
     try:
         history = await get_verified_cfdis_by_token_id(db, token_id)
         return {
@@ -212,9 +203,7 @@ async def get_cfdi_history_by_uuid_endpoint(
     token_id: str = Depends(get_current_token),
     user_id: str = Depends(get_user_id_from_token),
 ):
-    """
-    Gets the history of a specific CFDI by its UUID.
-    """
+    """Gets the history of a specific CFDI by its UUID."""
     try:
         history = get_cfdi_history_by_uuid(db, uuid, token_id)
         return {
@@ -241,9 +230,7 @@ async def legacy_verify_cfdi_endpoint(
     token_id: str = Depends(get_current_token),
     user_id: int = 1,  # Default user ID for legacy endpoints
 ):
-    """
-    Legacy endpoint for verifying a single CFDI (for test compatibility)
-    """
+    """Legacy endpoint for verifying a single CFDI (for test compatibility)"""
     try:
         # Use legacy verify_cfdi function directly
         cfdi_info = await verify_cfdi(
@@ -306,9 +293,7 @@ async def legacy_verify_batch_endpoint(
     token_id: str = Depends(get_current_token),
     user_id: int = 1,  # Default user ID for legacy endpoints
 ):
-    """
-    Legacy endpoint for verifying multiple CFDIs (for test compatibility)
-    """
+    """Legacy endpoint for verifying multiple CFDIs (for test compatibility)"""
     results = []
 
     for cfdi_request in batch_request.cfdis:
@@ -383,9 +368,7 @@ async def legacy_get_cfdi_history_endpoint(
     skip: int = 0,
     limit: int = 100,
 ):
-    """
-    Legacy endpoint for retrieving CFDI history (for test compatibility)
-    """
+    """Legacy endpoint for retrieving CFDI history (for test compatibility)"""
     try:
         try:
             history = get_user_cfdi_history(db, int(user_id), skip, limit)
@@ -415,9 +398,7 @@ async def legacy_get_cfdi_history_by_uuid_endpoint(
         get_user_id_from_token
     ),  # Require token authentication for test
 ):
-    """
-    Legacy endpoint for retrieving CFDI history by UUID (for test compatibility)
-    """
+    """Legacy endpoint for retrieving CFDI history by UUID (for test compatibility)"""
     try:
         try:
             history_items = get_cfdi_history_by_uuid(db, uuid)
@@ -431,7 +412,9 @@ async def legacy_get_cfdi_history_by_uuid_endpoint(
                     if "es_cancelable" in item["details"]:
                         item["es_cancelable"] = item["details"]["es_cancelable"]
                     if "estatus_cancelacion" in item["details"]:
-                        item["estatus_cancelacion"] = item["details"]["estatus_cancelacion"]
+                        item["estatus_cancelacion"] = item["details"][
+                            "estatus_cancelacion"
+                        ]
                     if "codigo_estatus" in item["details"]:
                         item["codigo_estatus"] = item["details"]["codigo_estatus"]
                     if "validacion_efos" in item["details"]:

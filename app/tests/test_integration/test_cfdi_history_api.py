@@ -1,6 +1,4 @@
-"""
-Integration tests for CFDI History API endpoints
-"""
+"""Integration tests for CFDI History API endpoints."""
 
 import pytest
 from fastapi.testclient import TestClient
@@ -12,14 +10,14 @@ from app.services.cfdi_history import create_cfdi_history
 
 @pytest.fixture
 def client():
-    """Test client fixture"""
+    """Test client fixture."""
     return TestClient(app)
 
 
 def test_get_cfdi_history_authenticated(
     client, db_session, override_get_token_dependency
 ):
-    """Test getting CFDI history when authenticated"""
+    """Test getting CFDI history when authenticated."""
     # Create test data
     cfdi_data = {
         "uuid": "6128396f-c09b-4ec6-8699-43c5f7e3b230",
@@ -74,7 +72,7 @@ def test_get_cfdi_history_authenticated(
 
 
 def test_get_cfdi_history_by_uuid(client, db_session, override_get_token_dependency):
-    """Test getting CFDI history for a specific UUID"""
+    """Test getting CFDI history for a specific UUID."""
     # Create test data
     uuid = "6128396f-c09b-4ec6-8699-43c5f7e3b230"
     cfdi_data = {
@@ -125,7 +123,7 @@ def test_get_cfdi_history_by_uuid(client, db_session, override_get_token_depende
 
 
 def test_get_cfdi_history_unauthorized(client, db_session):
-    """Test that history endpoint requires authentication"""
+    """Test that history endpoint requires authentication."""
     # Test without a token
     try:
         # We need to temporarily remove the override for get_current_token
@@ -147,7 +145,7 @@ def test_get_cfdi_history_unauthorized(client, db_session):
 
 
 def test_verify_cfdi_creates_history(client, db_session, override_get_token_dependency):
-    """Test that verifying a CFDI automatically creates a history entry"""
+    """Test that verifying a CFDI automatically creates a history entry."""
     # Prepare test data
     test_data = {
         "uuid": "6128396f-c09b-4ec6-8699-43c5f7e3b230",

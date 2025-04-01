@@ -1,17 +1,14 @@
-"""
-Test that directly tests database engine creation branches.
-"""
+"""Test that directly tests database engine creation branches."""
 
 import sqlalchemy
 
 
 def test_database_conditional_branches():
-    """
-    Test both branches of the conditional in database.py directly.
+    """Test both branches of the conditional in database.py directly.
 
-    Instead of trying to force coverage by importing a module that changes
-    the environment, we'll directly execute both branches of the conditional
-    to ensure they're covered.
+    Instead of trying to force coverage by importing a module that changes the
+    environment, we'll directly execute both branches of the conditional to ensure
+    they're covered.
     """
     # Test SQLite branch - this is what's typically run
     db_url = "sqlite:///test.db"
@@ -38,11 +35,10 @@ def test_database_conditional_branches():
 
 
 def test_exact_database_code():
-    """
-    Test the exact database.py module code to ensure both branches get coverage.
+    """Test the exact database.py module code to ensure both branches get coverage.
 
-    This test reproduces the exact code from database.py to make sure
-    both branches are executed in our tests.
+    This test reproduces the exact code from database.py to make sure both branches are
+    executed in our tests.
     """
     # First get a SQLite URL and execute the "if" branch
     sqlite_db_url = "sqlite:///test.db"
@@ -70,7 +66,7 @@ def test_exact_database_code():
 
 
 def my_module_test():
-    """A function that directly replicates the database.py module code"""
+    """A function that directly replicates the database.py module code."""
     # Replicating the module-level code in database.py
 
     # First, imitate get_db_url() function returning a PostgreSQL URL
@@ -89,7 +85,7 @@ def my_module_test():
 
 
 def test_module_replication():
-    """Test a function that replicates the database.py module code"""
+    """Test a function that replicates the database.py module code."""
     # Call our function that replicates the module code
     engine = my_module_test()
     assert engine is not None

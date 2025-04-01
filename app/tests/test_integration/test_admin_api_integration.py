@@ -27,9 +27,9 @@ print(f"Using admin credentials: {ADMIN_USERNAME}:{'*' * len(ADMIN_PASSWORD)}")
 def test_admin_token_not_found() -> None:
     """Test token not found error path in production.
 
-    This specifically tests the error handling when trying to access
-    a non-existent token by ID, which will trigger the 404 error path
-    in the admin.py file that is currently not covered.
+    This specifically tests the error handling when trying to access a non-existent
+    token by ID, which will trigger the 404 error path in the admin.py file that is
+    currently not covered.
     """
     # Set up auth with admin credentials
     auth = (ADMIN_USERNAME, ADMIN_PASSWORD)
@@ -50,9 +50,9 @@ def test_admin_token_not_found() -> None:
 def test_admin_superadmin_not_found() -> None:
     """Test superadmin not found error path in production.
 
-    This specifically tests the error handling when trying to deactivate
-    a non-existent superadmin account, which will trigger the 404 error path
-    in the admin.py file that is currently not covered.
+    This specifically tests the error handling when trying to deactivate a non-existent
+    superadmin account, which will trigger the 404 error path in the admin.py file that
+    is currently not covered.
     """
     # Set up auth with admin credentials
     auth = (ADMIN_USERNAME, ADMIN_PASSWORD)
@@ -73,8 +73,8 @@ def test_admin_superadmin_not_found() -> None:
 def test_admin_regenerate_token_not_found() -> None:
     """Test token regeneration not found error path in production.
 
-    This tests the error handling when trying to regenerate a token
-    that doesn't exist, which will trigger another 404 path in admin.py.
+    This tests the error handling when trying to regenerate a token that doesn't exist,
+    which will trigger another 404 path in admin.py.
     """
     # Set up auth with admin credentials
     auth = (ADMIN_USERNAME, ADMIN_PASSWORD)
@@ -96,8 +96,8 @@ def test_admin_regenerate_token_not_found() -> None:
 def test_admin_update_password_not_found() -> None:
     """Test updating password for a non-existent admin account.
 
-    This tests the error handling when trying to update the password
-    for a non-existent admin account, which should trigger a 404 error path.
+    This tests the error handling when trying to update the password for a non-existent
+    admin account, which should trigger a 404 error path.
     """
     # Set up auth with admin credentials
     auth = (ADMIN_USERNAME, ADMIN_PASSWORD)

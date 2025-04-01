@@ -1,16 +1,12 @@
-"""Add CFDI history table
+"""Add CFDI history table.
 
-Revision ID: 4b5f455a555c
-Revises: 1a1a1a1a1a1a
-Create Date: 2025-03-31 11:46:45.812972
-
+Revision ID: 4b5f455a555c Revises: 1a1a1a1a1a1a Create Date: 2025-03-31 11:46:45.812972
 """
 
 import sqlalchemy as sa
 from sqlalchemy import inspect
 
 from alembic import op
-from alembic.operations import BatchOperations
 
 # revision identifiers, used by Alembic.
 revision = "4b5f455a555c"

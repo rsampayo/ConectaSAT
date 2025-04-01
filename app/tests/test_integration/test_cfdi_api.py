@@ -1,6 +1,4 @@
-"""
-Integration tests for the CFDI API endpoints
-"""
+"""Integration tests for the CFDI API endpoints."""
 
 from unittest.mock import AsyncMock, patch
 
@@ -26,9 +24,7 @@ valid_cfdi_response = {
 # Mock the token verification
 @pytest.fixture(autouse=True)
 def mock_token_verification():
-    """
-    Override the token dependency to skip authentication
-    """
+    """Override the token dependency to skip authentication."""
 
     async def override_get_current_token():
         return "fake_token"
@@ -46,7 +42,7 @@ def mock_verify_cfdi():
 
 
 def test_verify_cfdi_endpoint(mock_verify_cfdi):
-    """Test the /verify-cfdi endpoint"""
+    """Test the /verify-cfdi endpoint."""
     # Test data
     request_data = {
         "uuid": "6128396f-c09b-4ec6-8699-43c5f7e3b230",
@@ -85,7 +81,7 @@ def test_verify_cfdi_endpoint(mock_verify_cfdi):
 
 
 def test_verify_cfdi_batch_endpoint(mock_verify_cfdi):
-    """Test the /verify-cfdi-batch endpoint"""
+    """Test the /verify-cfdi-batch endpoint."""
     # Test data
     request_data = {
         "cfdis": [
@@ -133,6 +129,6 @@ def test_verify_cfdi_batch_endpoint(mock_verify_cfdi):
 
 
 def test_health_endpoint():
-    """Test the /health endpoint"""
+    """Test the /health endpoint."""
     response = client.get("/health")
     assert response.status_code == 200

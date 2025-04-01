@@ -1,5 +1,4 @@
-"""
-SAT Verification Service
+"""SAT Verification Service.
 
 Functions for verifying CFDIs with the SAT service and checking EFOS status.
 """
@@ -21,17 +20,12 @@ logger = logging.getLogger(__name__)
 async def verify_cfdi(
     uuid: str, emisor_rfc: str, receptor_rfc: str, total: str
 ) -> Dict[str, Any]:
-    """
-    Verify a CFDI with the SAT service
+    """Verify a CFDI with the SAT service.
 
-    Args:
-        uuid: The UUID of the CFDI
-        emisor_rfc: The RFC of the emisor
-        receptor_rfc: The RFC of the receptor
-        total: The total amount of the CFDI
+    Args:     uuid: The UUID of the CFDI     emisor_rfc: The RFC of the emisor
+    receptor_rfc: The RFC of the receptor     total: The total amount of the CFDI
 
-    Returns:
-        A dictionary with the verification results
+    Returns:     A dictionary with the verification results
     """
     # SAT verification endpoint
     url = "https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc"

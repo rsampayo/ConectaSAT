@@ -1,6 +1,4 @@
-"""
-Pydantic models for CFDI verification
-"""
+"""Pydantic models for CFDI verification."""
 
 from typing import Any, Dict, List, Optional
 
@@ -8,9 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class CFDIRequest(BaseModel):
-    """
-    CFDI verification request
-    """
+    """CFDI verification request."""
 
     uuid: str = Field(..., description="UUID del CFDI")
     emisor_rfc: str = Field(..., description="RFC del emisor")
@@ -30,9 +26,7 @@ class CFDIRequest(BaseModel):
 
 
 class CFDIVerifyRequest(BaseModel):
-    """
-    New CFDI verification request format
-    """
+    """New CFDI verification request format."""
 
     uuid: str = Field(..., description="UUID del CFDI")
     rfc_emisor: str = Field(..., description="RFC del emisor")
@@ -41,9 +35,7 @@ class CFDIVerifyRequest(BaseModel):
 
 
 class CFDIResponse(BaseModel):
-    """
-    CFDI verification response
-    """
+    """CFDI verification response."""
 
     estado: Optional[str] = Field(None, description="Estado del CFDI")
     es_cancelable: Optional[str] = Field(None, description="Si el CFDI es cancelable")
@@ -62,9 +54,7 @@ class CFDIResponse(BaseModel):
 
 
 class VerifyCFDI(BaseModel):
-    """
-    CFDI verification result for batch processing
-    """
+    """CFDI verification result for batch processing."""
 
     uuid: str = Field(..., description="UUID del CFDI verificado")
     status: str = Field(..., description="Estado de la verificación (success/error)")
@@ -73,9 +63,7 @@ class VerifyCFDI(BaseModel):
 
 
 class CFDIBatch(BaseModel):
-    """
-    Batch response for CFDI verifications
-    """
+    """Batch response for CFDI verifications."""
 
     results: List[VerifyCFDI] = Field(
         ..., description="Resultados de las verificaciones"
@@ -83,9 +71,7 @@ class CFDIBatch(BaseModel):
 
 
 class BatchCFDIRequest(BaseModel):
-    """
-    Batch CFDI verification request
-    """
+    """Batch CFDI verification request."""
 
     cfdis: List[CFDIRequest] = Field(
         ..., description="Lista de CFDIs a verificar", min_length=1
@@ -93,9 +79,7 @@ class BatchCFDIRequest(BaseModel):
 
 
 class CFDIBatchItem(BaseModel):
-    """
-    Single item in a batch CFDI response
-    """
+    """Single item in a batch CFDI response."""
 
     request: CFDIRequest
     response: CFDIResponse
@@ -105,9 +89,7 @@ class CFDIBatchItem(BaseModel):
 
 
 class BatchCFDIResponse(BaseModel):
-    """
-    Batch CFDI verification response
-    """
+    """Batch CFDI verification response."""
 
     results: List[CFDIBatchItem]
 

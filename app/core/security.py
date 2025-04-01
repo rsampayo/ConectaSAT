@@ -1,6 +1,4 @@
-"""
-Security utilities for authentication and authorization
-"""
+"""Security utilities for authentication and authorization."""
 
 from datetime import datetime, timedelta
 from typing import Optional
@@ -17,9 +15,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def create_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
-    """
-    Create a JWT token
-    """
+    """Create a JWT token."""
     to_encode = data.copy()
     expire = datetime.utcnow() + (
         expires_delta or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -32,25 +28,19 @@ def create_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """
-    Verify a password against a hash
-    """
+    """Verify a password against a hash."""
     return pwd_context.verify(plain_password, hashed_password)
 
 
 def get_password_hash(password: str) -> str:
-    """
-    Hash a password
-    """
+    """Hash a password."""
     return pwd_context.hash(password)
 
 
 def authenticate_admin(
     db: Session, username: str, password: str
 ) -> Optional[SuperAdmin]:
-    """
-    Authenticate a superadmin by username and password
-    """
+    """Authenticate a superadmin by username and password."""
     admin = db.query(SuperAdmin).filter(SuperAdmin.username == username).first()
     if (
         not admin
@@ -62,20 +52,16 @@ def authenticate_admin(
 
 
 async def verify_api_token(db: Session, token: str) -> Optional[int]:
-    """
-    Verify an API token and return the associated user_id if valid.
-    """
+    """Verify an API token and return the associated user_id if valid."""
     try:
-        api_token = (
-            db.query(APIToken).filter(APIToken.token == token).first()
-        )
-        
+        api_token = db.query(APIToken).filter(APIToken.token == token).first()
+
         if api_token is None:
             return None
-            
+
         if api_token.is_active:
             return api_token.user_id
-            
+
         return None
     except Exception as e:
         logging.error(f"Error verifying API token: {e}")
@@ -83,9 +69,7 @@ async def verify_api_token(db: Session, token: str) -> Optional[int]:
 
 
 def create_api_token(db: Session, description: Optional[str] = None) -> APIToken:
-    """
-    Create a new API token
-    """
+    """Create a new API token."""
     import secrets
 
     token_value = secrets.token_urlsafe(32)
