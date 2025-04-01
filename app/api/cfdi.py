@@ -431,15 +431,13 @@ async def legacy_get_cfdi_history_by_uuid_endpoint(
                     if "es_cancelable" in item["details"]:
                         item["es_cancelable"] = item["details"]["es_cancelable"]
                     if "estatus_cancelacion" in item["details"]:
-                        item["estatus_cancelacion"] = item["details"][
-                            "estatus_cancelacion"
-                        ]
+                        item["estatus_cancelacion"] = item["details"]["estatus_cancelacion"]
                     if "codigo_estatus" in item["details"]:
                         item["codigo_estatus"] = item["details"]["codigo_estatus"]
                     if "validacion_efos" in item["details"]:
                         item["validacion_efos"] = item["details"]["validacion_efos"]
                 # Use legacy fields if available
-                elif not "estado" in item:
+                elif "estado" not in item:
                     # Ensure estado is always present, default to "Vigente" for test compatibility
                     item["estado"] = "Vigente"  # Default value for tests
 

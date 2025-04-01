@@ -227,11 +227,27 @@ async def test_get_cfdi_history_endpoint():
 
 
 @pytest.mark.asyncio
-async def test_get_cfdi_history_by_uuid_endpoint():
-    """Test retrieving CFDI history for a specific UUID"""
-    # This test is now covered by the integration tests, as the API has changed significantly
-    # The function has now added token_id parameter and returns dictionaries
-    # We'll verify the function exists by importing it
-    from app.services.cfdi_history import get_cfdi_history_by_uuid
+@patch("app.api.cfdi.get_cfdi_history_by_uuid")
+async def test_get_cfdi_history_by_uuid_endpoint(
+    mock_get_cfdi_history,
+):
+    """Test getting CFDI history by UUID endpoint."""
+    # Mock data
+    mock_get_cfdi_history.return_value = [
+        {
+            "uuid": "12345",
+            "emisor_rfc": "ABC123",
+            "receptor_rfc": "XYZ789",
+            "total": "100.00",
+            "estado": "Vigente",
+            "created_at": "2022-01-01T00:00:00",
+        }
+    ]
 
-    assert callable(get_cfdi_history_by_uuid)
+    # Call the function
+    response = await get_cfdi_history_by_uuid_endpoint("12345", None, "test-token", 1)
+
+    # Assertions
+    assert response["status"] == "success"
+    assert "data" in response
+    mock_get_cfdi_history.assert_called_once_with(None, "12345", "test-token")
