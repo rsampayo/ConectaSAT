@@ -7,15 +7,15 @@ import warnings
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine, Column, String, JSON
+from sqlalchemy import JSON, Column, String, create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from app.core.auth import create_access_token
 from app.db.database import Base, get_db
 from app.main import app
-from app.models.user import APIToken, User
 from app.models.cfdi_history import CFDIHistory
+from app.models.user import APIToken, User
 
 # Suppress Pydantic deprecation warnings
 warnings.filterwarnings(
@@ -56,11 +56,11 @@ def configure_database_url():
 
 
 # Ensure the CFDIHistory model has the token_id and details columns
-if not hasattr(CFDIHistory, 'token_id'):
-    setattr(CFDIHistory, 'token_id', Column(String, index=True, nullable=True))
+if not hasattr(CFDIHistory, "token_id"):
+    setattr(CFDIHistory, "token_id", Column(String, index=True, nullable=True))
 
-if not hasattr(CFDIHistory, 'details'):
-    setattr(CFDIHistory, 'details', Column(JSON, nullable=True))
+if not hasattr(CFDIHistory, "details"):
+    setattr(CFDIHistory, "details", Column(JSON, nullable=True))
 
 
 @pytest.fixture

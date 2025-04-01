@@ -2,7 +2,6 @@
 Dependency injection functions
 """
 
-
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials, HTTPBearer
 from sqlalchemy.orm import Session

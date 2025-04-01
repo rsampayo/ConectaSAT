@@ -2,7 +2,7 @@
 Service functions for CFDI history
 """
 
-from typing import List, Optional, Dict, Any, Union
+from typing import Any, Dict, List, Optional
 
 from sqlalchemy.orm import Session
 
@@ -11,17 +11,15 @@ from app.schemas.cfdi_history import CFDIHistoryCreate
 
 
 def create_cfdi_history(
-    db: Session,
-    cfdi_history: Optional[CFDIHistoryCreate] = None,
-    **kwargs
+    db: Session, cfdi_history: Optional[CFDIHistoryCreate] = None, **kwargs
 ) -> CFDIHistory:
     """
     Create a new CFDI history entry - supports both new and old parameter formats for compatibility
-    
+
     Can be called with either:
     1. A CFDIHistoryCreate object: create_cfdi_history(db, cfdi_history_obj)
     2. Old style kwargs: create_cfdi_history(db, uuid="123", emisor_rfc="ABC", ...)
-    
+
     Args:
         db: Database session
         cfdi_history: CFDI history data as object (new style)
@@ -33,25 +31,25 @@ def create_cfdi_history(
     # Handle old-style parameter format
     if cfdi_history is None and kwargs:
         # Map old parameter names to new model
-        if 'emisor_rfc' in kwargs and 'rfc_emisor' not in kwargs:
-            kwargs['rfc_emisor'] = kwargs.pop('emisor_rfc')
-        if 'receptor_rfc' in kwargs and 'rfc_receptor' not in kwargs:
-            kwargs['rfc_receptor'] = kwargs.pop('receptor_rfc')
-        
+        if "emisor_rfc" in kwargs and "rfc_emisor" not in kwargs:
+            kwargs["rfc_emisor"] = kwargs.pop("emisor_rfc")
+        if "receptor_rfc" in kwargs and "rfc_receptor" not in kwargs:
+            kwargs["rfc_receptor"] = kwargs.pop("receptor_rfc")
+
         # For older calls that don't provide token_id
-        if 'token_id' not in kwargs:
-            kwargs['token_id'] = 'legacy'
-            
+        if "token_id" not in kwargs:
+            kwargs["token_id"] = "legacy"
+
         # Convert user_id to string if it's not
-        if 'user_id' in kwargs and not isinstance(kwargs['user_id'], str):
-            kwargs['user_id'] = str(kwargs['user_id'])
-            
+        if "user_id" in kwargs and not isinstance(kwargs["user_id"], str):
+            kwargs["user_id"] = str(kwargs["user_id"])
+
         # Create a CFDIHistoryCreate object from kwargs
         cfdi_history = CFDIHistoryCreate(**kwargs)
-    
+
     if not cfdi_history:
         raise ValueError("Either cfdi_history or kwargs must be provided")
-    
+
     # Create database entry from the CFDIHistoryCreate object
     db_history = CFDIHistory(
         uuid=cfdi_history.uuid,
@@ -122,7 +120,9 @@ def create_cfdi_history_old(
     )
 
 
-def get_cfdi_history_by_uuid(db: Session, uuid: str, token_id: Optional[str] = None) -> List[Dict[str, Any]]:
+def get_cfdi_history_by_uuid(
+    db: Session, uuid: str, token_id: Optional[str] = None
+) -> List[Dict[str, Any]]:
     """
     Get CFDI history entries by UUID
 
@@ -135,12 +135,12 @@ def get_cfdi_history_by_uuid(db: Session, uuid: str, token_id: Optional[str] = N
         List of CFDIHistory objects for the given UUID
     """
     query = db.query(CFDIHistory).filter(CFDIHistory.uuid == uuid)
-    
+
     if token_id:
         query = query.filter(CFDIHistory.token_id == token_id)
-    
+
     results = query.order_by(CFDIHistory.created_at.desc()).all()
-    
+
     return [
         {
             "uuid": item.uuid,
@@ -150,7 +150,7 @@ def get_cfdi_history_by_uuid(db: Session, uuid: str, token_id: Optional[str] = N
             "token_id": item.token_id,
             "user_id": item.user_id,
             "details": item.details,
-            "created_at": item.created_at
+            "created_at": item.created_at,
         }
         for item in results
     ]
@@ -173,7 +173,7 @@ def get_verified_cfdis_by_token_id(db: Session, token_id: str) -> List[Dict[str,
         .order_by(CFDIHistory.created_at.desc())
         .all()
     )
-    
+
     return [
         {
             "uuid": item.uuid,
@@ -183,7 +183,7 @@ def get_verified_cfdis_by_token_id(db: Session, token_id: str) -> List[Dict[str,
             "token_id": item.token_id,
             "user_id": item.user_id,
             "details": item.details,
-            "created_at": item.created_at
+            "created_at": item.created_at,
         }
         for item in results
     ]

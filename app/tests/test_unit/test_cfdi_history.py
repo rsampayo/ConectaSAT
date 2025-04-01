@@ -67,8 +67,9 @@ def test_get_cfdi_history_by_uuid(db_session: Session):
 
     # Assert results
     assert len(history_items) >= 1
-    assert history_items[0].uuid == cfdi_data["uuid"]
-    assert history_items[0].emisor_rfc == cfdi_data["emisor_rfc"]
+    # Now testing dict access instead of attribute access
+    assert history_items[0]["uuid"] == cfdi_data["uuid"]
+    assert history_items[0]["emisor_rfc"] == cfdi_data["emisor_rfc"]
 
 
 def test_get_user_cfdi_history(db_session: Session):

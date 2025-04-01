@@ -2,7 +2,7 @@
 Pydantic models for CFDI verification
 """
 
-from typing import List, Optional, Dict, Any
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -33,6 +33,7 @@ class CFDIVerifyRequest(BaseModel):
     """
     New CFDI verification request format
     """
+
     uuid: str = Field(..., description="UUID del CFDI")
     rfc_emisor: str = Field(..., description="RFC del emisor")
     rfc_receptor: str = Field(..., description="RFC del receptor")
@@ -64,6 +65,7 @@ class VerifyCFDI(BaseModel):
     """
     CFDI verification result for batch processing
     """
+
     uuid: str = Field(..., description="UUID del CFDI verificado")
     status: str = Field(..., description="Estado de la verificación (success/error)")
     message: str = Field(..., description="Mensaje descriptivo")
@@ -74,7 +76,10 @@ class CFDIBatch(BaseModel):
     """
     Batch response for CFDI verifications
     """
-    results: List[VerifyCFDI] = Field(..., description="Resultados de las verificaciones")
+
+    results: List[VerifyCFDI] = Field(
+        ..., description="Resultados de las verificaciones"
+    )
 
 
 class BatchCFDIRequest(BaseModel):

@@ -22,15 +22,17 @@ class CFDIVerification:
     """
     Class for verifying CFDIs with the SAT service
     """
-    
+
     def __init__(self):
         """Initialize the CFDI verification service"""
-        self.url = "https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc"
+        self.url = (
+            "https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc"
+        )
         self.headers = {
             "Content-Type": "text/xml;charset=UTF-8",
             "SOAPAction": "http://tempuri.org/IConsultaCFDIService/Consulta",
         }
-    
+
     def validate_cfdi(
         self, uuid: str, emisor_rfc: str, receptor_rfc: str, total: float
     ) -> Dict[str, Any]:
@@ -50,7 +52,7 @@ class CFDIVerification:
             Exception: If there is an error connecting to the SAT service
         """
         total_str = str(total)
-        
+
         # Initialize result with default values
         result: Dict[str, Any] = {
             "estado": "",
@@ -81,12 +83,17 @@ class CFDIVerification:
                 f"Verifying CFDI: UUID={uuid}, Emisor={emisor_rfc}, Receptor={receptor_rfc}"
             )
             response = requests.post(
-                self.url, headers=self.headers, data=soap_envelope.encode("utf-8"), timeout=15
+                self.url,
+                headers=self.headers,
+                data=soap_envelope.encode("utf-8"),
+                timeout=15,
             )
 
             if response.status_code == 200:
                 # Save raw response
-                result["raw_response"] = minidom.parseString(response.content).toprettyxml()
+                result["raw_response"] = minidom.parseString(
+                    response.content
+                ).toprettyxml()
 
                 try:
                     # Parse XML response
@@ -130,7 +137,9 @@ class CFDIVerification:
                     # If we didn't find attributes, look for child elements with those names
                     if not result["estado"]:
                         for ns_prefix in ["a:", ""]:
-                            estado_elem = root.find(f".//*{ns_prefix}Estado", namespaces)
+                            estado_elem = root.find(
+                                f".//*{ns_prefix}Estado", namespaces
+                            )
                             if estado_elem is not None and estado_elem.text:
                                 result["estado"] = estado_elem.text
                                 break
@@ -223,7 +232,9 @@ class CFDIVerification:
                     logger.error(f"Error parsing SAT response: {str(e)}")
                     raise Exception(f"Error parsing SAT response: {str(e)}")
             else:
-                logger.error(f"SAT service error: {response.status_code} - {response.text}")
+                logger.error(
+                    f"SAT service error: {response.status_code} - {response.text}"
+                )
                 raise Exception(
                     f"SAT service error: {response.status_code} - {response.text}"
                 )
@@ -241,7 +252,7 @@ async def verify_cfdi(
 ) -> Dict[str, Any]:
     """
     Legacy function to verify a CFDI with the SAT verification service.
-    
+
     Uses the new CFDIVerification class internally.
     """
     verifier = CFDIVerification()

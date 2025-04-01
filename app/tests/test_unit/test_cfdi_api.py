@@ -1,7 +1,7 @@
 """
 Test module for CFDI API endpoints
 """
-import json
+
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -9,12 +9,14 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.api.cfdi import (
-    legacy_verify_cfdi_endpoint as verify_cfdi_endpoint,
-    legacy_verify_batch_endpoint as verify_cfdi_batch_endpoint,
-    create_cfdi_history_from_verification,
     get_user_cfdi_history,
 )
-from app.schemas.cfdi import BatchCFDIRequest, CFDIRequest, CFDIResponse, BatchCFDIResponse
+from app.api.cfdi import legacy_verify_batch_endpoint as verify_cfdi_batch_endpoint
+from app.api.cfdi import legacy_verify_cfdi_endpoint as verify_cfdi_endpoint
+from app.schemas.cfdi import (
+    BatchCFDIRequest,
+    CFDIRequest,
+)
 
 # Test data
 SAMPLE_CFDI_REQUEST = CFDIRequest(
@@ -90,8 +92,12 @@ async def test_verify_cfdi_endpoint_success():
         # Assert response matches the verification result
         assert isinstance(result, dict)
         assert result.get("estado") == SAMPLE_VERIFICATION_RESULT["estado"]
-        assert result.get("es_cancelable") == SAMPLE_VERIFICATION_RESULT["es_cancelable"]
-        assert result.get("codigo_estatus") == SAMPLE_VERIFICATION_RESULT["codigo_estatus"]
+        assert (
+            result.get("es_cancelable") == SAMPLE_VERIFICATION_RESULT["es_cancelable"]
+        )
+        assert (
+            result.get("codigo_estatus") == SAMPLE_VERIFICATION_RESULT["codigo_estatus"]
+        )
 
 
 @pytest.mark.asyncio
@@ -214,8 +220,7 @@ async def test_get_cfdi_history_endpoint():
     """Test retrieving CFDI history for a user"""
     # Use mock DB directly since we're only testing that the endpoint calls the service
     mock_db = MagicMock(spec=Session)
-    mock_user_id = 1
-    
+
     # This test is now covered by the integration tests, as the API has changed significantly
     # We'll just assert the get_user_cfdi_history service exists
     assert callable(get_user_cfdi_history)
@@ -228,4 +233,5 @@ async def test_get_cfdi_history_by_uuid_endpoint():
     # The function has now added token_id parameter and returns dictionaries
     # We'll verify the function exists by importing it
     from app.services.cfdi_history import get_cfdi_history_by_uuid
+
     assert callable(get_cfdi_history_by_uuid)
