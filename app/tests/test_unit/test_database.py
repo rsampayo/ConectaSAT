@@ -35,7 +35,8 @@ def test_get_db_url_postgresql(mock_settings):
 def test_sqlite_engine_creation_branch():
     """Test the SQLite engine creation branch in database.py."""
     # This tests the line 23 branch in database.py
-    # We test the branch condition rather than trying to trigger the engine creation directly
+    # We test the branch condition rather than trying to trigger
+    # the engine creation directly
 
     # First, verify we can detect a SQLite URL
     sqlite_url = "sqlite:///test.db"
@@ -67,8 +68,8 @@ def test_non_sqlite_engine_creation_branch():
 def test_sqlite_specific_engine_creation_direct(monkeypatch):
     """Test SQLite specific engine creation branch directly."""
     # This is the critical test for line 23
-    # we'll validate the engine creation directly by executing the code
-    # similar to what's in database.py
+    # We'll validate the engine creation directly by executing
+    # the code similar to what's in database.py
 
     # Setup mocking
     mock_engine = MagicMock()
@@ -80,7 +81,8 @@ def test_sqlite_specific_engine_creation_direct(monkeypatch):
 
     monkeypatch.setattr(sqlalchemy, "create_engine", mock_create_engine)
 
-    # Directly apply the condition and call create_engine as it would happen in database.py
+    # Directly apply the condition and call create_engine
+    # as it would happen in database.py
     db_url = "sqlite:///test.db"
     if "sqlite" in db_url:
         result_engine = sqlalchemy.create_engine(
@@ -99,7 +101,8 @@ def test_sqlite_specific_engine_creation_direct(monkeypatch):
 
 def test_postgresql_specific_engine_creation_direct(monkeypatch):
     """Test PostgreSQL specific engine creation branch directly (line 26)"""
-    # This test targets the else branch (line 26) in database.py that's currently not covered
+    # Test the else branch (line 26) in database.py
+    # This branch is currently not covered
 
     # Setup mocking
     mock_engine = MagicMock()
@@ -111,7 +114,7 @@ def test_postgresql_specific_engine_creation_direct(monkeypatch):
 
     monkeypatch.setattr(sqlalchemy, "create_engine", mock_create_engine)
 
-    # Directly apply the condition and call create_engine as it would happen in database.py
+    # Directly apply the condition and call create_engine
     db_url = "postgresql://user:pass@localhost:5432/db"
     if "sqlite" in db_url:
         result_engine = sqlalchemy.create_engine(
@@ -133,7 +136,8 @@ def test_postgresql_specific_engine_creation_direct(monkeypatch):
 def test_line_23_directly():
     """Test line 23 directly by executing similar code."""
     # This is a direct test of the line we need to cover
-    # Line 23 is: engine = create_engine(db_url, connect_args={"check_same_thread": False})
+    # Line 23 is:
+    # engine = create_engine(db_url, connect_args={"check_same_thread": False})
 
     # Here we're replicating the code from the module almost literally
     import sqlalchemy
@@ -169,7 +173,8 @@ def test_base_creation():
     """Test Base class creation."""
     # Check that Base is a declarative base
     assert hasattr(Base, "metadata")
-    # __tablename__ is not a class attribute but an instance attribute, so we don't check it
+    # __tablename__ is not a class attribute but an instance attribute,
+    # so we don't check it
 
 
 @patch("app.db.database.SessionLocal")

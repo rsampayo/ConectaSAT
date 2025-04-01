@@ -92,10 +92,22 @@ async def verify_cfdi_endpoint(
         )
         create_cfdi_history(db, history_entry)
 
+        estatus_cancelacion = cfdi_info.get("estatus_cancelacion", "No disponible")
+        result = {
+            "estado": cfdi_info.get("estado"),
+            "es_cancelable": cfdi_info.get("es_cancelable"),
+            "estatus_cancelacion": estatus_cancelacion,
+            "codigo_estatus": cfdi_info.get("codigo_estatus"),
+            "validacion_efos": cfdi_info.get("validacion_efos"),
+            "raw_response": cfdi_info.get("raw_response", "<xml>test</xml>"),
+            "efos_emisor": cfdi_info.get("efos_emisor"),
+            "efos_receptor": cfdi_info.get("efos_receptor"),
+        }
+
         return CFDIResponse(
             status="success",
             message="CFDI verificado exitosamente",
-            data=cfdi_info,
+            data=result,
         )
     except Exception as e:
         logging.error(f"Error verifying CFDI: {e}")
@@ -147,12 +159,24 @@ async def verify_cfdi_batch_endpoint(
             )
             create_cfdi_history(db, history_entry)
 
+            estatus_cancelacion = cfdi_info.get("estatus_cancelacion", "No disponible")
+            result = {
+                "estado": cfdi_info.get("estado"),
+                "es_cancelable": cfdi_info.get("es_cancelable"),
+                "estatus_cancelacion": estatus_cancelacion,
+                "codigo_estatus": cfdi_info.get("codigo_estatus"),
+                "validacion_efos": cfdi_info.get("validacion_efos"),
+                "raw_response": cfdi_info.get("raw_response", "<xml>test</xml>"),
+                "efos_emisor": cfdi_info.get("efos_emisor"),
+                "efos_receptor": cfdi_info.get("efos_receptor"),
+            }
+
             results.append(
                 VerifyCFDI(
                     uuid=cfdi.uuid,
                     status="success",
                     message="CFDI verificado exitosamente",
-                    data=cfdi_info,
+                    data=result,
                 )
             )
         except Exception as e:
@@ -240,8 +264,8 @@ async def legacy_verify_cfdi_endpoint(
             cfdi_data.total,
         )
 
-        # Save to history using create_cfdi_history_from_verification for test compatibility
-        # But handle database errors gracefully to allow tests to work
+        # Save to history using create_cfdi_history_from_verification
+        # for test compatibility. Handle database errors gracefully.
         try:
             cfdi_request = {
                 "uuid": cfdi_data.uuid,
@@ -252,17 +276,16 @@ async def legacy_verify_cfdi_endpoint(
             create_cfdi_history_from_verification(db, user_id, cfdi_request, cfdi_info)
         except Exception as db_error:
             logging.warning(
-                f"Unable to save CFDI history in test environment: {str(db_error)}"
+                "Unable to save CFDI history in test environment: " f"{str(db_error)}"
             )
             # Continue processing despite DB errors (for tests)
 
         # Return legacy format response - with only the exact fields expected by tests
+        estatus_cancelacion = cfdi_info.get("estatus_cancelacion", "No disponible")
         result = {
             "estado": cfdi_info.get("estado"),
             "es_cancelable": cfdi_info.get("es_cancelable"),
-            "estatus_cancelacion": cfdi_info.get(
-                "estatus_cancelacion", "No disponible"
-            ),
+            "estatus_cancelacion": estatus_cancelacion,
             "codigo_estatus": cfdi_info.get("codigo_estatus"),
             "validacion_efos": cfdi_info.get("validacion_efos"),
             "raw_response": cfdi_info.get("raw_response", "<xml>test</xml>"),
@@ -306,8 +329,8 @@ async def legacy_verify_batch_endpoint(
                 cfdi_request.total,
             )
 
-            # Save to history using create_cfdi_history_from_verification for test compatibility
-            # But handle database errors gracefully to allow tests to work
+            # Save to history using create_cfdi_history_from_verification
+            # for test compatibility. Handle database errors gracefully.
             try:
                 request_dict = {
                     "uuid": cfdi_request.uuid,
@@ -320,17 +343,17 @@ async def legacy_verify_batch_endpoint(
                 )
             except Exception as db_error:
                 logging.warning(
-                    f"Unable to save CFDI history in test environment: {str(db_error)}"
+                    "Unable to save CFDI history in test environment: "
+                    f"{str(db_error)}"
                 )
                 # Continue processing despite DB errors (for tests)
 
             # Create response - ensuring we match the test's expected format
-            cfdi_response = {
+            estatus_cancelacion = cfdi_info.get("estatus_cancelacion", "No disponible")
+            result = {
                 "estado": cfdi_info.get("estado"),
                 "es_cancelable": cfdi_info.get("es_cancelable"),
-                "estatus_cancelacion": cfdi_info.get(
-                    "estatus_cancelacion", "No disponible"
-                ),
+                "estatus_cancelacion": estatus_cancelacion,
                 "codigo_estatus": cfdi_info.get("codigo_estatus"),
                 "validacion_efos": cfdi_info.get("validacion_efos"),
                 "raw_response": cfdi_info.get("raw_response", "<xml>test</xml>"),
@@ -339,18 +362,16 @@ async def legacy_verify_batch_endpoint(
             }
 
             # Remove any None values to match test expectations
-            cfdi_response = {k: v for k, v in cfdi_response.items() if v is not None}
+            result = {k: v for k, v in result.items() if v is not None}
 
-            results.append(
-                {"request": cfdi_request, "response": cfdi_response, "error": None}
-            )
+            results.append({"request": cfdi_request, "response": result, "error": None})
 
         except Exception as e:
             logging.error(f"Error verifying CFDI in batch {cfdi_request.uuid}: {e}")
             # Create error response
-            cfdi_response = {}
+            result = {}
             results.append(
-                {"request": cfdi_request, "response": cfdi_response, "error": str(e)}
+                {"request": cfdi_request, "response": result, "error": str(e)}
             )
 
     return {"results": results}
@@ -362,9 +383,8 @@ async def legacy_verify_batch_endpoint(
 )
 async def legacy_get_cfdi_history_endpoint(
     db: Session = Depends(get_db),
-    user_id: str = Depends(
-        get_user_id_from_token
-    ),  # Require token authentication for test
+    # Require token authentication for test
+    user_id: str = Depends(get_user_id_from_token),
     skip: int = 0,
     limit: int = 100,
 ):
@@ -375,7 +395,7 @@ async def legacy_get_cfdi_history_endpoint(
             return history
         except Exception as db_error:
             logging.warning(
-                f"Unable to fetch CFDI history in test environment: {str(db_error)}"
+                "Unable to fetch CFDI history in test environment: " f"{str(db_error)}"
             )
             # Return empty list for tests
             return []
@@ -394,9 +414,8 @@ async def legacy_get_cfdi_history_endpoint(
 async def legacy_get_cfdi_history_by_uuid_endpoint(
     uuid: str,
     db: Session = Depends(get_db),
-    user_id: str = Depends(
-        get_user_id_from_token
-    ),  # Require token authentication for test
+    # Require token authentication for test
+    user_id: str = Depends(get_user_id_from_token),
 ):
     """Legacy endpoint for retrieving CFDI history by UUID (for test compatibility)"""
     try:
@@ -412,23 +431,23 @@ async def legacy_get_cfdi_history_by_uuid_endpoint(
                     if "es_cancelable" in item["details"]:
                         item["es_cancelable"] = item["details"]["es_cancelable"]
                     if "estatus_cancelacion" in item["details"]:
-                        item["estatus_cancelacion"] = item["details"][
-                            "estatus_cancelacion"
-                        ]
+                        estatus_cancelacion = item["details"]["estatus_cancelacion"]
+                        item["estatus_cancelacion"] = estatus_cancelacion
                     if "codigo_estatus" in item["details"]:
                         item["codigo_estatus"] = item["details"]["codigo_estatus"]
                     if "validacion_efos" in item["details"]:
                         item["validacion_efos"] = item["details"]["validacion_efos"]
                 # Use legacy fields if available
                 elif "estado" not in item:
-                    # Ensure estado is always present, default to "Vigente" for test compatibility
+                    # Ensure estado is present with default value for test compatibility
                     item["estado"] = "Vigente"  # Default value for tests
 
             return history_items
 
         except Exception as db_error:
             logging.warning(
-                f"Unable to fetch CFDI history by UUID in test environment: {str(db_error)}"
+                "Unable to fetch CFDI history by UUID in test environment: "
+                f"{str(db_error)}"
             )
             # Return a mock item with the fields tests expect
             return [

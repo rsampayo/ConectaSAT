@@ -120,9 +120,10 @@ def test_verify_cfdi_batch_endpoint(mock_verify_cfdi):
         response_data = cfdi_result["response"]
         for key, value in valid_cfdi_response.items():
             assert key in response_data, f"Key {key} missing from response {i}"
-            assert (
-                response_data[key] == value
-            ), f"Value mismatch for {key} in response {i}: expected {value}, got {response_data[key]}"
+            assert response_data[key] == value, (
+                f"Value mismatch for {key} in response {i}: "
+                f"expected {value}, got {response_data[key]}"
+            )
 
     # Verify the service was called for each CFDI
     assert mock_verify_cfdi.call_count == 2

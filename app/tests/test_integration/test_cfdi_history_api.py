@@ -28,7 +28,7 @@ def test_get_cfdi_history_authenticated(
         "estado": "Vigente",
         "es_cancelable": "Cancelable sin aceptación",
         "estatus_cancelacion": "No cancelado",
-        "codigo_estatus": "S - Comprobante obtenido satisfactoriamente",
+        "codigo_estatus": "S - Comprobante verificado",
         "validacion_efos": "200",
     }
     create_cfdi_history(db_session, **cfdi_data)
@@ -84,7 +84,7 @@ def test_get_cfdi_history_by_uuid(client, db_session, override_get_token_depende
         "estado": "Vigente",
         "es_cancelable": "Cancelable sin aceptación",
         "estatus_cancelacion": "No cancelado",
-        "codigo_estatus": "S - Comprobante obtenido satisfactoriamente",
+        "codigo_estatus": "S - Comprobante verificado",
         "validacion_efos": "200",
     }
     create_cfdi_history(db_session, **cfdi_data)
@@ -159,8 +159,9 @@ def test_verify_cfdi_creates_history(client, db_session, override_get_token_depe
     app.dependency_overrides[get_user_id_from_token] = lambda: 1
 
     try:
-        # Need to mock the actual SAT verification since this is an integration test
-        # For a real test, you might want to use dependency_overrides to mock the SAT service
+        # Need to mock the actual SAT verification since this is an integration test.
+        # For a real test, you might want to use dependency_overrides
+        # to mock the SAT service.
 
         # Make verify-cfdi request
         with pytest.MonkeyPatch.context() as m:
@@ -171,7 +172,7 @@ def test_verify_cfdi_creates_history(client, db_session, override_get_token_depe
                     "estado": "Vigente",
                     "es_cancelable": "Cancelable sin aceptación",
                     "estatus_cancelacion": "No cancelado",
-                    "codigo_estatus": "S - Comprobante obtenido satisfactoriamente",
+                    "codigo_estatus": ("S - Comprobante verificado"),
                     "validacion_efos": "200",
                     "raw_response": "<xml>test</xml>",
                 },

@@ -7,7 +7,7 @@ def fix_file(filename):
         if os.path.isdir(filename):
             print(f"Processing directory: {filename}")
             # Process all Python files in the directory recursively
-            for root, dirs, files in os.walk(filename):
+            for root, _dirs, files in os.walk(filename):
                 for file in files:
                     if file.endswith(".py"):
                         fix_file(os.path.join(root, file))

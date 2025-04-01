@@ -91,7 +91,8 @@ def test_verify_cfdi_batch_unauthorized():
     # Endpoint could return 401/403 for auth or 404 if path doesn't exist
     assert response.status_code in [401, 403, 404]
     print(
-        "✅ CFDI batch verification correctly requires authentication or doesn't exist at this path"
+        "✅ CFDI batch verification correctly requires authentication "
+        "or doesn't exist at this path"
     )
 
 

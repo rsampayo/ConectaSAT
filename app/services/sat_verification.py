@@ -59,11 +59,14 @@ class CFDIVerification:
 
         # SOAP envelope template
         soap_envelope = f"""
-        <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
+        <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+                      xmlns:tem="http://tempuri.org/">
            <soap:Header/>
            <soap:Body>
               <tem:Consulta>
-                 <tem:expresionImpresa>?re={emisor_rfc}&amp;rr={receptor_rfc}&amp;tt={total_str}&amp;id={uuid}</tem:expresionImpresa>
+                 <tem:expresionImpresa>
+                    ?re={emisor_rfc}&amp;rr={receptor_rfc}&amp;tt={total_str}&amp;id={uuid}
+                 </tem:expresionImpresa>
               </tem:Consulta>
            </soap:Body>
         </soap:Envelope>
@@ -72,7 +75,8 @@ class CFDIVerification:
         # Send request to SAT service
         try:
             logger.info(
-                f"Verifying CFDI: UUID={uuid}, Emisor={emisor_rfc}, Receptor={receptor_rfc}"
+                "Verifying CFDI: "
+                f"UUID={uuid}, Emisor={emisor_rfc}, Receptor={receptor_rfc}"
             )
             response = requests.post(
                 self.url,
@@ -95,7 +99,10 @@ class CFDIVerification:
                     namespaces = {
                         "s": "http://schemas.xmlsoap.org/soap/envelope/",
                         "temp": "http://tempuri.org/",
-                        "a": "http://schemas.datacontract.org/2004/07/Sat.Cfdi.Negocio.ConsultaCfdi.Servicio",
+                        "a": (
+                            "http://schemas.datacontract.org/2004/07/"
+                            "Sat.Cfdi.Negocio.ConsultaCfdi.Servicio"
+                        ),
                     }
 
                     # Find all elements that might contain our attributes
@@ -126,14 +133,15 @@ class CFDIVerification:
                                 elif attr_key == "validacionefos":
                                     result["validacion_efos"] = elem.attrib[attr_name]
 
-                    # If we didn't find attributes, look for child elements with those names
+                    # If we didn't find attributes, look for child elements
+                    # with those names
                     if not result["estado"]:
                         for ns_prefix in ["a:", ""]:
                             estado_elem = root.find(
                                 f".//*{ns_prefix}Estado", namespaces
                             )
                             if estado_elem is not None and estado_elem.text:
-                                result["estado"] = estado_elem.text
+                                result["estado"] = estado_elem.text.strip()
                                 break
 
                         for ns_prefix in ["a:", ""]:
@@ -141,7 +149,7 @@ class CFDIVerification:
                                 f".//*{ns_prefix}EsCancelable", namespaces
                             )
                             if cancelable_elem is not None and cancelable_elem.text:
-                                result["es_cancelable"] = cancelable_elem.text
+                                result["es_cancelable"] = cancelable_elem.text.strip()
                                 break
 
                         for ns_prefix in ["a:", ""]:
@@ -150,8 +158,8 @@ class CFDIVerification:
                             )
                             if estatus_elem is not None:
                                 result["estatus_cancelacion"] = (
-                                    estatus_elem.text
-                                    if estatus_elem.text
+                                    estatus_elem.text.strip()
+                                    if estatus_elem.text and estatus_elem.text.strip()
                                     else "No disponible"
                                 )
                                 break
@@ -161,7 +169,7 @@ class CFDIVerification:
                                 f".//*{ns_prefix}CodigoEstatus", namespaces
                             )
                             if codigo_elem is not None and codigo_elem.text:
-                                result["codigo_estatus"] = codigo_elem.text
+                                result["codigo_estatus"] = codigo_elem.text.strip()
                                 break
 
                         for ns_prefix in ["a:", ""]:
@@ -169,7 +177,7 @@ class CFDIVerification:
                                 f".//*{ns_prefix}ValidacionEFOS", namespaces
                             )
                             if efos_elem is not None and efos_elem.text:
-                                result["validacion_efos"] = efos_elem.text
+                                result["validacion_efos"] = efos_elem.text.strip()
                                 break
 
                     # Special handling for our test XML format
@@ -217,9 +225,7 @@ class CFDIVerification:
                                     "CodigoEstatus"
                                 ]
 
-                    logger.info(
-                        f"CFDI verification successful: UUID={uuid}, Estado={result['estado']}"
-                    )
+                    logger.info(f"CFDI status: {uuid}={result['estado']}")
                 except Exception as e:
                     logger.error(f"Error parsing SAT response: {str(e)}")
                     raise Exception(f"Error parsing SAT response: {str(e)}")

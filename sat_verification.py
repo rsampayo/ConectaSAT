@@ -38,11 +38,15 @@ async def verify_cfdi(
 
     # SOAP envelope template
     soap_envelope = f"""
-    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
+    <soap:Envelope 
+        xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" 
+        xmlns:tem="http://tempuri.org/">
        <soap:Header/>
        <soap:Body>
           <tem:Consulta>
-             <tem:expresionImpresa>?re={emisor_rfc}&amp;rr={receptor_rfc}&amp;tt={total}&amp;id={uuid}</tem:expresionImpresa>
+             <tem:expresionImpresa>
+                ?re={emisor_rfc}&amp;rr={receptor_rfc}&amp;tt={total}&amp;id={uuid}
+             </tem:expresionImpresa>
           </tem:Consulta>
        </soap:Body>
     </soap:Envelope>
@@ -93,12 +97,10 @@ async def verify_cfdi(
                         elif tag_name == "ValidacionEFOS":
                             result["validacion_efos"] = elem.text
 
-                # Check EFOS status (mock for now - would actually check against EFOS database)
-                # In a real implementation, this would check the database for EFOS status
+                # Check EFOS status (mock for now)
+                # Would actually check against EFOS database in real implementation
 
-                logger.info(
-                    f"CFDI verification successful: UUID={uuid}, Estado={result['estado']}"
-                )
+                logger.info(f"CFDI status: {uuid}={result['estado']}")
             except Exception as e:
                 logger.error(f"Error parsing SAT response: {str(e)}")
                 raise Exception(f"Error parsing SAT response: {str(e)}")

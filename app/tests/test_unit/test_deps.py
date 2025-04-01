@@ -190,7 +190,8 @@ async def test_get_current_admin_valid(mock_db, mock_basic_credentials, mock_adm
     # Setup
     mock_db.query.return_value.filter.return_value.first.return_value = mock_admin
 
-    # Properly mock the hashed_password to be a string and patch the verify_password function
+    # Properly mock the hashed_password to be a string and patch
+    # the verify_password function
     mock_admin.hashed_password = "hashed_password_string"
     mock_admin.is_active = True
 

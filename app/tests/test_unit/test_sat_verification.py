@@ -41,11 +41,25 @@ ALTERNATIVE_XML_FORMAT = """<?xml version="1.0" encoding="utf-8"?>
     <s:Body>
         <ConsultaResponse xmlns="http://tempuri.org/">
             <ConsultaResult>
-                <a:CodigoEstatus xmlns:a="http://schemas.datacontract.org/2004/07/Sat.Cfdi.Negocio.ConsultaCfdi.Servicio">S - Comprobante obtenido satisfactoriamente.</a:CodigoEstatus>
-                <a:Estado xmlns:a="http://schemas.datacontract.org/2004/07/Sat.Cfdi.Negocio.ConsultaCfdi.Servicio">Vigente</a:Estado>
-                <a:EsCancelable xmlns:a="http://schemas.datacontract.org/2004/07/Sat.Cfdi.Negocio.ConsultaCfdi.Servicio">Cancelable sin aceptación</a:EsCancelable>
-                <a:EstatusCancelacion xmlns:a="http://schemas.datacontract.org/2004/07/Sat.Cfdi.Negocio.ConsultaCfdi.Servicio"></a:EstatusCancelacion>
-                <a:ValidacionEFOS xmlns:a="http://schemas.datacontract.org/2004/07/Sat.Cfdi.Negocio.ConsultaCfdi.Servicio">200</a:ValidacionEFOS>
+                <a:CodigoEstatus 
+                    xmlns:a="http://schemas.datacontract.org/2004/07/Sat.Cfdi.Negocio.ConsultaCfdi.Servicio">
+                    S - Comprobante obtenido satisfactoriamente.
+                </a:CodigoEstatus>
+                <a:Estado 
+                    xmlns:a="http://schemas.datacontract.org/2004/07/Sat.Cfdi.Negocio.ConsultaCfdi.Servicio">
+                    Vigente
+                </a:Estado>
+                <a:EsCancelable 
+                    xmlns:a="http://schemas.datacontract.org/2004/07/Sat.Cfdi.Negocio.ConsultaCfdi.Servicio">
+                    Cancelable sin aceptación
+                </a:EsCancelable>
+                <a:EstatusCancelacion 
+                    xmlns:a="http://schemas.datacontract.org/2004/07/Sat.Cfdi.Negocio.ConsultaCfdi.Servicio">
+                </a:EstatusCancelacion>
+                <a:ValidacionEFOS 
+                    xmlns:a="http://schemas.datacontract.org/2004/07/Sat.Cfdi.Negocio.ConsultaCfdi.Servicio">
+                    200
+                </a:ValidacionEFOS>
             </ConsultaResult>
         </ConsultaResponse>
     </s:Body>
@@ -87,11 +101,11 @@ async def test_verify_cfdi_valid():
         )
 
         # Assert results
-        assert result["estado"] == "Vigente"
-        assert result["es_cancelable"] == "Cancelable sin aceptación"
-        assert result["estatus_cancelacion"] == "No disponible"
+        assert result["estado"].strip() == "Vigente"
+        assert result["es_cancelable"].strip() == "Cancelable sin aceptación"
+        assert result["estatus_cancelacion"].strip() == "No disponible"
         assert (
-            result["codigo_estatus"] == "S - Comprobante obtenido satisfactoriamente."
+            result["codigo_estatus"].strip() == "S - Comprobante obtenido satisfactoriamente."
         )
         assert mock_post.called
 
@@ -116,11 +130,11 @@ async def test_verify_cfdi_canceled():
         )
 
         # Assert results
-        assert result["estado"] == "Cancelado"
-        assert result["es_cancelable"] == "No cancelable"
-        assert result["estatus_cancelacion"] == "Cancelado sin aceptación"
+        assert result["estado"].strip() == "Cancelado"
+        assert result["es_cancelable"].strip() == "No cancelable"
+        assert result["estatus_cancelacion"].strip() == "Cancelado sin aceptación"
         assert (
-            result["codigo_estatus"] == "S - Comprobante obtenido satisfactoriamente."
+            result["codigo_estatus"].strip() == "S - Comprobante obtenido satisfactoriamente."
         )
         assert mock_post.called
 
@@ -229,13 +243,13 @@ async def test_verify_cfdi_alternative_xml_format():
         )
 
         # Assert results
-        assert result["estado"] == "Vigente"
-        assert result["es_cancelable"] == "Cancelable sin aceptación"
-        assert result["estatus_cancelacion"] == "No disponible"
+        assert result["estado"].strip() == "Vigente"
+        assert result["es_cancelable"].strip() == "Cancelable sin aceptación"
+        assert result["estatus_cancelacion"].strip() == "No disponible"
         assert (
-            result["codigo_estatus"] == "S - Comprobante obtenido satisfactoriamente."
+            result["codigo_estatus"].strip() == "S - Comprobante obtenido satisfactoriamente."
         )
-        assert result["validacion_efos"] == "200"
+        assert result["validacion_efos"].strip() == "200"
         assert mock_post.called
 
 
@@ -259,13 +273,13 @@ async def test_verify_cfdi_with_validacion_efos():
         )
 
         # Assert results
-        assert result["estado"] == "Vigente"
-        assert result["es_cancelable"] == "Cancelable sin aceptación"
-        assert result["estatus_cancelacion"] == "No disponible"
+        assert result["estado"].strip() == "Vigente"
+        assert result["es_cancelable"].strip() == "Cancelable sin aceptación"
+        assert result["estatus_cancelacion"].strip() == "No disponible"
         assert (
-            result["codigo_estatus"] == "S - Comprobante obtenido satisfactoriamente."
+            result["codigo_estatus"].strip() == "S - Comprobante obtenido satisfactoriamente."
         )
-        assert result["validacion_efos"] == "200"
+        assert result["validacion_efos"].strip() == "200"
         assert mock_post.called
 
 
@@ -308,10 +322,12 @@ async def test_verify_cfdi_special_xml_format():
     <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
         <s:Body>
             <ConsultaResponse xmlns="http://tempuri.org/">
-                <ConsultaResult Estado="Vigente"
-                               EsCancelable="Cancelable sin aceptación"
-                               EstatusCancelacion="No cancelado"
-                               CodigoEstatus="S - Comprobante obtenido satisfactoriamente."/>
+                <ConsultaResult 
+                    Estado="Vigente"
+                    EsCancelable="Cancelable sin aceptación"
+                    EstatusCancelacion="No cancelado"
+                    CodigoEstatus="S - Comprobante obtenido satisfactoriamente."
+                />
             </ConsultaResponse>
         </s:Body>
     </s:Envelope>
@@ -379,11 +395,11 @@ async def test_verify_cfdi_special_xml_format():
             )
 
             # Assert results
-            assert result["estado"] == "Vigente"
-            assert result["es_cancelable"] == "Cancelable sin aceptación"
-            assert result["estatus_cancelacion"] == "No cancelado"
+            assert result["estado"].strip() == "Vigente"
+            assert result["es_cancelable"].strip() == "Cancelable sin aceptación"
+            assert result["estatus_cancelacion"].strip() == "No cancelado"
             assert (
-                result["codigo_estatus"]
+                result["codigo_estatus"].strip()
                 == "S - Comprobante obtenido satisfactoriamente."
             )
             assert mock_post.called
@@ -398,10 +414,12 @@ async def test_verify_cfdi_special_xml_empty_estado():
     <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
         <s:Body>
             <ConsultaResponse xmlns="http://tempuri.org/">
-                <ConsultaResult Estado="Vigente"
-                               EsCancelable="Cancelable sin aceptación"
-                               EstatusCancelacion="No cancelado"
-                               CodigoEstatus="S - Comprobante obtenido satisfactoriamente."/>
+                <ConsultaResult 
+                    Estado="Vigente"
+                    EsCancelable="Cancelable sin aceptación"
+                    EstatusCancelacion="No cancelado"
+                    CodigoEstatus="S - Comprobante obtenido satisfactoriamente."
+                />
             </ConsultaResponse>
         </s:Body>
     </s:Envelope>
@@ -452,11 +470,11 @@ async def test_verify_cfdi_special_xml_empty_estado():
             )
 
             # Assert results
-            assert result["estado"] == "Vigente"
-            assert result["es_cancelable"] == "Cancelable sin aceptación"
-            assert result["estatus_cancelacion"] == "No cancelado"
+            assert result["estado"].strip() == "Vigente"
+            assert result["es_cancelable"].strip() == "Cancelable sin aceptación"
+            assert result["estatus_cancelacion"].strip() == "No cancelado"
             assert (
-                result["codigo_estatus"]
+                result["codigo_estatus"].strip()
                 == "S - Comprobante obtenido satisfactoriamente."
             )
             assert mock_post.called

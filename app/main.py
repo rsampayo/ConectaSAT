@@ -37,7 +37,10 @@ async def lifespan(app: FastAPI):
 # Create FastAPI app
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    description="API para verificar la validez de Comprobantes Fiscales Digitales por Internet (CFDI)",
+    description=(
+        "API para verificar la validez de Comprobantes Fiscales "
+        "Digitales por Internet (CFDI)"
+    ),
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",

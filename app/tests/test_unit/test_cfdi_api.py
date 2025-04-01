@@ -217,7 +217,8 @@ async def test_verify_cfdi_batch_endpoint_with_error():
 @pytest.mark.asyncio
 async def test_get_cfdi_history_endpoint():
     """Test retrieving CFDI history for a user."""
-    # This test is now covered by the integration tests, as the API has changed significantly
+    # This test is now covered by the integration tests
+    # as the API has changed significantly
     # We'll just assert the get_user_cfdi_history service exists
     assert callable(get_user_cfdi_history)
 

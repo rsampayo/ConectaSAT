@@ -76,9 +76,11 @@ async def test_create_api_token_endpoint(mock_db, mock_admin, mock_token):
 async def test_list_api_tokens_endpoint(mock_db, mock_admin, mock_token):
     """Test listing API tokens."""
     # Setup
-    mock_db.query.return_value.filter.return_value.offset.return_value.limit.return_value.all.return_value = [
-        mock_token
-    ]
+    mock_query = mock_db.query.return_value
+    mock_filter = mock_query.filter.return_value
+    mock_offset = mock_filter.offset.return_value
+    mock_limit = mock_offset.limit.return_value
+    mock_limit.all.return_value = [mock_token]
     mock_db.query.return_value.count.return_value = 1
 
     # Configure the mock token with attributes needed for TokenResponse
