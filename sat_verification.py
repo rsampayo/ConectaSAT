@@ -38,8 +38,8 @@ async def verify_cfdi(
 
     # SOAP envelope template
     soap_envelope = f"""
-    <soap:Envelope 
-        xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" 
+    <soap:Envelope
+        xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
         xmlns:tem="http://tempuri.org/">
        <soap:Header/>
        <soap:Body>

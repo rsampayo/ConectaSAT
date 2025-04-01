@@ -41,22 +41,22 @@ ALTERNATIVE_XML_FORMAT = """<?xml version="1.0" encoding="utf-8"?>
     <s:Body>
         <ConsultaResponse xmlns="http://tempuri.org/">
             <ConsultaResult>
-                <a:CodigoEstatus 
+                <a:CodigoEstatus
                     xmlns:a="http://schemas.datacontract.org/2004/07/Sat.Cfdi.Negocio.ConsultaCfdi.Servicio">
                     S - Comprobante obtenido satisfactoriamente.
                 </a:CodigoEstatus>
-                <a:Estado 
+                <a:Estado
                     xmlns:a="http://schemas.datacontract.org/2004/07/Sat.Cfdi.Negocio.ConsultaCfdi.Servicio">
                     Vigente
                 </a:Estado>
-                <a:EsCancelable 
+                <a:EsCancelable
                     xmlns:a="http://schemas.datacontract.org/2004/07/Sat.Cfdi.Negocio.ConsultaCfdi.Servicio">
                     Cancelable sin aceptación
                 </a:EsCancelable>
-                <a:EstatusCancelacion 
+                <a:EstatusCancelacion
                     xmlns:a="http://schemas.datacontract.org/2004/07/Sat.Cfdi.Negocio.ConsultaCfdi.Servicio">
                 </a:EstatusCancelacion>
-                <a:ValidacionEFOS 
+                <a:ValidacionEFOS
                     xmlns:a="http://schemas.datacontract.org/2004/07/Sat.Cfdi.Negocio.ConsultaCfdi.Servicio">
                     200
                 </a:ValidacionEFOS>
@@ -105,8 +105,10 @@ async def test_verify_cfdi_valid():
         assert result["es_cancelable"].strip() == "Cancelable sin aceptación"
         assert result["estatus_cancelacion"].strip() == "No disponible"
         assert (
-            result["codigo_estatus"].strip() == "S - Comprobante obtenido satisfactoriamente."
+            result["codigo_estatus"].strip()
+            == "S - Comprobante obtenido satisfactoriamente."
         )
+        assert result["validacion_efos"].strip() == "200"
         assert mock_post.called
 
 
@@ -134,7 +136,8 @@ async def test_verify_cfdi_canceled():
         assert result["es_cancelable"].strip() == "No cancelable"
         assert result["estatus_cancelacion"].strip() == "Cancelado sin aceptación"
         assert (
-            result["codigo_estatus"].strip() == "S - Comprobante obtenido satisfactoriamente."
+            result["codigo_estatus"].strip()
+            == "S - Comprobante obtenido satisfactoriamente."
         )
         assert mock_post.called
 
@@ -247,7 +250,8 @@ async def test_verify_cfdi_alternative_xml_format():
         assert result["es_cancelable"].strip() == "Cancelable sin aceptación"
         assert result["estatus_cancelacion"].strip() == "No disponible"
         assert (
-            result["codigo_estatus"].strip() == "S - Comprobante obtenido satisfactoriamente."
+            result["codigo_estatus"].strip()
+            == "S - Comprobante obtenido satisfactoriamente."
         )
         assert result["validacion_efos"].strip() == "200"
         assert mock_post.called
@@ -277,7 +281,8 @@ async def test_verify_cfdi_with_validacion_efos():
         assert result["es_cancelable"].strip() == "Cancelable sin aceptación"
         assert result["estatus_cancelacion"].strip() == "No disponible"
         assert (
-            result["codigo_estatus"].strip() == "S - Comprobante obtenido satisfactoriamente."
+            result["codigo_estatus"].strip()
+            == "S - Comprobante obtenido satisfactoriamente."
         )
         assert result["validacion_efos"].strip() == "200"
         assert mock_post.called
@@ -322,7 +327,7 @@ async def test_verify_cfdi_special_xml_format():
     <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
         <s:Body>
             <ConsultaResponse xmlns="http://tempuri.org/">
-                <ConsultaResult 
+                <ConsultaResult
                     Estado="Vigente"
                     EsCancelable="Cancelable sin aceptación"
                     EstatusCancelacion="No cancelado"
@@ -414,7 +419,7 @@ async def test_verify_cfdi_special_xml_empty_estado():
     <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
         <s:Body>
             <ConsultaResponse xmlns="http://tempuri.org/">
-                <ConsultaResult 
+                <ConsultaResult
                     Estado="Vigente"
                     EsCancelable="Cancelable sin aceptación"
                     EstatusCancelacion="No cancelado"

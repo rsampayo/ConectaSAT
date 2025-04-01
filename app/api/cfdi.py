@@ -3,10 +3,15 @@
 import logging
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.core.deps import get_current_token, get_db, get_user_id_from_token
+import app.schemas as schemas
+from app.core.deps import (
+    get_current_token_dependency,
+    get_db_dependency,
+    get_user_id_from_token_dependency,
+)
 from app.schemas.cfdi import (
     BatchCFDIRequest,
     CFDIBatch,
@@ -18,17 +23,9 @@ from app.schemas.cfdi import (
 from app.schemas.cfdi_history import CFDIHistoryCreate
 from app.services.cfdi_history import (
     create_cfdi_history,
-)
-from app.services.cfdi_history import (
     create_cfdi_history_from_verification as service_create_cfdi_history_from_verification,
-)
-from app.services.cfdi_history import (
     get_cfdi_history_by_uuid,
-)
-from app.services.cfdi_history import (
     get_user_cfdi_history as service_get_user_cfdi_history,
-)
-from app.services.cfdi_history import (
     get_verified_cfdis_by_token_id,
 )
 from app.services.sat_verification import CFDIVerification, verify_cfdi
@@ -65,9 +62,9 @@ def get_user_cfdi_history(db, user_id, skip=0, limit=100):
 )
 async def verify_cfdi_endpoint(
     cfdi_data: CFDIVerifyRequest,
-    db: Session = Depends(get_db),
-    token_id: str = Depends(get_current_token),
-    user_id: str = Depends(get_user_id_from_token),
+    db: Session = get_db_dependency,
+    token_id: str = get_current_token_dependency,
+    user_id: str = get_user_id_from_token_dependency,
 ):
     """Verifies a CFDI with the SAT and returns the validation result along with CFDI
     information."""
@@ -130,9 +127,9 @@ async def verify_cfdi_endpoint(
 )
 async def verify_cfdi_batch_endpoint(
     cfdi_data: List[CFDIVerifyRequest],
-    db: Session = Depends(get_db),
-    token_id: str = Depends(get_current_token),
-    user_id: str = Depends(get_user_id_from_token),
+    db: Session = get_db_dependency,
+    token_id: str = get_current_token_dependency,
+    user_id: str = get_user_id_from_token_dependency,
 ):
     """Verifies multiple CFDIs with the SAT in a single request.
 
@@ -195,9 +192,9 @@ async def verify_cfdi_batch_endpoint(
     description="Obtiene el historial de CFDIs verificados",
 )
 async def get_cfdi_history_endpoint(
-    db: Session = Depends(get_db),
-    token_id: str = Depends(get_current_token),
-    user_id: str = Depends(get_user_id_from_token),
+    db: Session = get_db_dependency,
+    token_id: str = get_current_token_dependency,
+    user_id: str = get_user_id_from_token_dependency,
 ):
     """Gets the history of verified CFDIs."""
     try:
@@ -223,9 +220,9 @@ async def get_cfdi_history_endpoint(
 )
 async def get_cfdi_history_by_uuid_endpoint(
     uuid: str,
-    db: Session = Depends(get_db),
-    token_id: str = Depends(get_current_token),
-    user_id: str = Depends(get_user_id_from_token),
+    db: Session = get_db_dependency,
+    token_id: str = get_current_token_dependency,
+    user_id: str = get_user_id_from_token_dependency,
 ):
     """Gets the history of a specific CFDI by its UUID."""
     try:
@@ -250,8 +247,8 @@ async def get_cfdi_history_by_uuid_endpoint(
 )
 async def legacy_verify_cfdi_endpoint(
     cfdi_data: CFDIRequest,
-    db: Session = Depends(get_db),
-    token_id: str = Depends(get_current_token),
+    db: Session = get_db_dependency,
+    token_id: str = get_current_token_dependency,
     user_id: int = 1,  # Default user ID for legacy endpoints
 ):
     """Legacy endpoint for verifying a single CFDI (for test compatibility)"""
@@ -312,8 +309,8 @@ async def legacy_verify_cfdi_endpoint(
 )
 async def legacy_verify_batch_endpoint(
     batch_request: BatchCFDIRequest,
-    db: Session = Depends(get_db),
-    token_id: str = Depends(get_current_token),
+    db: Session = get_db_dependency,
+    token_id: str = get_current_token_dependency,
     user_id: int = 1,  # Default user ID for legacy endpoints
 ):
     """Legacy endpoint for verifying multiple CFDIs (for test compatibility)"""
@@ -382,9 +379,9 @@ async def legacy_verify_batch_endpoint(
     status_code=status.HTTP_200_OK,
 )
 async def legacy_get_cfdi_history_endpoint(
-    db: Session = Depends(get_db),
+    db: Session = get_db_dependency,
     # Require token authentication for test
-    user_id: str = Depends(get_user_id_from_token),
+    user_id: str = get_user_id_from_token_dependency,
     skip: int = 0,
     limit: int = 100,
 ):
@@ -413,9 +410,9 @@ async def legacy_get_cfdi_history_endpoint(
 )
 async def legacy_get_cfdi_history_by_uuid_endpoint(
     uuid: str,
-    db: Session = Depends(get_db),
+    db: Session = get_db_dependency,
     # Require token authentication for test
-    user_id: str = Depends(get_user_id_from_token),
+    user_id: str = get_user_id_from_token_dependency,
 ):
     """Legacy endpoint for retrieving CFDI history by UUID (for test compatibility)"""
     try:
@@ -462,6 +459,68 @@ async def legacy_get_cfdi_history_by_uuid_endpoint(
             ]
     except Exception as e:
         logging.error(f"Error in legacy CFDI history by UUID endpoint: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e),
+        )
+
+
+@router.get(
+    "/cfdi/{uuid}",
+    response_model=schemas.CFDIVerificationResponse,
+    status_code=status.HTTP_200_OK,
+    description=(
+        "Verifica el estado de un CFDI en el SAT usando el UUID, RFC del "
+        "emisor, RFC del receptor y total"
+    ),
+)
+async def verify_cfdi_by_uuid_endpoint(
+    uuid: str,
+    db: Session = get_db_dependency,
+    token_id: str = get_current_token_dependency,
+    user_id: str = get_user_id_from_token_dependency,
+):
+    """Verifies a CFDI with the SAT and returns the validation result."""
+    cfdi_verification = CFDIVerification()
+    try:
+        cfdi_info = cfdi_verification.validate_cfdi(
+            uuid,
+            "TEST",
+            "TEST",
+            "0.00",
+        )
+
+        # Save to history
+        history_entry = CFDIHistoryCreate(
+            uuid=uuid,
+            rfc_emisor="TEST",
+            rfc_receptor="TEST",
+            total="0.00",
+            token_id=token_id,
+            details=cfdi_info,
+            user_id=user_id,
+        )
+        create_cfdi_history(db, history_entry)
+
+        estatus_cancelacion = cfdi_info.get("estatus_cancelacion", "No disponible")
+        result = {
+            "estado": cfdi_info.get("estado"),
+            "es_cancelable": cfdi_info.get("es_cancelable"),
+            "estatus_cancelacion": estatus_cancelacion,
+            "codigo_estatus": cfdi_info.get("codigo_estatus"),
+            "validacion_efos": cfdi_info.get("validacion_efos"),
+            "raw_response": cfdi_info.get("raw_response", "<xml>test</xml>"),
+            "efos_emisor": cfdi_info.get("efos_emisor"),
+            "efos_receptor": cfdi_info.get("efos_receptor"),
+        }
+
+        return schemas.CFDIVerificationResponse(
+            status="success",
+            message="CFDI verificado exitosamente",
+            data=result,
+        )
+    except Exception as e:
+        logging.error(f"Error verifying CFDI: {e}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e),

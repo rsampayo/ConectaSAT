@@ -4,9 +4,10 @@ It's intentionally separate to allow direct execution of the uncovered line.
 """
 
 import os
-import sqlalchemy
-from app.db.database import get_db_url
 
+import sqlalchemy
+
+from app.db.database import get_db_url
 
 os.environ["DATABASE_URL"] = "postgresql://fake:fake@localhost:5432/fakedb"
 
