@@ -46,7 +46,7 @@ get_db_dependency = db_dependency
 
 
 async def get_current_token(
-    token: Optional[HTTPBearer] = security_bearer_dependency,
+    token = security_bearer_dependency,
     db: Session = db_dependency,
 ) -> str:
     """Get and validate the current API token."""
@@ -89,7 +89,7 @@ async def get_user_id_from_token(
     
     # If the token has a user_id, return it
     if api_token.user_id:
-        return api_token.user_id
+        return int(api_token.user_id)
     
     # If not, look for an existing default user or create one
     default_user = db.query(User).filter(User.email == "default@user.com").first()
@@ -109,7 +109,7 @@ async def get_user_id_from_token(
     api_token.user_id = default_user.id
     db.commit()
     
-    return default_user.id
+    return int(default_user.id)
 
 
 # Create module-level dependency variable for get_user_id_from_token
@@ -132,7 +132,7 @@ def get_current_admin(
             headers={"WWW-Authenticate": "Basic"},
         )
     
-    if not verify_password(credentials.password, admin.hashed_password):
+    if not verify_password(credentials.password, str(admin.hashed_password)):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid authentication credentials",

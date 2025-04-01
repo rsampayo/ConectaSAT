@@ -86,6 +86,11 @@ async def verify_cfdi_endpoint(
             token_id=token_id,
             details=cfdi_info,
             user_id=user_id,
+            estado=cfdi_info.get("estado"),
+            es_cancelable=cfdi_info.get("es_cancelable"),
+            estatus_cancelacion=cfdi_info.get("estatus_cancelacion", "No disponible"),
+            codigo_estatus=cfdi_info.get("codigo_estatus"),
+            validacion_efos=cfdi_info.get("validacion_efos"),
         )
         create_cfdi_history(db, history_entry)
 
@@ -105,6 +110,14 @@ async def verify_cfdi_endpoint(
             status="success",
             message="CFDI verificado exitosamente",
             data=result,
+            estado=result.get("estado"),
+            es_cancelable=result.get("es_cancelable"),
+            estatus_cancelacion=result.get("estatus_cancelacion"),
+            codigo_estatus=result.get("codigo_estatus"),
+            validacion_efos=result.get("validacion_efos"),
+            efos_emisor=result.get("efos_emisor"),
+            efos_receptor=result.get("efos_receptor"),
+            raw_response=result.get("raw_response")
         )
     except Exception as e:
         logging.error(f"Error verifying CFDI: {e}")
@@ -153,6 +166,11 @@ async def verify_cfdi_batch_endpoint(
                 token_id=token_id,
                 details=cfdi_info,
                 user_id=user_id,
+                estado=cfdi_info.get("estado"),
+                es_cancelable=cfdi_info.get("es_cancelable"),
+                estatus_cancelacion=cfdi_info.get("estatus_cancelacion", "No disponible"),
+                codigo_estatus=cfdi_info.get("codigo_estatus"),
+                validacion_efos=cfdi_info.get("validacion_efos"),
             )
             create_cfdi_history(db, history_entry)
 
@@ -487,7 +505,7 @@ async def verify_cfdi_by_uuid_endpoint(
             uuid,
             "TEST",
             "TEST",
-            "0.00",
+            float("0.00"),
         )
 
         # Save to history
@@ -499,6 +517,11 @@ async def verify_cfdi_by_uuid_endpoint(
             token_id=token_id,
             details=cfdi_info,
             user_id=user_id,
+            estado=cfdi_info.get("estado"),
+            es_cancelable=cfdi_info.get("es_cancelable"),
+            estatus_cancelacion=cfdi_info.get("estatus_cancelacion", "No disponible"),
+            codigo_estatus=cfdi_info.get("codigo_estatus"),
+            validacion_efos=cfdi_info.get("validacion_efos"),
         )
         create_cfdi_history(db, history_entry)
 
@@ -518,6 +541,14 @@ async def verify_cfdi_by_uuid_endpoint(
             status="success",
             message="CFDI verificado exitosamente",
             data=result,
+            estado=result.get("estado"),
+            es_cancelable=result.get("es_cancelable"),
+            estatus_cancelacion=result.get("estatus_cancelacion"),
+            codigo_estatus=result.get("codigo_estatus"),
+            validacion_efos=result.get("validacion_efos"),
+            efos_emisor=result.get("efos_emisor"),
+            efos_receptor=result.get("efos_receptor"),
+            raw_response=result.get("raw_response")
         )
     except Exception as e:
         logging.error(f"Error verifying CFDI: {e}")

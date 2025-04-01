@@ -61,7 +61,7 @@ async def verify_api_token(db: Session, token: str) -> Optional[int]:
             return None
 
         if api_token.is_active:
-            return api_token.user_id
+            return int(api_token.user_id) if api_token.user_id else None
 
         return None
     except Exception as e:
