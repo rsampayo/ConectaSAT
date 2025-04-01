@@ -33,8 +33,9 @@ async def get_current_token(
     if not token or not token.credentials:
         raise credentials_exception
 
-    # Verify token
-    if not verify_api_token(db, token.credentials):
+    # Verify token - await the coroutine
+    user_id = await verify_api_token(db, token.credentials)
+    if not user_id:
         raise credentials_exception
 
     return token.credentials

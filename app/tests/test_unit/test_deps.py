@@ -1,6 +1,6 @@
 """Unit tests for dependency injection functions."""
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, patch, AsyncMock
 
 import pytest
 from fastapi import HTTPException
@@ -87,7 +87,9 @@ async def test_get_current_token_valid(mock_db, mock_token_obj):
 async def test_get_current_token_invalid(mock_db, mock_invalid_token_obj):
     """Test handling an invalid token raises 401."""
     # Setup
-    with patch("app.core.deps.verify_api_token", return_value=False):
+    with patch("app.core.deps.verify_api_token", new_callable=AsyncMock) as mock_verify:
+        mock_verify.return_value = None  # Simulate invalid token returning None
+        
         # Call the dependency and expect an exception
         with pytest.raises(HTTPException) as exc_info:
             await get_current_token(mock_invalid_token_obj, mock_db)

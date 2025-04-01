@@ -141,40 +141,46 @@ def test_authenticate_admin_not_found(mock_db):
     assert result is None
 
 
-def test_verify_api_token_valid(mock_db, mock_token):
+@pytest.mark.asyncio
+async def test_verify_api_token_valid(mock_db, mock_token):
     """Test verification of a valid API token."""
     # Setup
     mock_db.query.return_value.filter.return_value.first.return_value = mock_token
+    mock_token.is_active = True 
+    mock_token.user_id = 123
 
     # Test verification
-    result = verify_api_token(mock_db, "test-token-123")
+    result = await verify_api_token(mock_db, "test-token-123")
 
-    # Should return True
-    assert result is True
+    # Should return user_id
+    assert result == 123
 
 
-def test_verify_api_token_invalid(mock_db):
+@pytest.mark.asyncio
+async def test_verify_api_token_invalid(mock_db):
     """Test verification of an invalid API token."""
     # Setup
     mock_db.query.return_value.filter.return_value.first.return_value = None
 
     # Test verification
-    result = verify_api_token(mock_db, "invalid-token")
+    result = await verify_api_token(mock_db, "invalid-token")
 
-    # Should return False
-    assert result is False
+    # Should return None
+    assert result is None
 
 
-def test_verify_api_token_inactive(mock_db):
+@pytest.mark.asyncio
+async def test_verify_api_token_inactive(mock_db, mock_token):
     """Test verification of an inactive API token."""
-    # Setup - The query should filter for active tokens, so we return None
-    mock_db.query.return_value.filter.return_value.first.return_value = None
+    # Setup - Token exists but is inactive
+    mock_token.is_active = False
+    mock_db.query.return_value.filter.return_value.first.return_value = mock_token
 
     # Test verification
-    result = verify_api_token(mock_db, "test-token-123")
+    result = await verify_api_token(mock_db, "test-token-123")
 
-    # Should return False
-    assert result is False
+    # Should return None
+    assert result is None
 
 
 def test_create_api_token(mock_db):
