@@ -9,10 +9,11 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.api.cfdi import (
-    get_user_cfdi_history,
+    legacy_verify_batch_endpoint,
+    legacy_verify_cfdi_endpoint,
+    get_cfdi_history_by_uuid_endpoint,
 )
-from app.api.cfdi import legacy_verify_batch_endpoint as verify_cfdi_batch_endpoint
-from app.api.cfdi import legacy_verify_cfdi_endpoint as verify_cfdi_endpoint
+from app.services.cfdi_history import get_user_cfdi_history
 from app.schemas.cfdi import (
     BatchCFDIRequest,
     CFDIRequest,
@@ -74,7 +75,7 @@ async def test_verify_cfdi_endpoint_success():
         mock_verify.return_value = SAMPLE_VERIFICATION_RESULT
 
         # Call the function
-        result = await verify_cfdi_endpoint(
+        result = await legacy_verify_cfdi_endpoint(
             cfdi_data=SAMPLE_CFDI_REQUEST, db=mock_db, user_id=mock_user_id
         )
 
@@ -114,7 +115,7 @@ async def test_verify_cfdi_endpoint_error():
 
         # Call the function and expect an exception
         with pytest.raises(HTTPException) as excinfo:
-            await verify_cfdi_endpoint(
+            await legacy_verify_cfdi_endpoint(
                 cfdi_data=SAMPLE_CFDI_REQUEST,
                 db=mock_db,
                 user_id=mock_user_id,
@@ -144,7 +145,7 @@ async def test_verify_cfdi_batch_endpoint():
         mock_verify.return_value = SAMPLE_VERIFICATION_RESULT
 
         # Call the function
-        result = await verify_cfdi_batch_endpoint(
+        result = await legacy_verify_batch_endpoint(
             batch_request=SAMPLE_BATCH_REQUEST,
             db=mock_db,
             user_id=mock_user_id,
@@ -192,7 +193,7 @@ async def test_verify_cfdi_batch_endpoint_with_error():
         ]
 
         # Call the function
-        result = await verify_cfdi_batch_endpoint(
+        result = await legacy_verify_batch_endpoint(
             batch_request=SAMPLE_BATCH_REQUEST,
             db=mock_db,
             user_id=mock_user_id,
@@ -218,9 +219,6 @@ async def test_verify_cfdi_batch_endpoint_with_error():
 @pytest.mark.asyncio
 async def test_get_cfdi_history_endpoint():
     """Test retrieving CFDI history for a user"""
-    # Use mock DB directly since we're only testing that the endpoint calls the service
-    mock_db = MagicMock(spec=Session)
-
     # This test is now covered by the integration tests, as the API has changed significantly
     # We'll just assert the get_user_cfdi_history service exists
     assert callable(get_user_cfdi_history)
