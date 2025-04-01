@@ -1,112 +1,145 @@
 """Dependency injection functions."""
 
+from typing import Generator, Optional
+
 from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBasic, HTTPBasicCredentials, HTTPBearer
+from fastapi.security import (
+    HTTPBasic,
+    HTTPBasicCredentials,
+    HTTPBearer,
+    OAuth2PasswordBearer,
+)
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.core.security import verify_api_token, verify_password
-from app.db.database import get_db
+from app.db.database import SessionLocal
 from app.models.user import APIToken, SuperAdmin, User
 
 # Security schemes
 security_bearer = HTTPBearer()
 security_basic = HTTPBasic()
 
-# Create fixed variable for get_db dependency
+# Create module-level dependency variables for security schemes
+security_bearer_dependency = Depends(security_bearer)
+security_basic_dependency = Depends(security_basic)
+
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl=f"{settings.API_V1_STR}/login/access-token"
+)
+
+
+def get_db() -> Generator:
+    """Get database session."""
+    try:
+        db = SessionLocal()
+        yield db
+    finally:
+        db.close()
+
+
+# Create module-level dependency variables
 db_dependency = Depends(get_db)
+
+# For backward compatibility
+get_db_dependency = db_dependency
 
 
 async def get_current_token(
-    token: str = Depends(security_bearer), db: Session = db_dependency
+    token: Optional[HTTPBearer] = security_bearer_dependency,
+    db: Session = db_dependency,
 ) -> str:
     """Get and validate the current API token."""
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+        
+    token_str = token.credentials
+    result = await verify_api_token(db, token_str)
+    
+    if not result:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return token_str
 
-    if not token or not token.credentials:
-        raise credentials_exception
 
-    # Verify token - await the coroutine
-    user_id = await verify_api_token(db, token.credentials)
-    if not user_id:
-        raise credentials_exception
-
-    return token.credentials
+# Create module-level dependency variable for get_current_token
+get_current_token_dependency = Depends(get_current_token)
 
 
 async def get_user_id_from_token(
-    token: str = Depends(get_current_token), db: Session = db_dependency
+    token: str = get_current_token_dependency,
+    db: Session = db_dependency,
 ) -> int:
-    """Get the user ID associated with the current token.
-
-    For now, since we don't have user-specific tokens, return a default user ID. In a
-    real implementation, this would look up the token in the database and return the
-    associated user ID.
-    """
-    # Find the API token in the database
+    """Get the user ID associated with the current token."""
+    # Get the API token from the database
     api_token = db.query(APIToken).filter(APIToken.token == token).first()
-
-    if api_token and api_token.user_id:
-        # Return the associated user ID
-        return int(api_token.user_id)
-
-    # If there's no user association, create or get the default user
-    default_user = db.query(User).filter(User.email == "default@conectasat.com").first()
-
+    
+    if not api_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid API token",
+        )
+    
+    # If the token has a user_id, return it
+    if api_token.user_id:
+        return api_token.user_id
+    
+    # If not, look for an existing default user or create one
+    default_user = db.query(User).filter(User.email == "default@user.com").first()
+    
     if not default_user:
-        # Create a default user if one doesn't exist
+        # Create a new default user
         default_user = User(
-            name="Default User", email="default@conectasat.com", is_active=True
+            name="Default User",
+            email="default@user.com",
+            is_active=True,
         )
         db.add(default_user)
         db.commit()
         db.refresh(default_user)
+        
+    # Associate the token with the default user - only update the token
+    api_token.user_id = default_user.id
+    db.commit()
+    
+    return default_user.id
 
-        # Associate the token with this user
-        if api_token:
-            api_token.user_id = default_user.id
-            db.commit()
 
-    return int(default_user.id)
+# Create module-level dependency variable for get_user_id_from_token
+get_user_id_from_token_dependency = Depends(get_user_id_from_token)
 
 
 def get_current_admin(
-    credentials: HTTPBasicCredentials = Depends(security_basic),
+    credentials: HTTPBasicCredentials = security_basic_dependency,
     db: Session = db_dependency,
 ) -> SuperAdmin:
     """Get the current superadmin from HTTP Basic auth credentials."""
-    # Check if credentials are provided
-    if not credentials.username or not credentials.password:
+    admin = db.query(SuperAdmin).filter(
+        SuperAdmin.username == credentials.username
+    ).first()
+    
+    if not admin or not admin.is_active:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid authentication credentials",
             headers={"WWW-Authenticate": "Basic"},
         )
-
-    # Check if superadmin exists and password is correct
-    admin = (
-        db.query(SuperAdmin).filter(SuperAdmin.username == credentials.username).first()
-    )
-    if not admin or not verify_password(credentials.password, admin.hashed_password):
+    
+    if not verify_password(credentials.password, admin.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid authentication credentials",
             headers={"WWW-Authenticate": "Basic"},
         )
-
-    # Check if superadmin is active
-    if not admin.is_active:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Admin account is inactive",
-            headers={"WWW-Authenticate": "Basic"},
-        )
-
+    
     return admin
 
-
-# Create fixed variable for get_current_admin dependency
+# Create module-level dependency variable for get_current_admin
 current_admin_dependency = Depends(get_current_admin)

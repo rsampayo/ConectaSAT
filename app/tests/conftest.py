@@ -2,10 +2,11 @@
 
 import os
 import warnings
+from unittest.mock import patch
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import JSON, Column, String, create_engine
+from sqlalchemy import JSON, Column, Integer, String, create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
@@ -51,12 +52,37 @@ def configure_database_url():
         del os.environ["DATABASE_URL"]
 
 
-# Ensure the CFDIHistory model has the token_id and details columns
-if not hasattr(CFDIHistory, "token_id"):
-    setattr(CFDIHistory, "token_id", Column(String, index=True, nullable=True))
+# Ensure the CFDIHistory model has required columns
+if not hasattr(CFDIHistory, "token_id") or CFDIHistory.token_id is None:
+    CFDIHistory.token_id = Column(String, index=True, nullable=True)
 
-if not hasattr(CFDIHistory, "details"):
-    setattr(CFDIHistory, "details", Column(JSON, nullable=True))
+if not hasattr(CFDIHistory, "details") or CFDIHistory.details is None:
+    CFDIHistory.details = Column(JSON, nullable=True)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def patch_cfdi_history_model():
+    """Patch the CFDIHistory model to ensure it has all necessary columns for tests."""
+    original_columns = {}
+    
+    # Save original columns if they exist
+    if hasattr(CFDIHistory, "__table__") and hasattr(CFDIHistory.__table__, "columns"):
+        for column_name in ["token_id", "details"]:
+            original_columns[column_name] = getattr(CFDIHistory, column_name, None)
+    
+    # Apply patches
+    if not hasattr(CFDIHistory, "token_id") or CFDIHistory.token_id is None:
+        CFDIHistory.token_id = Column(String, index=True, nullable=True)
+    
+    if not hasattr(CFDIHistory, "details") or CFDIHistory.details is None:
+        CFDIHistory.details = Column(JSON, nullable=True)
+    
+    yield
+    
+    # Restore original columns after tests
+    for column_name, original_column in original_columns.items():
+        if original_column is not None:
+            setattr(CFDIHistory, column_name, original_column)
 
 
 @pytest.fixture
@@ -159,3 +185,11 @@ def override_get_token_dependency():
         app.dependency_overrides[get_current_token] = original_dependency
     else:
         del app.dependency_overrides[get_current_token]
+
+
+class MockResponse:
+    """Mock response object for testing."""
+
+    def __init__(self, text: str = "", status_code: int = 200):
+        self.text = text
+        self.status_code = status_code
