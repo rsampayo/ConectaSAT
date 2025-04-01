@@ -1,7 +1,7 @@
 """Unit tests for CFDI History service."""
 
 from datetime import datetime
-from typing import Dict, Any, cast
+from typing import Any, Dict, cast
 
 from sqlalchemy.orm import Session
 

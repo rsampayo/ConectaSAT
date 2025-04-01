@@ -23,9 +23,17 @@ from app.schemas.cfdi import (
 from app.schemas.cfdi_history import CFDIHistoryCreate
 from app.services.cfdi_history import (
     create_cfdi_history,
+)
+from app.services.cfdi_history import (
     create_cfdi_history_from_verification as service_create_cfdi_history_from_verification,
+)
+from app.services.cfdi_history import (
     get_cfdi_history_by_uuid,
+)
+from app.services.cfdi_history import (
     get_user_cfdi_history as service_get_user_cfdi_history,
+)
+from app.services.cfdi_history import (
     get_verified_cfdis_by_token_id,
 )
 from app.services.sat_verification import CFDIVerification, verify_cfdi
@@ -117,7 +125,7 @@ async def verify_cfdi_endpoint(
             validacion_efos=result.get("validacion_efos"),
             efos_emisor=result.get("efos_emisor"),
             efos_receptor=result.get("efos_receptor"),
-            raw_response=result.get("raw_response")
+            raw_response=result.get("raw_response"),
         )
     except Exception as e:
         logging.error(f"Error verifying CFDI: {e}")
@@ -168,7 +176,9 @@ async def verify_cfdi_batch_endpoint(
                 user_id=user_id,
                 estado=cfdi_info.get("estado"),
                 es_cancelable=cfdi_info.get("es_cancelable"),
-                estatus_cancelacion=cfdi_info.get("estatus_cancelacion", "No disponible"),
+                estatus_cancelacion=cfdi_info.get(
+                    "estatus_cancelacion", "No disponible"
+                ),
                 codigo_estatus=cfdi_info.get("codigo_estatus"),
                 validacion_efos=cfdi_info.get("validacion_efos"),
             )
@@ -548,7 +558,7 @@ async def verify_cfdi_by_uuid_endpoint(
             validacion_efos=result.get("validacion_efos"),
             efos_emisor=result.get("efos_emisor"),
             efos_receptor=result.get("efos_receptor"),
-            raw_response=result.get("raw_response")
+            raw_response=result.get("raw_response"),
         )
     except Exception as e:
         logging.error(f"Error verifying CFDI: {e}")

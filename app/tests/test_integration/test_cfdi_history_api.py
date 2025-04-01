@@ -1,8 +1,9 @@
 """Integration tests for CFDI History API endpoints."""
 
+from unittest.mock import patch
+
 import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import patch
 
 from app.core.deps import get_current_token, get_user_id_from_token
 from app.main import app
