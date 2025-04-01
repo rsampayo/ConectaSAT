@@ -35,7 +35,8 @@ class Settings(BaseSettings):
     )
     API_V1_STR: str = Field(default="", description="API version prefix")
 
-    model_config: SettingsConfigDict = SettingsConfigDict(
+    # Make model_config a class variable
+    model_config = SettingsConfigDict(
         env_file=".env", case_sensitive=True
     )
 
