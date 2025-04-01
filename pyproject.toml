@@ -1,7 +1,88 @@
 [tool.black]
+# https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
 line-length = 88
-target-version = ['py312']
-include = '\.pyi?$'
+target-version = ['py39', 'py310', 'py311', 'py312'] # Specify supported Python versions
+# preview = true # Uncomment for bleeding-edge formatting (use with caution)
+
+[tool.flake8]
+# https://flake8.pycqa.org/en/latest/user/configuration.html
+max-line-length = 88
+extend-ignore = [
+    "E203", # Whitespace before ':' - conflicts with Black
+    "W503", # Line break before binary operator - Black prefers this
+]
+max-complexity = 12 # Slightly higher than default (10), adjust as needed
+# Select checks from plugins (add more as needed)
+# B = flake8-bugbear (potential bugs)
+# C4 = flake8-comprehensions (pythonic comprehensions)
+# T20 = flake8-print (discourage print)
+# D = flake8-docstrings (requires flake8-docstrings plugin)
+select = ["E", "W", "F", "C", "N", "B", "C4", "T20"]
+# Add "D" to select if using flake8-docstrings
+
+# Per-file ignores can be useful for specific cases, e.g., __init__.py
+# per-file-ignores =
+#    "__init__.py:F401" # Ignore unused imports in __init__
+
+# --- Optional: Settings for flake8-docstrings (if installed and selected) ---
+# [tool.flake8.pydocstyle]
+# convention = "google" # Or numpy, pep257
+
+[tool.mypy]
+# https://mypy.readthedocs.io/en/stable/config_file.html
+python_version = "3.10" # Set to your minimum supported Python version
+
+# Core Strictness Flags (Good balance for most projects)
+check_untyped_defs = true     # Type check the interior of functions without annotations
+disallow_untyped_defs = true  # Disallow functions without type annotations
+disallow_incomplete_defs = true # Disallow functions with partially annotated signatures
+disallow_untyped_calls = true # Disallow calling functions without annotations from annotated functions
+
+# Warnings for potentially unsafe code
+warn_return_any = true        # Warn about functions inferred to return Any
+warn_unused_ignores = true    # Warn about unnecessary '# type: ignore' comments
+warn_redundant_casts = true   # Warn about unnecessary casts
+warn_no_return = true         # Warn about functions failing to return (if not annotated with NoReturn)
+
+# How to handle missing imports (common issue with third-party libs)
+# Start with 'true' for easier adoption, move to 'false' or per-module settings later for stricter checks.
+ignore_missing_imports = true
+# For stricter checking later, set ignore_missing_imports = false and add:
+# [tool.mypy]
+# [[tool.mypy.overrides]]
+# module = "third_party_module_without_types.*"
+# ignore_missing_imports = true
+
+# Pretty output
+pretty = true
+show_error_codes = true
+
+# Exclude files/directories (e.g., tests, build artifacts)
+exclude = [
+    'venv',
+    '\.venv',
+    'build',
+    'dist',
+    'docs',
+    'tests/.*_fixture.py', # Example: exclude test fixture files if they cause issues
+]
+
+# --- Optional: Stricter flags (Consider enabling these gradually) ---
+# strict = true # Enables many strict flags at once (can be overwhelming initially)
+# disallow_any_unimported = true # Disallow Any types resulting from missing imports
+# disallow_any_explicit = true # Disallow explicit `Any` in type hints
+# disallow_subclassing_any = true # Disallow subclassing values of type 'Any'
+
+# --- Optional: Plugin Usage (Example: Pydantic) ---
+# [[tool.mypy.plugins]]
+# module = "pydantic.mypy"
+
+# --- Optional: Type checking for tests (often needs less strictness) ---
+# [[tool.mypy.overrides]]
+# module = "tests.*"
+# # Relax rules for tests if needed, e.g.:
+# disallow_untyped_defs = false
+# disallow_incomplete_defs = false
 
 [tool.isort]
 profile = "black"
@@ -11,22 +92,6 @@ include_trailing_comma = true
 force_grid_wrap = 0
 use_parentheses = true
 ensure_newline_before_comments = true
-
-[tool.mypy]
-python_version = "3.12"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-check_untyped_defs = true
-disallow_untyped_decorators = true
-no_implicit_optional = true
-strict_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-no_implicit_reexport = true
-strict = true
-ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 minversion = "7.0"
