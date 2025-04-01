@@ -186,7 +186,7 @@ async def get_cfdi_history_endpoint(
     Gets the history of verified CFDIs.
     """
     try:
-        history = get_verified_cfdis_by_token_id(db, token_id)
+        history = await get_verified_cfdis_by_token_id(db, token_id)
         return {
             "status": "success",
             "message": "Historial obtenido exitosamente",

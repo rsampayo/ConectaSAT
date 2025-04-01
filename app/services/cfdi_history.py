@@ -156,7 +156,7 @@ def get_cfdi_history_by_uuid(
     ]
 
 
-def get_verified_cfdis_by_token_id(db: Session, token_id: str) -> List[Dict[str, Any]]:
+async def get_verified_cfdis_by_token_id(db: Session, token_id: str) -> List[Dict[str, Any]]:
     """
     Get all CFDI history entries for a token ID
 
